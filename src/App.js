@@ -14,13 +14,12 @@ function App() {
         <header>
           <Navbar />
         </header>
-
         <div>
           <Home />
           <Support />
         </div>
         <Routes>
-          {/* <Route exact path="/" element={< Home/>} /> */}
+          {/* <Route exact path="/" element={<Home />} /> */}
           <Route path="/signin" element={<LogInForm />} />
           <Route exact path="/signup" element={<SignUpForm />} />
         </Routes>

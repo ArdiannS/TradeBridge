@@ -1,4 +1,5 @@
 import React from "react";
+import {Link} from "react-router-dom"
 
 function Navbar() {
   return (
@@ -50,9 +51,12 @@ function Navbar() {
             <button className="bg-white text-gray-900 py-2 px-6 rounded-full border border-gray-200 hover:bg-gray-200 hover:text-gray-900 transition duration-300 ease-in-out">
               Sign Up
             </button>
-            <button className="text-white bg-transparent border border-white py-2 px-6 rounded-full hover:bg-gray-200 hover:text-gray-900 transition duration-300 ease-in-out">
-              Sign In
-            </button>
+            <Link to="/signin">
+              <button className="text-white bg-transparent border border-white py-2 px-6 rounded-full hover:bg-gray-200 hover:text-gray-900 transition duration-300 ease-in-out">
+                Sign In
+              </button>
+            </Link>
+         
           </div>
         </div>
       </nav>
