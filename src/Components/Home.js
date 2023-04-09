@@ -2,8 +2,8 @@ import React from "react";
 //import bgImg from "../images/bgImg.jpeg";
 import mainIMG from "../images/mainIMG.jpg";
 
-import { PhoneIcon, ArrowSmRightIcon } from "@heroicons/react/outline";
-import { ChipIcon, SupportIcon } from "@heroicons/react/solid";
+// import { PhoneIcon, ArrowSmRightIcon } from "@heroicons/react/outline";
+// import { ChipIcon, SupportIcon } from "@heroicons/react/solid";
 
 import {
   BriefcaseIcon,
