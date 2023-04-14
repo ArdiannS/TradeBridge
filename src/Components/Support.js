@@ -7,7 +7,7 @@ const Support = () => {
   return (
     <div name="support" className="w-full mt-24">
       <div className="grid grid-cols-1 lg:grid-cols-3 relative gap-x-8 gap-y-16 px-1   text-black">
-        <div className="bg-white rounded-xl shadow-2xl">
+        <div className="bg-white rounded-xl shadow-2xl ">
           <div className="p-8">
             <PhoneIcon className="w-16 p-4 bg-indigo-600 text-white rounded-lg mt-[-4rem]" />
             <h3 className="font-bold text-2xl my-6">Sales</h3>
