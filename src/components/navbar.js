@@ -1,17 +1,19 @@
 import React from "react";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 
 function Navbar() {
   return (
     <div>
-      <nav className="bg-gray-900 bg-opacity-80 text-white px-6 py-4 flex justify-between items-center fixed w-full z-50">
+      <nav className="backdrop-blur-sm bg-gray-400 bg-opacity-40 text-white px-6 py-4 flex justify-between items-center fixed w-full top-0 z-50">
         <div className="flex items-center space-x-6">
           <h1 className="text-2xl font-bold tracking-wider">
-            <img
-              src={require("./logoo2.png")}
-              className="h-5 md:h-20"
-              alt="Logo"
-            ></img>
+            <Link to="/">
+              <img
+                src={require("../images/logoo2.png")}
+                className="h-5 md:h-20"
+                alt="Logo"
+              ></img>
+            </Link>
           </h1>
         </div>
         <div className="flex items-center space-x-6 md:hidden">
@@ -25,38 +27,17 @@ function Navbar() {
           </button>
         </div>
         <div className="hidden md:flex md:items-center md:space-x-6">
-          <ul className="flex items-center space-x-6 text-sm font-medium">
-            <li>
-              <a href="#" className="hover:text-gray-200" alt="">
-                About Us
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-200" alt="">
-                Services
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-200" alt="">
-                Blog
-              </a>
-            </li>
-            <li>
-              <a href="#" className="hover:text-gray-200" alt="">
-                Contact Us
-              </a>
-            </li>
-          </ul>
           <div className="flex items-center space-x-6">
-            <button className="bg-white text-gray-900 py-2 px-6 rounded-full border border-gray-200 hover:bg-gray-200 hover:text-gray-900 transition duration-300 ease-in-out">
-              Sign Up
-            </button>
+            <Link to="/signup">
+              <button className="bg-white text-gray-900 py-2 px-6 rounded-full border border-gray-200 hover:bg-gray-200 hover:text-gray-900 transition duration-300 ease-in-out">
+                Sign Up
+              </button>
+            </Link>
             <Link to="/signin">
               <button className="text-white bg-transparent border border-white py-2 px-6 rounded-full hover:bg-gray-200 hover:text-gray-900 transition duration-300 ease-in-out">
                 Sign In
               </button>
             </Link>
-         
           </div>
         </div>
       </nav>
