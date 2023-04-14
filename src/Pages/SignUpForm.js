@@ -24,22 +24,24 @@ function SignUpForm() {
               placeholder="Enter your username"
             />
           </div>
+          <div className="flex justify-between">
           <div className="flex flex-col mb-4">
-            <label className="font-semibold mb-1">Password</label>
-            <input
-              type="password"
-              className="border p-2 rounded-lg"
-              placeholder="Enter your password"
-            />
-          </div>
-          <div className="flex flex-col mb-4">
-            <label className="font-semibold mb-1">Confirm your Password</label>
-            <input
-              type="password"
-              className="border p-2 rounded-lg"
-              placeholder="Confirm your password"
-            />
-          </div>
+              <label className="font-semibold mb-1">Password</label>
+              <input
+                type="password"
+                className="border p-2 rounded-lg"
+                placeholder="Enter your password"
+              />
+            </div>
+            <div className="flex flex-col mb-4">
+              <label className="font-semibold mb-1">Confirm your Password</label>
+              <input
+                type="password"
+                className="border p-2 rounded-lg"
+                placeholder="Confirm your password"
+              />
+            </div>
+            </div>
           <div className="flex flex-col mb-4">
             <label className="font-semibold mb-1">Email</label>
             <input
