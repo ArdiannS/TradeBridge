@@ -1,6 +1,7 @@
 import React from "react";
 //import bgImg from "../images/bgImg.jpeg";
 import mainIMG from "../images/mainIMG.jpg";
+import Support from "../Components/Support";
 
 import { PhoneIcon, ArrowSmRightIcon } from "@heroicons/react/outline";
 import { ChipIcon, SupportIcon } from "@heroicons/react/solid";
@@ -14,7 +15,7 @@ import {
 
 const Home = () => {
   return (
-    <div className="w-full h-screen bg-zinc-200 flex flex-col justify-between">
+    <>    <div className="w-full h-screen bg-zinc-200 flex flex-col justify-between">
       <div className="relative w-full h-full">
         <img
           className="absolute top-0 left-0 w-full h-full"
@@ -68,6 +69,12 @@ const Home = () => {
         </div>
       </div>
     </div>
+    <div>
+    <Support/>
+  </div>
+  </>
+
+
   );
 };
 
