@@ -6,7 +6,7 @@ import { SignUpForm } from "./SignUpForm";
 
 function LogInForm() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full my-20">
+    <div className="my-0 grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
       <div className="hidden sm:block">
         <img className="w-full h-full object-cover" src={loginImg} alt="" />
       </div>
