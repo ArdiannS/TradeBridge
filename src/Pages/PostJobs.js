@@ -1,15 +1,46 @@
-import React from "react";
 import mainIMG from "../images/photo.jpg";
+import { useRef, useEffect } from "react";
+
 function PostJobs() {
+  const sectionRef1 = useRef(null);
+  const sectionRef2 = useRef(null);
+  const sectionRef3 = useRef(null);
+
+  useEffect(() => {
+    const sectionRefs = [sectionRef1, sectionRef2, sectionRef3];
+
+    const options = {
+      root: null,
+      threshold: 0.7,
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.intersectionRatio > 0) {
+          entry.target.classList.remove("opacity-0", "-translate-y-8");
+        }
+      });
+    }, options);
+
+    sectionRefs.forEach((ref) => {
+      observer.observe(ref.current);
+    });
+
+    return () => {
+      sectionRefs.forEach((ref) => {
+        try {
+          observer.unobserve(ref.current);
+        } catch (err) {
+          console.error("Failed to unobserve:", err);
+        }
+      });
+    };
+  }, []);
+
   return (
     <div>
-      <div class="flex flex-col md:flex-row justify-center items-center my-56 items-start">
+      <div class="flex flex-col md:flex-row justify-center items-center my-32 md:my-32 items-start">
         <div class="w-full md:w-1/2 px-4 relative">
-          <div class="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-            <h2 class="text-white text-2xl font-bold uppercase tracking-wide">
-              Find the job you always dreamed of
-            </h2>
-          </div>
           <img
             src={mainIMG}
             alt="your-image-alt-text"
@@ -183,6 +214,51 @@ function PostJobs() {
             </button>
           </div>
         </form>
+      </div>
+      <div className="flex justify-center items-center">
+        <div className="grid grid-cols-3 gap-8">
+          <div
+            ref={sectionRef1}
+            className="opacity-0 -translate-y-8 p-8 bg-gray-100 rounded-lg transition-all duration-500 ease-in-out transform hover:-translate-y-10 hover:shadow-2xl"
+          >
+            <h3 className="text-3xl font-bold mb-4 text-center text-gray-800">
+              Find the perfect job for you
+            </h3>
+            <p className="text-gray-700 leading-7 text-center">
+              Our app makes it easy for you to find jobs that match your skills
+              and experience. With a large pool of employers and job seekers,
+              you can be sure to find the right fit for you.
+            </p>
+          </div>
+          <div
+            ref={sectionRef2}
+            className="opacity-0 -translate-y-8 p-8 bg-gray-100 rounded-lg transition-all duration-500 ease-in-out transform hover:-translate-y-10 hover:shadow-2xl"
+          >
+            <h3 className="text-3xl font-bold mb-4 text-center text-gray-800">
+              Save time and effort
+            </h3>
+            <p className="text-gray-700 leading-7 text-center">
+              Our app streamlines the job application process, making it easy
+              for you to apply to multiple jobs with just a few clicks. No more
+              filling out repetitive application forms or searching through
+              countless job boards.
+            </p>
+          </div>
+          <div
+            ref={sectionRef3}
+            className="opacity-0 -translate-y-8 p-8 bg-gray-100 rounded-lg transition-all duration-500 ease-in-out transform hover:-translate-y-10 hover:shadow-2xl"
+          >
+            <h3 className="text-3xl font-bold mb-4 text-center text-gray-800">
+              Get noticed by top employers
+            </h3>
+            <p className="text-gray-700 leading-7 text-center">
+              Our app attracts top employers from a variety of industries,
+              giving you the opportunity to be noticed by the best. With our
+              advanced matching algorithm, you can be sure to stand out from the
+              crowd and get hired for your dream job.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
