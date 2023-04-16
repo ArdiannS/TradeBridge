@@ -3,6 +3,7 @@ import React from "react";
 import mainIMG from "../images/mainIMG.jpg";
 import Support from "../Components/Support";
 import Containers from "../Components/Containers";
+import { Link } from "react-router-dom";
 
 import { PhoneIcon, ArrowSmRightIcon } from "@heroicons/react/outline";
 import { ChipIcon, SupportIcon } from "@heroicons/react/solid";
@@ -47,26 +48,27 @@ const Home = () => {
           <div className="flex justify-center flex-wrap px-8 py-6 ">
             <div className="flex items-center mb-4 mx-4 hover:text-indigo-600">
               <BriefcaseIcon className="h-6 w-6 text-indigo-600 mr-2" />
-              <p className="text-slate-700 font-medium hover:text-indigo-600">
-                Job Search
-              </p>
+              <Link to="/jobsearch">
+                <p className="text-slate-700 font-medium hover:text-indigo-600 cursor pointer">
+                  Job Search
+                </p>
+              </Link>
             </div>
 
             <div className="flex items-center mb-4 ml-4 hover:text-indigo-600">
               <DocumentTextIcon className="h-6 w-6  text-indigo-600 mr-2" />
-              <p className="text-slate-700 font-medium hover:text-indigo-600">
-                Post a Job
-              </p>
+              <Link to="/postjobs">
+                <p className="text-slate-700 font-medium hover:text-indigo-600 cursor pointer">
+                  Post a Job
+                </p>
+              </Link>
             </div>
           </div>
         </div>
       </div>
-
       <div>
-      
-    <Containers/>
+        <Containers />
       </div>
-
       <div>
         <Support />
       </div>
