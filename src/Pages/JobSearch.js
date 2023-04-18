@@ -1,166 +1,139 @@
-import React from "react";
+import React,{useState} from "react";
 import { FaFacebook, FaHeart } from "react-icons/fa";
 import { IoFilterSharp } from "react-icons/io5";
 // import { HiOutlineArrowsExpand  } from 'react-icons/hi';
 import { MdOutlineInfo } from "react-icons/md";
 import { BsSliders } from "react-icons/bs";
-import Navbar from "../Components/navbar";
+import Footer from "../Components/Footer";
+
 function JobSearch() {
+
+
+  const divs = [];
+  for (let i = 0; i < 5; i++) {
+    divs.push(
+      <div className="flex flex-col justify-center items-center bg-white rounded-lg shadow-md  w-4/8 mx-auto my-5">
+        <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
+          <FaFacebook size={36} className="text-white" />
+        </div>
+        <div className="flex flex-col justify-center items-center p-6">
+          <h2 className="text-3xl font-bold mb-2">Flexible</h2>
+          <div className="flex items-center">
+            <MdOutlineInfo size={24} className="text-indigo-500 mr-2" />
+            <p className="text-lg text-gray-600 font-medium">Per Hour</p>
+          </div>
+          <div className="mt-8 w-full">
+            <h2 className="text-2xl font-bold mb-4">
+              DoorDash Dashers - Start Delivering Today
+            </h2>
+            <span className="text-xl text-gray-600 font-medium mb-6">
+              DoorDash
+            </span>
+            <div className="flex items-center justify-between w-full">
+              <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition duration-300 ease-in-out">
+                Start Today
+              </button>
+              <div className="flex items-center">
+                <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out mr-4">
+                  Apply Now
+                </button>
+                <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                  <FaHeart size={26} />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+ 
   return (
     <>
-      <header>
-        {/* <Navbar /> */}
-      </header>
-      <div className="flex">
-        <div class="w-1/4 h-1/4 bg-slate-300  overflow-y-scroll">
-          <h2 className="font-light text-3xl ml-2 mt-4">Jobs</h2>
-          <div className="mt-4 ml-2 flex justify-between">
-            <p className="">3,377,966 jobs</p>
-            <div className="flex items-center">
-              <p className="pr-4">Filter</p>
-              <IoFilterSharp size={22} />
-            </div>
-            <div className="flex items-center">
-              <p className="pr-4">Sort</p>
-              <BsSliders size={22} />
-            </div>
-          </div>
-          {/* Content for the left div */}
-          <div className="flex flex-col justify-center items-center h-full bg-white rounded-lg shadow-md w-4/8 mx-auto my-5">
-            <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
-              <FaFacebook size={36} className="text-white" />
-            </div>
-            <div className="flex flex-col justify-center items-center p-6">
-              <h2 className="text-3xl font-bold mb-2">Flexible</h2>
+      <header>{/* <Navbar /> */}</header>
+      <div className="flex h-full m-0">
+        <div
+          className="h-full w-1/3 bg-slate-400"
+          style={{ overflowY: "scroll", height: "900px" }}
+        >
+          <div className="flex flex-col justify-center items-center rounded-lg shadow-md w-full mx-auto">
+            <h2 className="font-light text-3xl ml-2 mt-4">Jobs</h2>
+            <div className="mt-4 ml-2 flex justify-between gap-4">
+              <p className="">3,377,966 jobs</p>
               <div className="flex items-center">
-                <MdOutlineInfo size={24} className="text-indigo-500 mr-2" />
-                <p className="text-lg text-gray-600 font-medium">Per Hour</p>
+                <p className="pr-4">Filter</p>
+                <IoFilterSharp size={22} />
               </div>
-              <div className="mt-8 w-full">
-                <h2 className="text-2xl font-bold mb-4">
-                  DoorDash Dashers - Start Delivering Today
-                </h2>
-                <span className="text-xl text-gray-600 font-medium mb-6">
-                  DoorDash
-                </span>
-                <div className="flex items-center justify-between w-full">
-                  <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition duration-300 ease-in-out">
-                    Start Today
-                  </button>
-                  <div className="flex items-center">
-                    <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out mr-4">
-                      Apply Now
-                    </button>
-                    <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                      <FaHeart size={26} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col justify-center items-center h-full bg-white rounded-lg shadow-md w-4/8 mx-auto my-5">
-            <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
-              <FaFacebook size={36} className="text-white" />
-            </div>
-            <div className="flex flex-col justify-center items-center p-6">
-              <h2 className="text-3xl font-bold mb-2">Flexible</h2>
               <div className="flex items-center">
-                <MdOutlineInfo size={24} className="text-indigo-500 mr-2" />
-                <p className="text-lg text-gray-600 font-medium">Per Hour</p>
+                <p className="pr-4">Sort</p>
+                <BsSliders size={22} />
               </div>
-              <div className="mt-8 w-full">
-                <h2 className="text-2xl font-bold mb-4">
-                  DoorDash Dashers - Start Delivering Today
-                </h2>
-                <span className="text-xl text-gray-600 font-medium mb-6">
-                  DoorDash
-                </span>
-                <div className="flex items-center justify-between w-full">
-                  <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition duration-300 ease-in-out">
-                    Start Today
-                  </button>
-                  <div className="flex items-center">
-                    <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out mr-4">
-                      Apply Now
-                    </button>
-                    <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                      <FaHeart size={26} />
-                    </button>
-                  </div>
-                </div>
+            </div>
+            {/* Content for the left div */}
+            {divs};
+            <div class="flex flex-col items-center">
+              <span class="text-sm text-gray-700 dark:text-gray-400">
+                Showing{" "}
+                <span class="font-semibold text-gray-900 dark:text-white">
+                  1
+                </span>{" "}
+                to{" "}
+                <span class="font-semibold text-gray-900 dark:text-white">
+                  10
+                </span>{" "}
+                of{" "}
+                <span class="font-semibold text-gray-900 dark:text-white">
+                  100
+                </span>{" "}
+                Entries
+              </span>
+              <div class="inline-flex mt-2 xs:mt-0">
+                <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-800 rounded-l hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                  <svg
+                    aria-hidden="true"
+                    class="w-5 h-5 mr-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M7.707 14.707a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l2.293 2.293a1 1 0 010 1.414z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+                <button class="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-gray-800 border-0 border-l border-gray-700 rounded-r hover:bg-gray-900 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+                  <svg
+                    aria-hidden="true"
+                    class="w-5 h-5 ml-2"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z"
+                      clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
-          <div className="flex flex-col justify-center items-center h-full bg-white rounded-lg shadow-md w-4/8 mx-auto my-5">
-            <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
-              <FaFacebook size={36} className="text-white" />
+          <footer class="flex flex-col items-center justify-between bg-gray-200 py-2 px-4">
+            <div>
+              <a href="#" class="text-gray-600 hover:text-gray-800">
+                Terms of Use
+              </a>
+              <span class="text-gray-600 mx-2">|</span>
+              <a href="#" class="text-gray-600 hover:text-gray-800">
+                Privacy Policy
+              </a>
             </div>
-            <div className="flex flex-col justify-center items-center p-6">
-              <h2 className="text-3xl font-bold mb-2">Flexible</h2>
-              <div className="flex items-center">
-                <MdOutlineInfo size={24} className="text-indigo-500 mr-2" />
-                <p className="text-lg text-gray-600 font-medium">Per Hour</p>
-              </div>
-              <div className="mt-8 w-full">
-                <h2 className="text-2xl font-bold mb-4">
-                  DoorDash Dashers - Start Delivering Today
-                </h2>
-                <span className="text-xl text-gray-600 font-medium mb-6">
-                  DoorDash
-                </span>
-                <div className="flex items-center justify-between w-full">
-                  <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition duration-300 ease-in-out">
-                    Start Today
-                  </button>
-                  <div className="flex items-center">
-                    <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out mr-4">
-                      Apply Now
-                    </button>
-                    <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                      <FaHeart size={26} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col justify-center items-center h-full bg-white rounded-lg shadow-md w-4/8 mx-auto my-5">
-            <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
-              <FaFacebook size={36} className="text-white" />
-            </div>
-            <div className="flex flex-col justify-center items-center p-6">
-              <h2 className="text-3xl font-bold mb-2">Flexible</h2>
-              <div className="flex items-center">
-                <MdOutlineInfo size={24} className="text-indigo-500 mr-2" />
-                <p className="text-lg text-gray-600 font-medium">Per Hour</p>
-              </div>
-              <div className="mt-8 w-full">
-                <h2 className="text-2xl font-bold mb-4">
-                  DoorDash Dashers - Start Delivering Today
-                </h2>
-                <span className="text-xl text-gray-600 font-medium mb-6">
-                  DoorDash
-                </span>
-                <div className="flex items-center justify-between w-full">
-                  <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition duration-300 ease-in-out">
-                    Start Today
-                  </button>
-                  <div className="flex items-center">
-                    <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out mr-4">
-                      Apply Now
-                    </button>
-                    <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                      <FaHeart size={26} />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          </div>
-
+            <div class="text-gray-600">© TradeBridge.com, Inc.</div>
+          </footer>
+        </div>
 
         {/* Adjust the flex properties of this div */}
         <div className="w-3/4 flex justify-center">
@@ -275,7 +248,7 @@ function JobSearch() {
               <h3 className="font-bold text-xl">Similar Jobs</h3>
             </div>
             <div className="flex justify-between">
-              <div className="h-full rounded-lg w-1/4 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3">
+              <div className="h-full rounded-lg w-1/3 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3">
                 <div className="rounded-lg  mt-5">
                   <div className="mt-5 flex justify-between items-center">
                     <div className="">
@@ -301,10 +274,10 @@ function JobSearch() {
                         Start Today
                       </button>
                     </div>
-                    <div className="flex mt-5">
-                      <div className="mt-3 ml-2">
-                        <button className="bg-indigo-500 text-white font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-                          Apply Now
+                    <div className="flex mt-5 bg-slate-600 justify-center">
+                      <div className="mt-3 w-full-10 ">
+                        <button className="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
+                          <p>Apply </p>
                         </button>
                       </div>
                       <div className="mt-3 ml-2">
@@ -317,7 +290,7 @@ function JobSearch() {
                 </div>
               </div>
 
-              <div className="h-full rounded-lg w-1/4 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3">
+              <div className="h-full rounded-lg w-1/3 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3">
                 <div className="rounded-lg  mt-5">
                   <div className="mt-5 flex justify-between items-center">
                     <div className="">
@@ -343,10 +316,10 @@ function JobSearch() {
                         Start Today
                       </button>
                     </div>
-                    <div className="flex mt-5">
-                      <div className="mt-3 ml-2">
-                        <button className="bg-indigo-500 text-white font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-                          Apply Now
+                    <div className="flex mt-5 bg-slate-600 justify-center">
+                      <div className="mt-3 w-full-10 ">
+                        <button className="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
+                          <p>Apply </p>
                         </button>
                       </div>
                       <div className="mt-3 ml-2">
@@ -358,7 +331,7 @@ function JobSearch() {
                   </div>
                 </div>
               </div>
-              <div className="h-full rounded-lg w-1/4 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3">
+              <div className="h-full rounded-lg w-1/3 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3">
                 <div className="rounded-lg  mt-5">
                   <div className="mt-5 flex justify-between items-center">
                     <div className="">
@@ -384,10 +357,10 @@ function JobSearch() {
                         Start Today
                       </button>
                     </div>
-                    <div className="flex mt-5">
-                      <div className="mt-3 ml-2">
-                        <button className="bg-indigo-500 text-white font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-                          Apply Now
+                    <div className="flex mt-5 bg-slate-600 justify-center">
+                      <div className="mt-3 w-full-10 ">
+                        <button className="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
+                          <p>Apply </p>
                         </button>
                       </div>
                       <div className="mt-3 ml-2">
@@ -400,52 +373,7 @@ function JobSearch() {
                 </div>
               </div>
             </div>
-            <footer class="bg-slate-200 text-black w-full ml-2 border rounded-lg py-10">
-  <div class="container mx-auto">
-    <div class="flex justify-between">
-      <div class="w-1/4">
-        <h4 class="text-lg font-semibold mb-4 ">Job Categories</h4>
-        <ul class="list-none">
-          <li><a href="#" class="hover:text-gray-300">Marketing</a></li>
-          <li><a href="#" class="hover:text-gray-300">Sales</a></li>
-          <li><a href="#" class="hover:text-gray-300">Customer Service</a></li>
-          <li><a href="#" class="hover:text-gray-300">Engineering</a></li>
-          <li><a href="#" class="hover:text-gray-300">Design</a></li>
-        </ul>
-      </div>
-      <div class="w-1/4">
-        <h4 class="text-lg font-semibold mb-4">Top Companies</h4>
-        <ul class="list-none">
-          <li><a href="#" class="hover:text-gray-300">Google</a></li>
-          <li><a href="#" class="hover:text-gray-300">Amazon</a></li>
-          <li><a href="#" class="hover:text-gray-300">Apple</a></li>
-          <li><a href="#" class="hover:text-gray-300">Microsoft</a></li>
-          <li><a href="#" class="hover:text-gray-300">Facebook</a></li>
-        </ul>
-      </div>
-      <div class="w-1/4">
-        <h4 class="text-lg font-semibold mb-4">Explore More Jobs</h4>
-        <ul class="list-none">
-          <li><a href="#" class="hover:text-gray-300">Accounting</a></li>
-          <li><a href="#" class="hover:text-gray-300">Data Analysis</a></li>
-          <li><a href="#" class="hover:text-gray-300">Finance</a></li>
-          <li><a href="#" class="hover:text-gray-300">Human Resources</a></li>
-          <li><a href="#" class="hover:text-gray-300">IT</a></li>
-        </ul>
-      </div>
-      <div class="w-1/4">
-        <h4 class="text-lg font-semibold mb-4">Stay Connected</h4>
-        <ul class="list-none">
-          <li><a href="#" class="hover:text-gray-300">Facebook</a></li>
-          <li><a href="#" class="hover:text-gray-300">Twitter</a></li>
-          <li><a href="#" class="hover:text-gray-300">LinkedIn</a></li>
-          <li><a href="#" class="hover:text-gray-300">Instagram</a></li>
-        </ul>
-      </div>
-    </div>
-  </div>
-</footer>
-
+            <Footer />
           </div>
         </div>
       </div>
