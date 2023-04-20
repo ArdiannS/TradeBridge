@@ -10,8 +10,9 @@ function JobSearch() {
 
 
   const divs = [];
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i <= 9; i++) {
     divs.push(
+      
       <div className="flex flex-col justify-center items-center bg-white rounded-lg shadow-md  w-4/8 mx-auto my-5">
         <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
           <FaFacebook size={36} className="text-white" />
@@ -51,9 +52,9 @@ function JobSearch() {
   return (
     <>
       <header>{/* <Navbar /> */}</header>
-      <div className="flex h-full m-0">
+      <div className="flex h-full mt-28">
         <div
-          className="h-full w-1/3 bg-slate-400"
+          className="h-900 w-1/3 bg-slate-400"
           style={{ overflowY: "scroll", height: "900px" }}
         >
           <div className="flex flex-col justify-center items-center rounded-lg shadow-md w-full mx-auto">

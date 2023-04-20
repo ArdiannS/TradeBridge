@@ -18,8 +18,7 @@ import {
 const Home = () => {
   return (
     <>
-      {" "}
-      <div className="w-full h-screen bg-zinc-200 flex flex-col justify-between">
+      <div className="w-full h-screen bg-zinc-200 flex flex-col justify-between ">
         <div className="relative w-full h-full">
           <img
             className="absolute top-0 left-0 w-full h-full"
