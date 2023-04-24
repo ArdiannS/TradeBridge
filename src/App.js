@@ -10,16 +10,34 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PreLoader from "./Pages/PreLoader";
 import React, { useState, useEffect } from "react";
 function App() {
+  const[backendData,setBackEndData] = useState([{}]);
+  useEffect(()=>{
+    fetch("/api").then(
+    response => response.json()
+    ).then(
+      data=>{
+        setBackEndData(data)
+
+      }
+    )
+},[])
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 3600);
+    }, 100);
   }, []);
 
   return (
     <>
+    {(typeof backendData.users === 'undefined') ? (
+      <p>Loading...</p>
+    ) : (
+      backendData.users.map((user,i) => (
+        <p key={i}>{user}</p>
+      ))
+    )}
       {isLoading ? <PreLoader /> :(
       <Router>
         <Navbar />
