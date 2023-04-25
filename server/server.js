@@ -1,7 +1,16 @@
-const express = require("express");
-const app = express();
-app.get("/api",(req,res) => {
-    res.json({"users":["userOne","userTwo","userThree"]})
-})
+var mysql = require("mysql");
+var conn = mysql.createConnection({
+  host: "localhost",
+  user: "root",
+  password: "root",
+  database: "TradeBridgeDb",
+});
 
-app.listen(5000,()=>(console.log("Server started at 5000")))
+conn.connect(function (err) {
+  if (err) throw err;
+  console.log("Connection succesful...");
+});
+
+conn.query("select * from users", (err, res) => {
+  return console.log(res);
+});
