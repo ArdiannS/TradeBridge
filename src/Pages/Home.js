@@ -5,15 +5,7 @@ import Support from "../Components/Support";
 import Containers from "../Components/Containers";
 import { Link } from "react-router-dom";
 
-import { PhoneIcon, ArrowSmRightIcon } from "@heroicons/react/outline";
-import { ChipIcon, SupportIcon } from "@heroicons/react/solid";
-
-import {
-  BriefcaseIcon,
-  BookmarkIcon,
-  ClipboardCheckIcon,
-  DocumentTextIcon,
-} from "@heroicons/react/solid";
+import { BriefcaseIcon, DocumentTextIcon } from "@heroicons/react/solid";
 
 const Home = () => {
   return (

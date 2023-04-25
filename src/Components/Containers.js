@@ -9,7 +9,7 @@ const Containers = () => {
     <div>
       <div className=" containers px-20 pt-10">
         <div class="first-line-div flex w-full">
-          <div class="flex-grow h-98 px-10 w-1/2 flex flex-col justify-center aspect-w-1 aspect-h-1">
+          <div class="flex-grow h-98 px-10 w-1/2 flex flex-col justify-center aspect-w-1 aspect-h-1 transition-opacity duration-500 ease-in-out">
             <h1 class="text-4xl font-bold font-sans md:font-serif mb-4">
               Let the jobs find you
             </h1>
@@ -17,11 +17,10 @@ const Containers = () => {
               Create your free profile to get interview invites and jobs that
               work for you.
             </p>
-
             <div>
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-full ">
-              Get hired
-            </button>
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-full ">
+                Get hired
+              </button>
             </div>
           </div>
 
@@ -43,9 +42,9 @@ const Containers = () => {
               jobs to help you reach them.
             </p>
             <div>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-full">
-              See jobs
-            </button>
+              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-full">
+                See jobs
+              </button>
             </div>
           </div>
         </div>
@@ -59,9 +58,9 @@ const Containers = () => {
               Your profile is your application. Apply to jobs instantly.
             </p>
             <div>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-              Create Profile
-            </button>
+              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                Create Profile
+              </button>
             </div>
           </div>
           <div class="flex-grow w-1/2 aspect-w-1 aspect-h-1">
@@ -87,9 +86,9 @@ const Containers = () => {
             </p>
 
             <div>
-            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
-              Learn more
-            </button>
+              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full">
+                Learn more
+              </button>
             </div>
           </div>
         </div>
