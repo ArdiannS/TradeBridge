@@ -35,12 +35,12 @@ useEffect(()=>{
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 3600);
+    }, 1);
   }, []);
 
   return (
     <>
-    {(typeof backendData.users === 'undefined') ? (
+    {/* {(typeof backendData.users === 'undefined') ? (
       <p>Loading...</p>
     ) : (
       backendData.users.map((user,i) => (
@@ -49,7 +49,7 @@ useEffect(()=>{
     )}
     {userdata.map((item)=>(
       {item}
-    ))}
+    ))} */}
       {isLoading ? <PreLoader /> :(
       <Router>
         <Navbar />

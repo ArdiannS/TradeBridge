@@ -20,7 +20,8 @@ function LogInForm() {
           <div className="flex flex-col mb-4">
             <label className="font-semibold mb-1">Username</label>
             <input
-              type="text"name="username"
+              type="text"
+              name="username"
               className="border p-2 rounded-lg"
               placeholder="Enter your username"
             />
