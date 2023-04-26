@@ -55,7 +55,6 @@ const Support = () => {
             </p>
           </div>
         </div>
-        
       </div>
     </div>
   );

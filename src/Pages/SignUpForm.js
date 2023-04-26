@@ -13,6 +13,7 @@ function SignUpForm() {
         <form
           className="max-w-md w-full mx-auto bg-white p-6 rounded-lg shadow-md"
           method="POST"
+          action="/signup"
         >
           <h2 className="text-4xl font-bold text-center py-6">Sign Up</h2>
 
@@ -22,6 +23,7 @@ function SignUpForm() {
               type="text"
               className="border p-2 rounded-lg"
               placeholder="Enter your username"
+              name = "username"
             />
           </div>
           <div className="flex justify-between">
@@ -31,6 +33,7 @@ function SignUpForm() {
                 type="password"
                 className="border p-2 rounded-lg"
                 placeholder="Enter your password"
+                name = "password"
               />
             </div>
             <div className="flex flex-col mb-4">
@@ -48,6 +51,7 @@ function SignUpForm() {
               type="email"
               className="border p-2 rounded-lg"
               placeholder="Enter your Email"
+              name = "email"
             />
           </div>
           <div className="flex flex-col mb-4">
@@ -56,8 +60,35 @@ function SignUpForm() {
               type="date"
               className="border p-2 rounded-lg"
               placeholder="Enter your password"
+              name = "date"
+
             />
           </div>
+          <div className="flex flex-col mb-4">
+  <div className="flex items-center justify-center mb-4">
+    <h4 className="font-bold text-center flex-1 text-lg">Dua te regjistrohem si:</h4>
+  </div>
+  <div className="flex justify-betweenw-1/2 ml-20">
+    <label className="mr-4 ">
+      <input
+        type="radio"
+        className="border p-2 rounded-lg"
+        name="userType"
+        value="punedhenes"
+      />
+  <span className="pl-2 font-bold text-lg">Punedhenes</span> 
+    </label>
+    <label>
+      <input
+        type="radio"
+        className="border p-2 rounded-lg"
+        name="userType"
+        value="punemarres"
+      />
+  <span className="pl-2 font-bold text-lg">Punemarres</span> 
+    </label>
+  </div>
+</div>
 
           <button className="border rounded-lg w-full my-5 py-2 bg-indigo-600 hover:bg-green-800 text-white font-semibold">
             Sign up
