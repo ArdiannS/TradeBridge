@@ -7,3 +7,34 @@ app.use(bodyParser.json());
 app.listen(5000);
 const router = require("./Routes/routes");
 app.use(router);
+
+
+// app.post("/postjobs", (req, res) => {
+  // Extract user data from the POST request
+ 
+
+//   const sql = `INSERT INTO Jobs (jobDescription, jobType,jobCategory,jobCity,jobPrice,idusers) VALUES (?,?,?,?,?,1)`;
+//   conn.query(
+//       sql,
+//       [jobTitle, jobType, jobCategory, jobDescription, jobPrice, jobCity],
+//       (err, result) => {
+//         if (err) {
+//           return console.error(err.message);
+//         }
+//         // Return success response to the client
+//         res.send("Job has been created succesfully");
+//       }
+//   );
+// });
+
+// app.get("/jobs", (req, res) => {
+//   const sql = "SELECT * FROM Jobs";
+//   conn.query(sql, (err, result) => {
+//     if (err) {
+//       console.error(err.message);
+//       res.status(500).send("Server Error");
+//     } else {
+//       res.send(result);
+//     }
+//   });
+// });

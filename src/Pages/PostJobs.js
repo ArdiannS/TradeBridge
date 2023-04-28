@@ -47,7 +47,7 @@ function PostJobs() {
             class="w-full h-auto rounded-full"
           />
         </div>
-        <form action="" method="post" class="w-full md:w-1/2 px-4">
+        <form action="/postjobs" method="POST" class="w-full md:w-1/2 px-4">
           <h1 class="text-3xl font-bold mb-4 text-center text-gray-800">
             Post a New Job
           </h1>
@@ -62,9 +62,9 @@ function PostJobs() {
               <input
                 class=" focus:border-blue-600 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 type="text"
-                id="job-title"
-                name="job-title"
-                placeholder="Frontend Developer"
+                id="jobTitle"
+                name="jobTitle"
+                placeholder="Ex: Frontend Developer"
                 autofocus
               />
             </div>
@@ -80,8 +80,8 @@ function PostJobs() {
                 <div class="relative">
                   <select
                     class="focus:border-blue-600 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    id="job-type"
-                    name="job-type"
+                    id="jobType"
+                    name="jobType"
                   >
                     <option>Full-time</option>
                     <option>Part-time</option>
@@ -109,9 +109,9 @@ function PostJobs() {
                   Job Category
                 </label>
                 <select
+                  name="jobCategory"
                   class="focus:border-blue-600 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="job-type"
-                  name="job-type"
+                  id="jobCategory"
                 >
                   <option>Select an option</option>
                   <option>IT</option>
@@ -121,7 +121,7 @@ function PostJobs() {
                   <option>Hidraulik</option>
                 </select>
 
-                <div class="mt-2">
+                {/* <div class="mt-2">
                   <label class="inline-flex items-center">
                     <input
                       type="checkbox"
@@ -130,19 +130,19 @@ function PostJobs() {
                     />
                     <span class="text-sm">Work can be done remotely</span>
                   </label>
-                </div>
+                </div> */}
               </div>
             </div>
 
             <div>
               <label
                 for="description"
-                class="focus:border-blue-600 block text-gray-700 text-sm mb-2"
+                class="focus:border-blue-600 block text-gray-700 text-sm mb-2 mt-3"
               >
                 Description
               </label>
               <textarea
-                name="description"
+                name="jobDescription"
                 id="description"
                 cols="50"
                 rows="5"
@@ -153,27 +153,27 @@ function PostJobs() {
             <div class="flex flex-wrap -mx-3">
               <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                 <label for="company" class="block text-gray-700 text-sm mb-2">
-                  Company
+                  City
                 </label>
                 <input
+                  name="jobCity"
                   type="text"
                   class="focus:border-blue-600 appearance-none block w-full bg-white text-gray-700 border border-gray-400 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500"
-                  id="company"
-                  name="company"
-                  placeholder="Company"
+                  id="jobCity"
+                  placeholder="Ex: Prishtine"
                 />
               </div>
 
               <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
                 <label for="company" class=" block text-gray-700 text-sm mb-2">
-                  Company Website
+                  Price
                 </label>
                 <input
+                  name="jobPrice"
                   type="text"
                   class="focus:border-blue-600 appearance-none block w-full bg-white text-gray-700 border border-gray-400 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500"
-                  id="company"
-                  name="company"
-                  placeholder="https://www.djangoproject.com/"
+                  id="jobPrice"
+                  placeholder="Please type in euro"
                 />
               </div>
             </div>
@@ -189,7 +189,7 @@ function PostJobs() {
                 type="file"
                 class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-3 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="company-logo"
-                name="company-logo/"
+                name="jobPhoto"
               />
             </div>
           </div>
