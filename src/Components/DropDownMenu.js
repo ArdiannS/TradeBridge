@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
 
 function DropdownMenu() {
   const [isOpen, setIsOpen] = useState(false);
@@ -34,10 +35,11 @@ function DropdownMenu() {
       </button>
 
       {/* Dropdown menu */}
+
       {isOpen && (
         <div
           id="dropdownAvatarName"
-          className="overflow-hidden absolute top-10 right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 z-50" 
+          className="overflow-hidden absolute top-10 right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 z-50"
         >
           <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
             <div className="font-medium ">Pro User</div>
@@ -47,14 +49,12 @@ function DropdownMenu() {
             className="py-2 text-sm text-gray-700 dark:text-gray-200"
             aria-labelledby="dropdownInformdropdownAvatarNameButtonationButton"
           >
-            <li>
-              <a
-                href="#"
-                className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-              >
+            <Link to="/dashboard">
+              <li className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                {" "}
                 Dashboard
-              </a>
-            </li>
+              </li>
+            </Link>
             <li>
               <a
                 href="#"
@@ -84,5 +84,5 @@ function DropdownMenu() {
       )}
     </div>
   );
-      }
-      export default DropdownMenu;
+}
+export default DropdownMenu;
