@@ -13,7 +13,8 @@ router.post("/signup",UserController.addUser);
 router.post("/signin",UserController.logInSucces);
 router.delete("/users/:id", UserController.deleteUser);
 router.put("/users/:id", UserController.updateUser);
-router.post("/postjobs",ProductController.insertJobs);
+router.post("/postjobs", ProductController.insertJobs);
+router.get("/jobs", ProductController.getJobs);
 
 
 
