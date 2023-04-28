@@ -10,8 +10,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PreLoader from "./Pages/PreLoader";
 import React, { useState, useEffect } from "react";
 
-=======
-import Dashboard from "./Pages/DashBoard";
+// import Dashboard from "./Pages/Dashboard";
 function App() {
 //   const[backendData,setBackEndData] = useState([{}]);
 //   useEffect(()=>{
@@ -61,8 +60,7 @@ function App() {
           <Route path="/" exact element={<Home />} />
           <Route path="/signin" exact element={<LogInForm />} />
           <Route path="/signup" exact element={<SignUpForm />} />
-          <Route path="/dashboard" exact element={<Dashboard />} />
-
+          {/* <Route path="/dashboard" exact element={<Dashboard />} /> */}
           <Route path="/postjobs" exact element={<PostJobs />} />
           <Route path="/jobsearch" exact element={<JobSearch />} />
         </Routes>

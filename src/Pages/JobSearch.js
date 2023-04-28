@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React,{useState,useEffect} from "react";
 import { FaFacebook, FaHeart } from "react-icons/fa";
 import { IoFilterSharp } from "react-icons/io5";
 // import { HiOutlineArrowsExpand  } from 'react-icons/hi';
@@ -7,46 +7,19 @@ import { BsSliders } from "react-icons/bs";
 import Footer from "../Components/Footer";
 
 function JobSearch() {
+  const [jobs, setJobs] = useState([]);
+  useEffect(() => {
+    fetch("/jobs")
+      .then((res) => res.json())
+      .then((data) => {
+        setJobs(data);
+        console.log(data); // add this line to check data
+      })
+      .catch((err) => console.error(err.message));
+  }, []);
 
 
-  const divs = [];
-  for (let i = 0; i <= 9; i++) {
-    divs.push(
-      <div className="flex flex-col justify-center items-center bg-white rounded-lg shadow-md  w-4/8 mx-auto my-5">
-        <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
-          <FaFacebook size={36} className="text-white" />
-        </div>
-        <div className="flex flex-col justify-center items-center p-6">
-          <h2 className="text-3xl font-bold mb-2">Flexible</h2>
-          <div className="flex items-center">
-            <MdOutlineInfo size={24} className="text-indigo-500 mr-2" />
-            <p className="text-lg text-gray-600 font-medium">Per Hour</p>
-          </div>
-          <div className="mt-8 w-full">
-            <h2 className="text-2xl font-bold mb-4">
-              DoorDash Dashers - Start Delivering Today
-            </h2>
-            <span className="text-xl text-gray-600 font-medium mb-6">
-              DoorDash
-            </span>
-            <div className="flex items-center justify-between w-full">
-              <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition duration-300 ease-in-out">
-                Start Today
-              </button>
-              <div className="flex items-center">
-                <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out mr-4">
-                  Apply Now
-                </button>
-                <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                  <FaHeart size={26} />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
+
  
   return (
     <>
@@ -70,7 +43,42 @@ function JobSearch() {
               </div>
             </div>
             {/* Content for the left div */}
-            {divs};
+            
+            {jobs.map((job) => (
+        <div className="flex flex-col justify-center items-center bg-white rounded-lg shadow-md  w-4/8 mx-auto my-5">
+          <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
+            <FaFacebook size={36} className="text-white" />
+          </div>
+          <div className="flex flex-col justify-center items-center p-6">
+            <h2 className="text-3xl font-bold mb-2">{job.Category}</h2>
+            <div className="flex items-center">
+              <MdOutlineInfo size={24} className="text-indigo-500 mr-2" />
+              <p className="text-lg text-gray-600 font-medium">{job.Category}</p>
+            </div>
+            <div className="mt-8 w-full">
+              <h2 className="text-2xl font-bold mb-4">{job.jobCity}</h2>
+              <span className="text-xl text-gray-600 font-medium mb-6">
+                {job.jobPrice}
+              </span>
+              <div className="flex items-center justify-between w-full">
+                <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition duration-300 ease-in-out">
+                  Start Today
+                </button>
+                <div className="flex items-center">
+                  <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out mr-4">
+                    Apply Now
+                  </button>
+                  <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                    <FaHeart size={26} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))
+}
+  
             <div class="flex flex-col items-center">
               <span class="text-sm text-gray-700 dark:text-gray-400">
                 Showing{" "}
@@ -134,7 +142,6 @@ function JobSearch() {
             <div class="text-gray-600">© TradeBridge.com, Inc.</div>
           </footer>
         </div>
-
         {/* Adjust the flex properties of this div */}
         <div className="w-3/4 flex justify-center">
           {/* Content for the right div */}

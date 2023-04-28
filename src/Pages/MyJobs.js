@@ -1,8 +1,44 @@
 import Stats from "../Components/Stats";
-import Dashboard from "./Dashboard";
+// import Dashboard from "./Dashboard";
 import { useState, useEffect } from "react";
 
 function MyJobs() {
+  const [userData, setUserData] = useState([]);
+  const [editingUser, setEditingUsername] = useState([]);
+
+  useEffect(() => {
+    fetch("/users")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setUserData(data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/users/${id}`, {
+        method: "DELETE",
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleEdit = async (id) => {
+    try {
+      const response = await fetch(`/users/${id}`, {
+        method: "PUT",
+      });
+      const data = await response.json();
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
@@ -14,7 +50,7 @@ function MyJobs() {
 
   return (
     <div>
-      <Dashboard />
+      {/* <Dashboard/> */}
       <table>
         <thead>
           <tr>
