@@ -18,6 +18,7 @@ router.get("/jobs", ProductController.getJobs);
 router.delete("/jobs/:id", ProductController.deleteJob);
 router.put("/jobs/:id", ProductController.updateJob);
 router.get("/jobs/:id", ProductController.getJobById);
+router.get("/users/:id", UserController.getUsersById);
 router.post("/edituser/:id", UserController.updateUser);
 router.post("/editjobs/:id", ProductController.updateJob);
 module.exports = router;

@@ -20,7 +20,7 @@ function EditUser() {
           .then((response) => response.json())
           .then((data) => {
             console.log(data);
-            setUserData(data);
+            setUserData(data[0]);
           })
           .catch((error) => console.error(error));
       }, [id]);
