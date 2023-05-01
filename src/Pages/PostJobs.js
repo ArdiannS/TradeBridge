@@ -1,6 +1,6 @@
 import mainIMG from "../images/photo.jpg";
 import { useRef, useEffect } from "react";
-
+import Footer from "../Components/Footer";
 function PostJobs() {
   const sectionRef1 = useRef(null);
   const sectionRef2 = useRef(null);
@@ -249,6 +249,7 @@ function PostJobs() {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 }
