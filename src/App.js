@@ -9,27 +9,29 @@ import PostJobs from "./Pages/PostJobs";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PreLoader from "./Pages/PreLoader";
 import React, { useState, useEffect } from "react";
+
+// import Dashboard from "./Pages/Dashboard";
 function App() {
-  const[backendData,setBackEndData] = useState([{}]);
-  useEffect(()=>{
-    fetch("/api").then(
-    response => response.json()
-    ).then(
-      data=>{
-        setBackEndData(data)
-      }
-    )
-},[])
-const[userdata,setUserData] = useState([]);
-useEffect(()=>{
-  fetch("/api/users").then(
-    response => response.json()
-    ).then(
-      data=>{
-        setBackEndData(data)
-      }
-    )
-},[])
+//   const[backendData,setBackEndData] = useState([{}]);
+//   useEffect(()=>{
+//     fetch("/api").then(
+//     response => response.json()
+//     ).then(
+//       data=>{
+//         setBackEndData(data)
+//       }
+//     )
+// },[])
+// const[userdata,setUserData] = useState([]);
+// useEffect(()=>{
+//   fetch("/api/users").then(
+//     response => response.json()
+//     ).then(
+//       data=>{
+//         setBackEndData(data)
+//       }
+//     )
+// },[])
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -40,6 +42,7 @@ useEffect(()=>{
 
   return (
     <>
+
     {/* {(typeof backendData.users === 'undefined') ? (
       <p>Loading...</p>
     ) : (
@@ -57,6 +60,7 @@ useEffect(()=>{
           <Route path="/" exact element={<Home />} />
           <Route path="/signin" exact element={<LogInForm />} />
           <Route path="/signup" exact element={<SignUpForm />} />
+          {/* <Route path="/dashboard" exact element={<Dashboard />} /> */}
           <Route path="/postjobs" exact element={<PostJobs />} />
           <Route path="/jobsearch" exact element={<JobSearch />} />
         </Routes>
