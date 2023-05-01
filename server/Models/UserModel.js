@@ -2,15 +2,35 @@ const database = require("../Configuration/DataBaseConnection")
 const bcrypt = require("bcrypt");
 
 class UserModel{
-
-    static async getUsers(){
-        return new Promise(resolve => {
-            database.query("Select * From Users",[],(error,result)=>{
-                if(!error)
+  static async getUsers(){
+    return new Promise(resolve => {
+        database.query("SELECT * FROM Users", [], (error, result) => {
+            if (!error) {
+                // Convert birthdate string to Date object and format without time zone
+                result.forEach(row => {
+                    row.birthdate = new Date(row.birthdate).toLocaleDateString([], { timeZone: 'UTC' });
+                });
                 resolve(result);
-            })
-        })
+            }
+        });
+    });
+}
 
+
+    static async getUserById(id) {
+      return new Promise((resolve, reject) => {
+        database.query(
+          "SELECT * FROM Users WHERE userid = ?",
+          [id],
+          (error, result) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(result);
+            }
+          }
+        );
+      });
     }
     static async addUser(username, password, email, birthday, usertype,res) {
         return new Promise(resolve => {
@@ -89,7 +109,7 @@ class UserModel{
       }
       static async updateUser(id,username,password,email,birthday){
         return new Promise(resolve =>{
-          database.query("Update Users set username = ?,passwordi=?,email,birthday=? where userid = ?",[username,password,email,birthday,id],(err,result)=>{
+          database.query("Update Users set username = ?,passwordi=?,email=?,birthday=? where userid = ?",[username,password,email,birthday,id],(err,result)=>{
             if(err){
               return console.error(err.message);
             }

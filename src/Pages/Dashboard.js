@@ -157,14 +157,22 @@ const Dashboard = () => {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <button
-                            className="text-red-600 hover:text-red-900 mr-2"
-                            onClick={() => handleDelete(user.userid)}
+                              class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
+                              onClick={() => handleDelete(user.userid)}
                           >
                             Delete
-                          </button>
-                          <button className="text-indigo-600 hover:text-indigo-900">
-                            Edit
-                          </button>
+                            </button>
+
+                          <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
+
+                          <Link
+                                to={`/edituser/${user.userid}`}
+                                class="text-white"
+                              >
+                                Edit
+                              </Link>
+                              </button>
+
                         </td>
                       </tr>
                     ))}

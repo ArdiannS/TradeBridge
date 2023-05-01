@@ -32,15 +32,27 @@ class UserController{
           res.status(500).send("Error deleting user");
         }
       }
+      static async getUsersById(req, res) {
+        const { id } = req.params;
+        try {
+          const result = await UserModel.getUserById(id);
+          if (result) {
+            res.send(result);
+          }
+        } catch (err) {
+          console.error(err);
+          res.status(500).send("Error retrieving job");
+        }
+      }
       static async updateUser(req,res) {
         const { id } = req.params;
-        const {username, password, email, date} =req.body;
+        const {username, password, email, birthday} =req.body;
         try {
-          const result = await UserModel.updateUser(id,username, password, email, date,res);
-          res.status(200).json({ message: 'User deleted successfully' });
+          const result = await UserModel.updateUser(id,username, password, email, birthday,res);
+          res.status(200).json({ message: 'User Edited successfully' });
         } catch (error) {
           console.error(error);
-          res.status(500).send("Error deleting user");
+          res.status(500).send("Error editing user");
         }
       }
       
