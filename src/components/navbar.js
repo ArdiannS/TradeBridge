@@ -7,7 +7,7 @@ function Navbar() {
 
   return (
     <div>
-      <nav className="backdrop-blur-sm bg-gray-400 bg-opacity-40 text-white px-6 py-4 flex justify-between items-center fixed w-full top-0 z-50">
+      <nav className="backdrop-blur-sm bg-gray-400 bg-opacity-40 text-white px-6 py-4 fixed flex justify-between items-center  w-full top-0 z-50">
         
         <div className="flex items-center space-x-6">
           <h1 className="text-2xl font-bold tracking-wider">

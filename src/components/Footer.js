@@ -19,7 +19,9 @@ function Footer() {
               type="submit"
               className="bg-gradient-to-br from-gray-700 to-gray-500 text-white py-2 px-4 rounded-r-lg shadow ml-1 hover:shadow-lg hover:from-gray-800 hover:to-gray-600 transition duration-300 ease-in-out"
             >
-              Send Email
+              <svg className="h-6 w-6 fill-current" viewBox="0 0 24 24">
+                <path d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
             </button>
           </form>
         </div>

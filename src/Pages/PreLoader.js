@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 function PreLoader() {
-  const [loadingText, setLoadingText] = useState('TradeBridge');
-  const [blurredText, setBlurredText] = useState('');
+  const [loadingText, setLoadingText] = useState("TradeBridge");
+  const [blurredText, setBlurredText] = useState("");
 
   useEffect(() => {
     const intervalId = setInterval(() => {
@@ -17,11 +17,9 @@ function PreLoader() {
   }, [loadingText, blurredText]);
 
   return (
-    <div className='flex justify-center items-center bg-indigo-500 h-screen'>
-      <h1 className='font-bold text-5xl'>
-        <span style={{ textShadow: `0 0 5px #000` }}>
-          {blurredText}
-        </span>
+    <div className="flex justify-center items-center bg-indigo-500 h-screen">
+      <h1 className="font-bold text-5xl">
+        <span style={{ textShadow: `0 0 5px #000` }}>{blurredText}</span>
         {loadingText.slice(blurredText.length)}
       </h1>
     </div>

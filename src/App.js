@@ -17,7 +17,16 @@ function App() {
     ).then(
       data=>{
         setBackEndData(data)
-
+      }
+    )
+},[])
+const[userdata,setUserData] = useState([]);
+useEffect(()=>{
+  fetch("/api/users").then(
+    response => response.json()
+    ).then(
+      data=>{
+        setBackEndData(data)
       }
     )
 },[])
@@ -26,18 +35,21 @@ function App() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 100);
+    }, 1);
   }, []);
 
   return (
     <>
-    {(typeof backendData.users === 'undefined') ? (
+    {/* {(typeof backendData.users === 'undefined') ? (
       <p>Loading...</p>
     ) : (
       backendData.users.map((user,i) => (
         <p key={i}>{user}</p>
       ))
     )}
+    {userdata.map((item)=>(
+      {item}
+    ))} */}
       {isLoading ? <PreLoader /> :(
       <Router>
         <Navbar />
@@ -50,8 +62,6 @@ function App() {
         </Routes>
       </Router>
       ) }
-
-
       {/* <Footer /> */}
     </>
   );

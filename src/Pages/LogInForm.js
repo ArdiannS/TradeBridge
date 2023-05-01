@@ -13,7 +13,7 @@ function LogInForm() {
       <div className="bg-gray-100 flex flex-col justify-center">
         <form
           className="max-w-md w-full mx-auto bg-white p-6 rounded-lg shadow-md"
-          method="POST"
+          method="POST" action="/signin"
         >
           <h2 className="text-4xl font-bold text-center py-6">Log In</h2>
 
@@ -21,13 +21,14 @@ function LogInForm() {
             <label className="font-semibold mb-1">Username</label>
             <input
               type="text"
+              name="username"
               className="border p-2 rounded-lg"
               placeholder="Enter your username"
             />
           </div>
           <div className="flex flex-col mb-4">
             <label className="font-semibold mb-1">Password</label>
-            <input
+            <input name="password"
               type="password"
               className="border p-2 rounded-lg"
               placeholder="Enter your password"

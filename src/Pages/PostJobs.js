@@ -39,7 +39,7 @@ function PostJobs() {
 
   return (
     <div>
-      <div class="flex flex-col md:flex-row justify-center items-center my-32 md:my-32 items-start">
+      <div class="flex flex-col md:flex-row justify-center items-center my-4 md:my-32 items-start">
         <div class="w-full md:w-1/2 px-4 relative">
           <img
             src={mainIMG}
@@ -66,22 +66,6 @@ function PostJobs() {
                 name="job-title"
                 placeholder="Frontend Developer"
                 autofocus
-              />
-            </div>
-
-            <div class="mb-4">
-              <label
-                class=" block text-gray-700 text-sm font-bold mb-2"
-                for="apply-link"
-              >
-                Link to apply
-              </label>
-              <input
-                class="focus:border-blue-600 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                type="text"
-                id="apply-link"
-                name="apply-link"
-                placeholder="https://www.djangoproject.com/apply"
               />
             </div>
 
@@ -119,18 +103,23 @@ function PostJobs() {
 
               <div class="w-full md:w-8/12 mb-4 md:mb-0">
                 <label
-                  for="location"
                   class="block text-gray-700 text-sm font-bold mb-2"
+                  for="job-type"
                 >
-                  Location
+                  Job Category
                 </label>
-                <input
-                  type="text"
+                <select
                   class="focus:border-blue-600 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="location"
-                  name="location"
-                  placeholder="Schwerin"
-                />
+                  id="job-type"
+                  name="job-type"
+                >
+                  <option>Select an option</option>
+                  <option>IT</option>
+                  <option>Pastrim</option>
+                  <option>Ndertimtari</option>
+                  <option>Mirembajtje</option>
+                  <option>Hidraulik</option>
+                </select>
 
                 <div class="mt-2">
                   <label class="inline-flex items-center">
