@@ -11,6 +11,7 @@ import PreLoader from "./Pages/PreLoader";
 import React, { useState, useEffect } from "react";
 import EditJobs from "./Pages/EditJobs";
 import Dashboard from "./Pages/Dashboard";
+import EditUser from "./Pages/EditUser";
 function App() {
   //   const[backendData,setBackEndData] = useState([{}]);
   //   useEffect(()=>{
@@ -64,6 +65,8 @@ function App() {
             <Route path="/dashboard" exact element={<Dashboard />} />
             <Route path="/postjobs" exact element={<PostJobs />} />
             <Route path="/jobsearch" exact element={<JobSearch />} />
+            <Route path="/edituser/:id" exact element={<EditUser />} />
+
             <Route path="/editjobs/:id" exact element={<EditJobs />} />
           </Routes>
         </Router>
