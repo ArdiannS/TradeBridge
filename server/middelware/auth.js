@@ -1,27 +1,20 @@
-const isLogin = async (req, res, next) => {
-  try {
-    if (req.session.userid) {
-    } else {
-      res.redirect("/signin");
-    }
+const isLoggedIn = async (req, res, next) => {
+  if (req.session.userId) {
     next();
-  } catch (error) {
-    console.log(error.message);
+  } else {
+    res.sendStatus(401);
   }
 };
 
-const isLogout = async (req, res, next) => {
-  try {
-    if (req.session.userid) {
-      res.redirect("/");
-    }
+const isGuest = async (req, res, next) => {
+  if (req.session.userId) {
+    res.sendStatus(401);
+  } else {
     next();
-  } catch (error) {
-    console.log(error.message);
   }
 };
 
 module.exports = {
-  isLogin,
-  isLogout,
+  isGuest,
+  isLoggedIn,
 };

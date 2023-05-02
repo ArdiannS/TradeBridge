@@ -22,20 +22,28 @@ class UserController {
       res.send("User added succesfully");
     }
   }
-  static async logInSucces(req, res) {
+  static async login(req, res) {
     const { username, password } = req.body;
     try {
-      const result = await UserModel.UserLogIn(username, password, res);
-      if (result) {
-        req.session.userid = result.userid;
-        req.session.username = result.username;
-        console.log(`User ${result.username} logged in successfully.`);
-        
-      }
+      const result = await UserModel.UserLogIn(username, password, res, req);
+      console.log(`User ${result.username} logged in successfully.`);
+      // res.status(200).json({ message: 'Miresevini', user: result.user });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: 'Something went wrong.' });
+    }
+  }
+
+  static async logout(req, res) {
+    try {
+      req.session.destroy(() => {
+        res.sendStatus(200);
+      });
     } catch (exception) {
       console.log("An error happened!" + exception);
     }
   }
+
   static async deleteUser(req, res) {
     const { id } = req.params;
     try {

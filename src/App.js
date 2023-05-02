@@ -9,29 +9,30 @@ import PostJobs from "./Pages/PostJobs";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import PreLoader from "./Pages/PreLoader";
 import React, { useState, useEffect } from "react";
-
-// import Dashboard from "./Pages/Dashboard";
+import EditJobs from "./Pages/EditJobs";
+import Dashboard from "./Pages/Dashboard";
+import EditUser from "./Pages/EditUser";
 function App() {
-//   const[backendData,setBackEndData] = useState([{}]);
-//   useEffect(()=>{
-//     fetch("/api").then(
-//     response => response.json()
-//     ).then(
-//       data=>{
-//         setBackEndData(data)
-//       }
-//     )
-// },[])
-// const[userdata,setUserData] = useState([]);
-// useEffect(()=>{
-//   fetch("/api/users").then(
-//     response => response.json()
-//     ).then(
-//       data=>{
-//         setBackEndData(data)
-//       }
-//     )
-// },[])
+  //   const[backendData,setBackEndData] = useState([{}]);
+  //   useEffect(()=>{
+  //     fetch("/api").then(
+  //     response => response.json()
+  //     ).then(
+  //       data=>{
+  //         setBackEndData(data)
+  //       }
+  //     )
+  // },[])
+  // const[userdata,setUserData] = useState([]);
+  // useEffect(()=>{
+  //   fetch("/api/users").then(
+  //     response => response.json()
+  //     ).then(
+  //       data=>{
+  //         setBackEndData(data)
+  //       }
+  //     )
+  // },[])
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -42,8 +43,7 @@ function App() {
 
   return (
     <>
-
-    {/* {(typeof backendData.users === 'undefined') ? (
+      {/* {(typeof backendData.users === 'undefined') ? (
       <p>Loading...</p>
     ) : (
       backendData.users.map((user,i) => (
@@ -53,19 +53,24 @@ function App() {
     {userdata.map((item)=>(
       {item}
     ))} */}
-      {isLoading ? <PreLoader /> :(
-      <Router>
-        <Navbar />
-        <Routes>
-          <Route path="/" exact element={<Home />} />
-          <Route path="/signin" exact element={<LogInForm />} />
-          <Route path="/signup" exact element={<SignUpForm />} />
-          {/* <Route path="/dashboard" exact element={<Dashboard />} /> */}
-          <Route path="/postjobs" exact element={<PostJobs />} />
-          <Route path="/jobsearch" exact element={<JobSearch />} />
-        </Routes>
-      </Router>
-      ) }
+      {isLoading ? (
+        <PreLoader />
+      ) : (
+        <Router>
+          <Navbar />
+          <Routes>
+            <Route path="/" exact element={<Home />} />
+            <Route path="/signin" exact element={<LogInForm />} />
+            <Route path="/signup" exact element={<SignUpForm />} />
+            <Route path="/dashboard" exact element={<Dashboard />} />
+            <Route path="/postjobs" exact element={<PostJobs />} />
+            <Route path="/jobsearch" exact element={<JobSearch />} />
+            <Route path="/edituser/:id" exact element={<EditUser />} />
+
+            <Route path="/editjobs/:id" exact element={<EditJobs />} />
+          </Routes>
+        </Router>
+      )}
       {/* <Footer /> */}
     </>
   );
