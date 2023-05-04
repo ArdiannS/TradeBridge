@@ -1,10 +1,27 @@
-import React from "react";
+import React, {useState} from "react";
 import loginImg from "../images/login.jpg";
 import { FaFacebook, FaGoogle, FaTwitter } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { SignUpForm } from "./SignUpForm";
+import axios from "../api/axiosInstance";
+import { useNavigate } from 'react-router-dom';
 
 function LogInForm() {
+  const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({username: "", password: ""});
+  const [error, setError] = useState("");
+  const handleLogin = (e) => {
+    e.preventDefault();
+    axios.post('/signin', formData, {withCredentials: true})
+        .then(res => {
+          localStorage.setItem('user', JSON.stringify(res.data.userData?.[0]) || "");
+          navigate('/dashboard');
+        }).catch(({response}) => {
+          setError(response.data.message)
+        });
+  }
+
   return (
     <div className="my-0 grid grid-cols-1 sm:grid-cols-2 h-screen w-full">
       <div className="hidden sm:block">
@@ -13,13 +30,20 @@ function LogInForm() {
       <div className="bg-gray-100 flex flex-col justify-center">
         <form
           className="max-w-md w-full mx-auto bg-white p-6 rounded-lg shadow-md"
-          method="POST" action="/signin"
         >
           <h2 className="text-4xl font-bold text-center py-6">Log In</h2>
+
+          {
+            error && (
+                <p className='text-red-500 h3 font-semibold'>{error}</p>
+              )
+          }
 
           <div className="flex flex-col mb-4">
             <label className="font-semibold mb-1">Username</label>
             <input
+              onInput={(event) => setFormData({...formData, username: event.target.value})}
+              value={formData.username}
               type="text"
               name="username"
               className="border p-2 rounded-lg"
@@ -29,13 +53,15 @@ function LogInForm() {
           <div className="flex flex-col mb-4">
             <label className="font-semibold mb-1">Password</label>
             <input name="password"
+              onInput={(event) => setFormData({...formData, password: event.target.value})}
+              value={formData.password}
               type="password"
               className="border p-2 rounded-lg"
               placeholder="Enter your password"
             />
           </div>
 
-          <button className="border rounded-lg w-full my-5 py-2 bg-indigo-600 hover:bg-green-800 text-white font-semibold">
+          <button onClick={handleLogin} className="border rounded-lg w-full my-5 py-2 bg-indigo-600 hover:bg-green-800 text-white font-semibold">
             Sign in
           </button>
 

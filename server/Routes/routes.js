@@ -1,12 +1,12 @@
 const express = require("express");
 const UserController = require("../Controllers/UserController");
 const ProductController = require("../Controllers/ProductController");
-
 const router = express.Router();
 
 const { isLoggedIn, isGuest } = require("../middelware/auth");
 
 router.get("/route", (req, res, next) => {
+  req.session.userName = 'Aditya@123';
   res.send("hello");
 });
 

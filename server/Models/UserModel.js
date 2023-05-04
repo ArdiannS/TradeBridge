@@ -74,7 +74,7 @@ class UserModel {
       );
     });
   }
-  static async addUser(username, password, email, birthday, usertype, res) {
+  static async addUser(username, password, email, birthday, usertype, res, req) {
     return new Promise((resolve) => {
       const sqlSelect = `SELECT * FROM Users WHERE username = ? OR email = ?`;
       database.query(sqlSelect, [username, email], (err, results) => {
@@ -95,7 +95,15 @@ class UserModel {
               [username, hashedPassword, email, birthday, usertype],
               (error, result) => {
                 if (!error) {
-                  resolve(true);
+                  database.query("SELECT * FROM Users WHERE userid = LAST_INSERT_ID()", [], (err, res) => {
+                    if (!error) {
+                      console.log(res)
+                      const data = res;
+                      delete data.passwordi;
+                      req.session.userId = data.userid;
+                      resolve(data);
+                    }
+                  })
                 } else {
                   resolve(false);
                 }
@@ -108,33 +116,43 @@ class UserModel {
   }
 
   static async UserLogIn(username, password, res, req) {
-    try {
-      const [rows] = await database.query(
-          "SELECT userid, username, passwordi FROM Users WHERE username = ?",
-          [username]
-      );
-
-      console.log('rows ---------------- ',rows)
-
-      if (rows.length === 0) {
-        return res.status(404).json({ message: "Nuk ekziston nje perdorues me kete username" });
-      }
-
-      const user = rows[0];
-      const hashedPasswordFromDB = user.passwordi;
-
-      const passwordMatches = await bcrypt.compare(password, hashedPasswordFromDB);
-      if (!passwordMatches) {
-        return res.status(401).json({ message: "Passwordi qe keni shtypur nuk eshte i sakte" });
-      }
-
-      delete user.passwordi;
-      return user;
-    } catch (error) {
-      console.error(error.message);
-      return res.status(500).json({ message: "Error fetching user from database" });
-    }
+    return new Promise((resolve) => {
+      resolve(database.query(
+          "SELECT * FROM Users WHERE username = ?",
+          [username],
+          (error, result1) => {
+            if (error) {
+              return console.error(error.message);
+            }
+            if (result1.length === 0) {
+              res.status(404).json({message: "Nuk ekziston nje perdorues me kete username"})
+            } else {
+              const existsTheUsername =
+                  "SELECT passwordi FROM Users WHERE username = ? LIMIT 1";
+              database.query(existsTheUsername, [username], (err, results2) => {
+                if (err) {
+                  return console.error(err.message);
+                }
+                const hashedPasswordFromDB = results2?.[0]?.passwordi;
+                bcrypt.compare(password, hashedPasswordFromDB, (err, result) => {
+                  if (err) {
+                    return console.error(err.message);
+                  }
+                  if (!result) {
+                    res.status(401).json({message: "Passwordi qe keni shtypur nuk eshte i sakte"})
+                  } else {
+                    const userData = result1;
+                    req.session.userId = userData[0].userid;
+                    res.status(200).json({userData, message: "Miresevini"})
+                  }
+                });
+              });
+            }
+          }
+      ));
+    });
   }
+
   static async deleteUser(id) {
     return new Promise((resolve) => {
       database.query(

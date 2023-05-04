@@ -1,8 +1,21 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 import { Link } from "react-router-dom";
+import axios from "../api/axiosInstance";
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const handleLogout = () => {
+    axios.post('/logout', {})
+        .then(res => {
+          console.log('good', res)
+        }).catch(err => {
+          console.log('good', err)
+        });
+  }
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  console.log('user', user)
+
 
   return (
     <div>
@@ -96,7 +109,7 @@ function Navbar() {
               src={require("../images/logoo2.png")}
               alt="user photo"
             />
-            Ardian Sutaj
+            {user?.username}
             <svg
               className="w-4 h-4 mx-1.5"
               aria-hidden="true"
@@ -119,8 +132,8 @@ function Navbar() {
               className="overflow-hidden absolute top-10 right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 z-50"
             >
               <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                <div className="font-medium ">Mjeshter</div>
-                <div className="truncate">ardian@outlook.com</div>
+                <div className="font-medium capitalize">{user?.usertype}</div>
+                <div className="truncate">{user?.email}</div>
               </div>
               <ul
                 className="py-2 text-sm text-gray-700 dark:text-gray-200"
@@ -148,12 +161,13 @@ function Navbar() {
                 </li>
               </ul>
               <div className="py-2">
-                <a
+                <p
+                    onClick={handleLogout}
                   href="#"
                   className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                 >
                   Sign out
-                </a>
+                </p>
               </div>
             </div>
           )}

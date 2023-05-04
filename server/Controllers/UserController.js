@@ -1,4 +1,6 @@
 const UserModel = require("../Models/UserModel");
+const util = require('util');
+
 class UserController {
   static async getAllUser(req, res) {
     var result = await UserModel.getUsers();
@@ -19,15 +21,16 @@ class UserController {
       req
     );
     if (result) {
-      res.send("User added succesfully");
+      req.session.userId = result[0].userid;
+      return res.status(200).json({userData:result?.[0], message: "User added succesfully"})
     }
+    res.status(400).json({message: "error"})
+
   }
   static async login(req, res) {
     const { username, password } = req.body;
     try {
-      const result = await UserModel.UserLogIn(username, password, res, req);
-      console.log(`User ${result.username} logged in successfully.`);
-      // res.status(200).json({ message: 'Miresevini', user: result.user });
+      await UserModel.UserLogIn(username, password, res, req);
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: 'Something went wrong.' });
@@ -46,6 +49,16 @@ class UserController {
 
   static async deleteUser(req, res) {
     const { id } = req.params;
+
+    // TODO: DELETE THIS
+    const currentUserId = req.session.userid;
+    const user = database.query( "SELECT * FROM Users WHERE userid = ?", [currentUserId])
+    if(user.userType === "admin") {
+      // complete action
+    } else {
+      res.status(401).json({message: "You are not authorized to delete a user"});
+    }
+
     try {
       const result = await UserModel.deleteUser(id, res);
       res.status(200).json({ message: "User deleted successfully" });
