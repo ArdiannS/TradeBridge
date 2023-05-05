@@ -12,28 +12,13 @@ import React, { useState, useEffect } from "react";
 import EditJobs from "./Pages/EditJobs";
 import Dashboard from "./Pages/Dashboard";
 import EditUser from "./Pages/EditUser";
+import PrivateRoute from "./utils/ProtectedRoute";
+import EditComment from "./Pages/EditComment";
 function App() {
-  //   const[backendData,setBackEndData] = useState([{}]);
-  //   useEffect(()=>{
-  //     fetch("/api").then(
-  //     response => response.json()
-  //     ).then(
-  //       data=>{
-  //         setBackEndData(data)
-  //       }
-  //     )
-  // },[])
-  // const[userdata,setUserData] = useState([]);
-  // useEffect(()=>{
-  //   fetch("/api/users").then(
-  //     response => response.json()
-  //     ).then(
-  //       data=>{
-  //         setBackEndData(data)
-  //       }
-  //     )
-  // },[])
+
   const [isLoading, setIsLoading] = useState(true);
+
+
 
   useEffect(() => {
     setTimeout(() => {
@@ -60,14 +45,19 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" exact element={<Home />} />
-            <Route path="/signin" exact element={<LogInForm />} />
-            <Route path="/signup" exact element={<SignUpForm />} />
-            <Route path="/dashboard" exact element={<Dashboard />} />
+            <Route path='/signin' element={<LogInForm />} />
+            <Route path='/signup' element={<SignUpForm />} />
+            <Route path="/dashboard" exact element={
+              <PrivateRoute>
+                <Dashboard />
+              </PrivateRoute>
+            } />
             <Route path="/postjobs" exact element={<PostJobs />} />
             <Route path="/jobsearch" exact element={<JobSearch />} />
             <Route path="/edituser/:id" exact element={<EditUser />} />
-
             <Route path="/editjobs/:id" exact element={<EditJobs />} />
+            <Route path="/editComment/:id" exact element={<EditComment />} />
+
           </Routes>
         </Router>
       )}
