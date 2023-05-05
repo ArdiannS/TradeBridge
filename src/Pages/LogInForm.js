@@ -13,7 +13,7 @@ function LogInForm() {
   const [error, setError] = useState("");
   const handleLogin = (e) => {
     e.preventDefault();
-    axios.post('/signin', formData, {withCredentials: true})
+    axios.post('/signin', formData)
         .then(res => {
           localStorage.setItem('user', JSON.stringify(res.data.userData?.[0]) || "");
           navigate('/dashboard');

@@ -11,7 +11,7 @@ function SignUpForm() {
     e.preventDefault();
     axios.post('/signup',formData)
       .then(res => {
-        localStorage.setItem('user', JSON.stringify(res.data.userData?.[0]) || "");
+        localStorage.setItem('user', JSON.stringify(res.data.userData) || "");
         navigate('/dashboard');
       }).catch(({response}) => {
         // TODO: set error
@@ -19,11 +19,11 @@ function SignUpForm() {
   }
 
   const [formData, setFormData] = useState({
-    username: "yvgygd",
-    password: "a",
-    email: 'yvgyhw',
+    username: "",
+    password: "",
+    email: '',
     date: "",
-    userType: 'a'
+    userType: ''
   });
 
   return (
@@ -44,6 +44,8 @@ function SignUpForm() {
               className="border p-2 rounded-lg"
               placeholder="Enter your username"
               name = "username"
+              value={formData.username}
+              onInput={(e) => setFormData({...formData, username: e.target.value})}
             />
           </div>
           <div className="flex justify-between">
@@ -54,6 +56,8 @@ function SignUpForm() {
                 className="border p-2 rounded-lg"
                 placeholder="Enter your password"
                 name = "password"
+                value={formData.password}
+                onInput={(e) => setFormData({...formData, password: e.target.value})}
               />
             </div>
             <div className="flex flex-col mb-4">
@@ -74,6 +78,8 @@ function SignUpForm() {
               className="border p-2 rounded-lg"
               placeholder="Enter your Email"
               name = "email"
+              value={formData.email}
+              onInput={(e) => setFormData({...formData, email: e.target.value})}
             />
           </div>
           <div className="flex flex-col mb-4">
@@ -83,8 +89,8 @@ function SignUpForm() {
               className="border p-2 rounded-lg"
               placeholder="Enter your password"
               name = "date"
+              value={formData.date}
               onInput={(e) => setFormData({...formData, date: e.target.value})}
-
             />
           </div>
           <div className="flex flex-col mb-4">
