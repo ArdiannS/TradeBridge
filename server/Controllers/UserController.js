@@ -1,5 +1,5 @@
 const UserModel = require("../Models/UserModel");
-const util = require('util');
+const util = require("util");
 
 class UserController {
   static async getAllUser(req, res) {
@@ -11,21 +11,25 @@ class UserController {
 
   static async addUser(req, res) {
     const { username, password, email, date, userType } = req.body;
-    const result = await UserModel.addUser(
-      username,
-      password,
-      email,
-      date,
-      userType,
-      res,
-      req
-    );
-    if (result) {
-      req.session.userId = result[0].userid;
-      return res.status(200).json({userData:result?.[0], message: "User added succesfully"})
-    }
-    res.status(400).json({message: "error"})
+    try {
+      const result = await UserModel.addUser(
+          username,
+          password,
+          email,
+          date,
+          userType,
+      );
+      console.log("++++++++++++++++++++")
+      console.log(result)
+      req.session.userId = result.result.userid || 30;
+      res.status(result.status).json({result: result.result, message: result.message});
 
+      console.log(req.session)
+      // console.log(req.session)
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: "Something went wrong." });
+    }
   }
   static async login(req, res) {
     const { username, password } = req.body;
@@ -33,7 +37,7 @@ class UserController {
       await UserModel.UserLogIn(username, password, res, req);
     } catch (error) {
       console.error(error.message);
-      res.status(500).json({ message: 'Something went wrong.' });
+      res.status(500).json({ message: "Something went wrong." });
     }
   }
 
@@ -46,18 +50,21 @@ class UserController {
       console.log("An error happened!" + exception);
     }
   }
+  static async getUsersById(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await UserModel.getUserById(id);
+      if (result) {
+        res.send(result);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving job");
+    }
+  }
 
   static async deleteUser(req, res) {
     const { id } = req.params;
-
-    // TODO: DELETE THIS
-    const currentUserId = req.session.userid;
-    const user = database.query( "SELECT * FROM Users WHERE userid = ?", [currentUserId])
-    if(user.userType === "admin") {
-      // complete action
-    } else {
-      res.status(401).json({message: "You are not authorized to delete a user"});
-    }
 
     try {
       const result = await UserModel.deleteUser(id, res);
@@ -79,10 +86,10 @@ class UserController {
         date,
         res
       );
-      res.status(200).json({ message: "User deleted successfully" });
+      res.status(200).json({ message: "User updated successfully" });
     } catch (error) {
       console.error(error);
-      res.status(500).send("Error deleting user");
+      res.status(500).send("Error updating user");
     }
   }
 }
