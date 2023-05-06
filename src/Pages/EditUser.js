@@ -70,7 +70,7 @@ function EditUser() {
             id="password"
             name="password"
             type="password"
-            defaultValue={ userData.passwordi }
+            defaultValue={ userData.password }
             onChange={handleChange}
             // value={message}
             />           

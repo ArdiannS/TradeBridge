@@ -92,7 +92,7 @@ class UserModel {
                             resolve({status: 500, message: "Error hashing the password"});
                         } else {
                             database.query(
-                            "INSERT INTO Users (username, passwordi, email, birthday, usertype) values(?,?,?,?,?)",
+                            "INSERT INTO Users (username, password, email, birthday, usertype) values(?,?,?,?,?)",
                             [username, hashedPassword, email, birthday, usertype],
                             (error, result2) => {
                                 if(error) {
