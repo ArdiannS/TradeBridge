@@ -5,6 +5,7 @@ var conn = mysql.createConnection({
   user: "Arbs",
   password: "root",
   database: "TradeBridgeDb",
+  timezone: "c",
 });
 conn.connect(function (err) {
   if (err) throw err;

@@ -1,9 +1,31 @@
-import React from "react";
+import React, {useState} from "react";
 import loginImg from "../images/login.jpg";
 import { FaFacebook, FaGoogle, FaTwitter } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
+import axios from "../api/axiosInstance";
 
 function SignUpForm() {
+  const navigate = useNavigate();
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    axios.post('/signup',formData)
+      .then(res => {
+        localStorage.setItem('user', JSON.stringify(res.data.userData) || "");
+        navigate('/dashboard');
+      }).catch(({response}) => {
+        // TODO: set error
+      });
+  }
+
+  const [formData, setFormData] = useState({
+    username: "",
+    password: "",
+    email: '',
+    date: "",
+    userType: ''
+  });
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full ">
       <div className="hidden sm:block">
@@ -12,8 +34,6 @@ function SignUpForm() {
       <div className="bg-gray-100 flex flex-col justify-center ">
         <form
           className="max-w-md w-full mx-auto bg-white p-6 rounded-lg shadow-md"
-          method="POST"
-          action="/signup"
         >
           <h2 className="text-4xl font-bold text-center py-6">Sign Up</h2>
 
@@ -24,6 +44,8 @@ function SignUpForm() {
               className="border p-2 rounded-lg"
               placeholder="Enter your username"
               name = "username"
+              value={formData.username}
+              onInput={(e) => setFormData({...formData, username: e.target.value})}
             />
           </div>
           <div className="flex justify-between">
@@ -34,6 +56,8 @@ function SignUpForm() {
                 className="border p-2 rounded-lg"
                 placeholder="Enter your password"
                 name = "password"
+                value={formData.password}
+                onInput={(e) => setFormData({...formData, password: e.target.value})}
               />
             </div>
             <div className="flex flex-col mb-4">
@@ -54,6 +78,8 @@ function SignUpForm() {
               className="border p-2 rounded-lg"
               placeholder="Enter your Email"
               name = "email"
+              value={formData.email}
+              onInput={(e) => setFormData({...formData, email: e.target.value})}
             />
           </div>
           <div className="flex flex-col mb-4">
@@ -63,7 +89,8 @@ function SignUpForm() {
               className="border p-2 rounded-lg"
               placeholder="Enter your password"
               name = "date"
-
+              value={formData.date}
+              onInput={(e) => setFormData({...formData, date: e.target.value})}
             />
           </div>
           <div className="flex flex-col mb-4">
@@ -92,7 +119,7 @@ function SignUpForm() {
   </div>
 </div>
 
-          <button className="border rounded-lg w-full my-5 py-2 bg-indigo-600 hover:bg-green-800 text-white font-semibold">
+          <button onClick={handleSignUp} className="border rounded-lg w-full my-5 py-2 bg-indigo-600 hover:bg-green-800 text-white font-semibold">
             Sign up
           </button>
 

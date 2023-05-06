@@ -11,7 +11,7 @@ class ProductModel {
   ) {
     return new Promise((resolve, reject) => {
       database.query(
-        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity, jobPrice) VALUES (?, ?, ?, ?, ?,?)",
+        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity, jobPrice,idusers) VALUES (?, ?, ?, ?, ?, ?,13)",
         [jobTitle, jobDescription, jobType, jobCategory, jobCity, jobPrice],
         (error, result) => {
           if (error) {
