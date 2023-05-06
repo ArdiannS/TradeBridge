@@ -1,17 +1,22 @@
 const express = require("express");
-const bodyParser = require('body-parser');
+const bodyParser = require("body-parser");
 const app = express();
-const database = require('./Configuration/DataBaseConnection')
+const database = require("./Configuration/DataBaseConnection");
+multer = require("multer");
+
+const upload = multer({ storage: multer.memoryStorage });
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.listen(5000);
 const router = require("./Routes/routes");
 app.use(router);
-
+const path = require("path");
+// const path = require("path");
+app.use(express.static(path.join(__dirname, "src")));
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // app.post("/postjobs", (req, res) => {
-  // Extract user data from the POST request
- 
+// Extract user data from the POST request
 
 //   const sql = `INSERT INTO Jobs (jobDescription, jobType,jobCategory,jobCity,jobPrice,idusers) VALUES (?,?,?,?,?,1)`;
 //   conn.query(
