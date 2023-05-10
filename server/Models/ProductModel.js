@@ -7,12 +7,21 @@ class ProductModel {
     jobType,
     jobCategory,
     jobCity,
-    jobPrice
+    jobPrice,
+    jobPhoto
   ) {
     return new Promise((resolve, reject) => {
       database.query(
-        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity, jobPrice,idusers) VALUES (?, ?, ?, ?, ?, ?,13)",
-        [jobTitle, jobDescription, jobType, jobCategory, jobCity, jobPrice],
+        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity, jobPrice,jobPhoto) VALUES (?, ?, ?, ?, ?,?,?)",
+        [
+          jobTitle,
+          jobDescription,
+          jobType,
+          jobCategory,
+          jobCity,
+          jobPrice,
+          jobPhoto,
+        ],
         (error, result) => {
           if (error) {
             reject(error);
@@ -49,6 +58,21 @@ class ProductModel {
       );
     });
   }
+  static async getJobPhotoById(id) {
+    return new Promise((resolve, reject) => {
+      database.query(
+        "SELECT jobPhoto FROM Jobs WHERE jobId = ?",
+        [id],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  }
   static async deleteJob(id) {
     return new Promise((resolve) => {
       database.query(
@@ -66,20 +90,20 @@ class ProductModel {
   static async updateJob(
     jobId,
     jobTitle,
-    jobDescription,
     jobType,
     jobCategory,
+    jobDescription,
     jobCity,
     jobPrice
   ) {
     return new Promise((resolve) => {
       database.query(
-        "Update Jobs set jobTitle=?, jobDescription = ?,jobType=?,jobCategory = ?,jobCity=?,jobPrice=? where jobId = ?",
+        "Update Jobs set jobTitle=?, jobType=?, jobCategory=?, jobDescription=?, jobCity=?, jobPrice=?, idusers=null where jobId = ?",
         [
           jobTitle,
-          jobDescription,
           jobType,
           jobCategory,
+          jobDescription,
           jobCity,
           jobPrice,
           jobId,
@@ -88,6 +112,7 @@ class ProductModel {
           if (err) {
             return console.error(err.message);
           }
+          console.log(result);
           resolve(result);
         }
       );
