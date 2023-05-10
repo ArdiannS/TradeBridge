@@ -1,29 +1,78 @@
+// const express = require("express");
+// const UserController = require("../Controllers/UserController");
+// const ProductController = require("../Controllers/ProductController");
+// const CommentController = require("../Controllers/CommentController");
+
+// const router = express.Router();
+
+// const { isLoggedIn, isGuest } = require("../middelware/auth");
+
+// router.get("/route", (req, res, next) => {
+//   res.send("hello");
+// });
+
+// router.get("/users", isLoggedIn, UserController.getAllUser);
+// router.post("/signup", UserController.addUser);
+// router.post("/signin", UserController.login);
+// router.post("/logout", UserController.logout);
+// router.delete("/users/:id", UserController.deleteUser);
+// router.put("/users/:id", UserController.updateUser);
+// router.get("/jobs", ProductController.getJobs);
+// router.get("/jobs/:id", ProductController.getJobById);
+// router.put("/jobs/:id", ProductController.updateJob);
+// router.delete("/jobs/:id", ProductController.deleteJob);
+// router.get("/users/:id", UserController.getUsersById);
+// router.post("/edituser/:id", UserController.updateUser);
+// router.put("/jobs/:id", ProductController.updateJob);
+// router.get("/jobs/:id", ProductController.getJobById);
+// router.post("/edituser/:id", UserController.updateUser);
+// router.post("/editjobs/:id", ProductController.updateJob);
+// router.delete("/users/:id", UserController.deleteUser);
+// router.post("/commentForm", CommentController.insertComment);
+// router.get("/comments", CommentController.getComments);
+// router.get("/comments/:id", CommentController.getComments);
+// router.post("/editcomment/:id", CommentController.updateComment);
+// router.delete("/comments/:id", CommentController.deleteComment);
+
+// module.exports = router;
 const express = require("express");
 const UserController = require("../Controllers/UserController");
 const ProductController = require("../Controllers/ProductController");
-
-const router = express.Router();
+const CommentController = require("../Controllers/CommentController");
 const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
-router.get("/route", (req, res, next) => {
-  res.send("hello");
-});
+const router = express.Router();
 
-router.get("/users", UserController.getAllUser);
-router.post("/signup", UserController.addUser);
-router.post("/signin", UserController.logInSucces);
-router.delete("/users/:id", UserController.deleteUser);
-router.put("/users/:id", UserController.updateUser);
-router.get("/jobs", ProductController.getJobs);
-router.delete("/jobs/:id", ProductController.deleteJob);
-router.put("/jobs/:id", ProductController.updateJob);
-router.get("/jobs/:id", ProductController.getJobById);
-router.post("/edituser/:id", UserController.updateUser);
-router.post("/editjobs/:id", ProductController.updateJob);
-
+const { isLoggedIn, isGuest } = require("../middelware/auth");
 router.post(
   "/postjobs",
   upload.single("jobPhoto"),
   ProductController.insertJobs
 );
+router.post(
+  "/editjobs",
+  upload.single("jobPhoto"),
+  ProductController.insertJobs
+);
+router.get("/users", isLoggedIn, UserController.getAllUser);
+router.post("/signup", UserController.addUser);
+router.post("/signin", UserController.login);
+router.post("/logout", UserController.logout);
+router.delete("/users/:id", UserController.deleteUser);
+router.put("/users/:id", UserController.updateUser);
+router.post("/postjobs", ProductController.insertJobs);
+router.get("/jobs", ProductController.getJobs);
+router.get("/jobs/:id", ProductController.getJobById);
+router.put("/jobs/:id", ProductController.updateJob);
+router.delete("/jobs/:id", ProductController.deleteJob);
+router.get("/users/:id", UserController.getUsersById);
+router.post("/edituser/:id", UserController.updateUser);
+router.post("/editjobs/:id", ProductController.updateJob);
+router.delete("/users/:id", UserController.deleteUser);
+router.post("/commentForm", CommentController.insertComment);
+router.get("/comments", CommentController.getComments);
+router.get("/comments/:id", CommentController.getComments);
+router.post("/editcomment/:id", CommentController.updateComment);
+router.delete("/comments/:id", CommentController.deleteComment);
+
 module.exports = router;

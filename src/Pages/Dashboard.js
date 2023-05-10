@@ -1,8 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
+import Stats from "../Components/Stats";
+import Sidebar from "../Components/Sidebar";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import axios from "../api/axiosInstance";
 
 function Dashboard() {
   const [userData, setUserData] = useState([]);
+  const [commentData, setCommentData] = useState([]);
+
   const [editingUser, setEditingUsername] = useState([]);
 
   useEffect(() => {
@@ -15,13 +21,41 @@ function Dashboard() {
       .catch((error) => console.error(error));
   }, []);
 
+  useEffect(() => {
+    fetch("/comments")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setCommentData(data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/users/${id}`, {
-        method: "DELETE",
-      });
-      const data = await response.json();
-      console.log(data);
+      axios
+        .delete(`/users/${id}`)
+        .then((res) => {
+          setUserData(userData.filter((x) => x.userid != id));
+        })
+        .catch((err) => {
+          console.log("err", err.message);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleDeleteComment = async (id) => {
+    try {
+      axios
+        .delete(`/comments/${id}`)
+        .then((res) => {
+          setCommentData(commentData.filter((x) => x.commentId != id));
+        })
+        .catch((err) => {
+          console.log("err", err.message);
+        });
     } catch (error) {
       console.error(error);
     }
@@ -38,192 +72,347 @@ function Dashboard() {
       console.error(error);
     }
   };
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    fetch("/jobs")
+      .then((res) => res.json())
+      .then((data) => setJobs(data))
+      .catch((err) => console.error(err.message));
+  }, []);
+  const jobDeleting = async (id) => {
+    try {
+      const response = await axios.delete(`/jobs/${id}`);
+
+      // const deletedJob = await response.json();
+      console.log("deletedJob", response);
+
+      setJobs((jobs) => jobs.filter((job) => job._id !== response._id));
+
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <div className="flex">
-      <div class="flex flex-row h-screen bg-gray-100 float-left">
-        <div class="flex flex-col w-56 bg-white shadow-lg">
-          <div class="flex items-center justify-center h-16 text-lg font-bold text-indigo-500 bg-white">
-            <span>Dashboard</span>
-          </div>
-          <ul class="flex flex-col py-4">
-            <li>
-              <a
-                href="#"
-                class="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-              >
-                <i class="bx bx-home mr-3"></i>
-                <span>Dashboard</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-              >
-                <i class="bx bx-music mr-3"></i>
-                <span>Music</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-              >
-                <i class="bx bx-drink mr-3"></i>
-                <span>Drink</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-              >
-                <i class="bx bx-shopping-bag mr-3"></i>
-                <span>Shopping</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-              >
-                <i class="bx bx-chat mr-3"></i>
-                <span>Chat</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-              >
-                <i class="bx bx-user mr-3"></i>
-                <span>Profile</span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-              >
-                <i class="bx bx-bell mr-3"></i>
-                <span>Notifications</span>
-                <span class="ml-auto text-xs font-semibold text-red-500 bg-red-100 rounded-full px-3 py-1">
-                  5
-                </span>
-              </a>
-            </li>
-            <li>
-              <a
-                href="#"
-                class="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
-              >
-                <i class="bx bx-log-out mr-3"></i>
-                <span>Logout</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
-          <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
-            <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-200">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      User ID
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Username
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Password
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Email
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Birthday
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      User Type
-                    </th>
-                    <th
-                      scope="col"
-                      className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                    >
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
-                  {userData.map((user) => (
+    <div class="box-border overflow-x-hidden">
+      <div class="flex flex-row h-screen w-screen bg-gray-100 m-0">
+        <Sidebar />
+        <div class=" w-full">
+          <Stats />
+          <div className="flex flex-col">
+            <h1 className="text-center text-2xl font-bold">Users</h1>
+            <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
+              <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
+                <table class="w-3/4 divide-y divide-gray-200 mx-auto">
+                  <thead className="bg-gray-50">
                     <tr>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {user.userid}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {user.username}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {user.passwordi}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {user.email}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {user.birthday}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-900">
-                          {user.usertype}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                        <button
-                          className="text-red-600 hover:text-red-900 mr-2"
-                          onClick={() => handleDelete(user.userid)}
-                        >
-                          Delete
-                        </button>
-                        <button className="text-indigo-600 hover:text-indigo-900">
-                          Edit
-                        </button>
-                      </td>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        User ID
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Username
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Password
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Email
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Birthday
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        User Type
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Actions
+                      </th>
                     </tr>
-                  ))}
-                </tbody>
-                
-              </table>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {userData.map((user) => (
+                      <tr>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {user.userid}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {user.username}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {user.password}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {user.email}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {user.birthday}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {user.usertype}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <button
+                            class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
+                            onClick={() => handleDelete(user.userid)}
+                          >
+                            Delete
+                          </button>
+
+                          <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
+                            <Link
+                              to={`/edituser/${user.userid}`}
+                              class="text-white"
+                            >
+                              Edit
+                            </Link>
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+
+                <h1 className="text-center text-2xl font-bold mt-12">Jobs</h1>
+                {/* <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"> */}
+                <table class="w-3/4 divide-y divide-gray-200 mx-auto">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Job ID
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Job Title
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Job Description
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Job Type
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Job Category
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Job City
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Job Price
+                      </th>
+                      <th
+                        scope="col"
+                        className=" text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {jobs.map((job) => (
+                      <tr>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {job.jobId}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {job.jobTitle}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {job.jobDescription}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {job.jobType}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {job.jobCategory}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {job.jobCity}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {job.jobPrice}
+                          </div>
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div class="flex justify-center">
+                            <button
+                              class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
+                              onClick={() => jobDeleting(job.jobId)}
+                            >
+                              Delete
+                            </button>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
+                              <Link
+                                to={`/editjobs/${job.jobId}`}
+                                class="text-white"
+                              >
+                                Edit
+                              </Link>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                {/* </div> */}
+                <h1 className="text-center text-2xl font-bold mt-12">
+                  Comments
+                </h1>
+                {/* <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg"> */}
+                <table class="w-3/4 divide-y divide-gray-200 mx-auto">
+                  <thead className="bg-gray-50">
+                    <tr>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Comment ID
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        User ID
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Job Id
+                      </th>
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Comment Content
+                      </th>
+
+                      <th
+                        scope="col"
+                        className=" text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Actions
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="bg-white divide-y divide-gray-200">
+                    {commentData.map((comment) => (
+                      <tr>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {comment.commentId}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {comment.userid}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {comment.jobid}
+                          </div>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {comment.commentContent}
+                          </div>
+                        </td>
+
+                        <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                          <div class="flex justify-center">
+                            <button
+                              class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
+                              onClick={() =>
+                                handleDeleteComment(comment.commentId)
+                              }
+                            >
+                              Delete
+                            </button>
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
+                              <Link
+                                to={`/editComment/${comment.commentId}`}
+                                class="text-white"
+                              >
+                                Edit
+                              </Link>
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
         </div>
