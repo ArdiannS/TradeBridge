@@ -10,6 +10,8 @@ class ProductController {
       jobCity,
       jobPrice,
     } = req.body;
+    const buffer = req.file.buffer;
+    const jobPhoto = buffer.toString("base64");
 
     try {
       const result = await ProductModel.insertJobs(
@@ -18,7 +20,8 @@ class ProductController {
         jobType,
         jobCategory,
         jobCity,
-        jobPrice
+        jobPrice,
+        jobPhoto
       );
       res.send("Job added successfully");
     } catch (err) {
@@ -26,7 +29,6 @@ class ProductController {
       res.status(500).send("Error adding job");
     }
   }
-
   static async getJobs(req, res) {
     try {
       const result = await ProductModel.getAllJobs();
@@ -50,6 +52,18 @@ class ProductController {
       res.status(500).send("Error retrieving job");
     }
   }
+  static async getJobPhotoById(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await ProductModel.getJobPhotoById(id);
+      if (result) {
+        res.send(result);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving jobPhoto");
+    }
+  }
 
   static async deleteJob(req, res) {
     const { id } = req.params;
@@ -71,6 +85,7 @@ class ProductController {
       jobCity,
       jobPrice,
     } = req.body;
+
     try {
       const result = await ProductModel.updateJob(
         id,

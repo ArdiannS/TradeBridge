@@ -68,54 +68,60 @@ class UserModel {
       );
     });
   }
-  static async addUser(
-    username,
-    password,
-    email,
-    birthday,
-    usertype,
-  ) {
+  static async addUser(username, password, email, birthday, usertype) {
     return new Promise((resolve) => {
-        database.query(
-            "SELECT * FROM Users WHERE username = ? OR email = ?",
-            [username, email],
-            (error, result1) => {
-                if (error) {
-                    console.error(error.message);
-                    resolve({status: 500, message: "There was an error"});
-                }
-                if (result1.length > 0) {
-                    resolve({status: 404, message: "Vetem se ekziston nje perdorues me kete username apo email"});
-                } else {
-                    bcrypt.hash(password, 10, (err, hashedPassword) => {
-                        if (err) {
-                            resolve({status: 500, message: "Error hashing the password"});
-                        } else {
-                            database.query(
-                            "INSERT INTO Users (username, password, email, birthday, usertype) values(?,?,?,?,?)",
-                            [username, hashedPassword, email, birthday, usertype],
-                            (error, result2) => {
-                                if(error) {
-                                    resolve({status: 500, message: "error"});
-                                } else {
-                                    database.query("SELECT * FROM Users WHERE username = ? OR email = ? LIMIT 1",
-                                        [username, email], (error, result3) => {
-                                            if(error) {
-                                                console.log(error.message)
-                                                resolve({status: 500, message: "error"});
-                                            } else {
-                                                let data = {...result3[0]};
-                                                delete data.passwordi;
-                                                resolve({status: 200, result: data, message: "All good"});
-                                            }
-                                        })
-                                }
+      database.query(
+        "SELECT * FROM Users WHERE username = ? OR email = ?",
+        [username, email],
+        (error, result1) => {
+          if (error) {
+            console.error(error.message);
+            resolve({ status: 500, message: "There was an error" });
+          }
+          if (result1.length > 0) {
+            resolve({
+              status: 404,
+              message:
+                "Vetem se ekziston nje perdorues me kete username apo email",
+            });
+          } else {
+            bcrypt.hash(password, 10, (err, hashedPassword) => {
+              if (err) {
+                resolve({ status: 500, message: "Error hashing the password" });
+              } else {
+                database.query(
+                  "INSERT INTO Users (username, passwordi, email, birthday, usertype) values(?,?,?,?,?)",
+                  [username, hashedPassword, email, birthday, usertype],
+                  (error, result2) => {
+                    if (error) {
+                      resolve({ status: 500, message: "error" });
+                    } else {
+                      database.query(
+                        "SELECT * FROM Users WHERE username = ? OR email = ? LIMIT 1",
+                        [username, email],
+                        (error, result3) => {
+                          if (error) {
+                            console.log(error.message);
+                            resolve({ status: 500, message: "error" });
+                          } else {
+                            let data = { ...result3[0] };
+                            delete data.passwordi;
+                            resolve({
+                              status: 200,
+                              result: data,
+                              message: "All good",
                             });
+                          }
                         }
-                    });
-                }
-            }
-        )
+                      );
+                    }
+                  }
+                );
+              }
+            });
+          }
+        }
+      );
     });
   }
 

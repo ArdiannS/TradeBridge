@@ -13,18 +13,21 @@ class UserController {
     const { username, password, email, date, userType } = req.body;
     try {
       const result = await UserModel.addUser(
-          username,
-          password,
-          email,
-          date,
-          userType,
+        username,
+        password,
+        email,
+        date,
+        userType
       );
-      console.log("++++++++++++++++++++")
-      console.log(result)
+      console.log("++++++++++++++++++++");
+      console.log(result);
+      console.log("++++++++++++++++++++");
       req.session.userId = result.result.userid || 30;
-      res.status(result.status).json({result: result.result, message: result.message});
+      res
+        .status(result.status)
+        .json({ result: result.result, message: result.message });
 
-      console.log(req.session)
+      console.log(req.session);
       // console.log(req.session)
     } catch (error) {
       console.error(error.message);

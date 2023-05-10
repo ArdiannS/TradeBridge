@@ -15,10 +15,7 @@ import EditUser from "./Pages/EditUser";
 import PrivateRoute from "./utils/ProtectedRoute";
 import EditComment from "./Pages/EditComment";
 function App() {
-
   const [isLoading, setIsLoading] = useState(true);
-
-
 
   useEffect(() => {
     setTimeout(() => {
@@ -45,19 +42,22 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" exact element={<Home />} />
-            <Route path='/signin' element={<LogInForm />} />
-            <Route path='/signup' element={<SignUpForm />} />
-            <Route path="/dashboard" exact element={
-              <PrivateRoute>
-                <Dashboard />
-              </PrivateRoute>
-            } />
+            <Route path="/signin" element={<LogInForm />} />
+            <Route path="/signup" element={<SignUpForm />} />
+            <Route
+              path="/dashboard"
+              exact
+              element={
+                <PrivateRoute>
+                  <Dashboard />
+                </PrivateRoute>
+              }
+            />
             <Route path="/postjobs" exact element={<PostJobs />} />
             <Route path="/jobsearch" exact element={<JobSearch />} />
             <Route path="/edituser/:id" exact element={<EditUser />} />
             <Route path="/editjobs/:id" exact element={<EditJobs />} />
             <Route path="/editComment/:id" exact element={<EditComment />} />
-
           </Routes>
         </Router>
       )}

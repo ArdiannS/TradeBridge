@@ -3,6 +3,7 @@ import React from "react";
 import mainIMG from "../images/mainIMG.jpg";
 import Support from "../Components/Support";
 import Containers from "../Components/Containers";
+import Footer from "../Components/Footer";
 import { Link } from "react-router-dom";
 
 import { BriefcaseIcon, DocumentTextIcon } from "@heroicons/react/solid";
