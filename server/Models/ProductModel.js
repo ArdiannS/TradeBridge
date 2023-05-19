@@ -43,6 +43,22 @@ class ProductModel {
       });
     });
   }
+  static async getNumberOfAllJobs() {
+    return new Promise((resolve, reject) => {
+      database.query(
+        "SELECT COUNT(*) AS totalJobs FROM Jobs",
+        [],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            const totalJobs = result[0].totalJobs;
+            resolve(totalJobs);
+          }
+        }
+      );
+    });
+  }
   static async getJobsById(id) {
     return new Promise((resolve, reject) => {
       database.query(

@@ -29,6 +29,17 @@ class ProductController {
       res.status(500).send("Error adding job");
     }
   }
+  static async getNumberOfAllJobs(req, res) {
+    try {
+      const totalJobs = await ProductModel.getNumberOfAllJobs();
+      if (totalJobs) {
+        res.send(totalJobs.toString());
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving jobs");
+    }
+  }
   static async getJobs(req, res) {
     try {
       const result = await ProductModel.getAllJobs();

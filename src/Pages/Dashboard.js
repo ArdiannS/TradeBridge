@@ -20,6 +20,16 @@ function Dashboard() {
       })
       .catch((error) => console.error(error));
   }, []);
+  const [totalJobs, setTotalJobs] = useState(0);
+  useEffect(() => {
+    fetch("/dashboard")
+      .then((response) => response.text())
+      .then((data) => {
+        console.log(data);
+        setTotalJobs(parseInt(data));
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   useEffect(() => {
     fetch("/comments")
