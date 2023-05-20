@@ -2,9 +2,9 @@ const CommentModel = require("../Models/CommentModel");
 
 class CommentController {
   static async insertComment(req, res) {
-    const { userId, jobId, commentContent } = req.body;
+    const { commentContent, jobId,userId  } = req.body;
 
-    const result = await CommentModel.addComent(userId, jobId, commentContent);
+    const result = await CommentModel.addComent(commentContent, jobId, userId);
     if (result) {
       return res.status(200).json({ message: "Comment added succesfully" });
     }

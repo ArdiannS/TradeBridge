@@ -1,5 +1,7 @@
 const UserModel = require("../Models/UserModel");
 const util = require("util");
+const fs = require('fs');
+
 
 class UserController {
   static async getAllUser(req, res) {
@@ -11,23 +13,25 @@ class UserController {
 
   static async addUser(req, res) {
     const { username, password, email, date, userType } = req.body;
+    const pathToImage = './uploads/182145777.jpg';
+    const buffer = fs.readFileSync(pathToImage);
+    const defaultPicture = buffer.toString('base64');
+
     try {
       const result = await UserModel.addUser(
-        username,
-        password,
-        email,
-        date,
-        userType
+          username,
+          password,
+          email,
+          date,
+          userType,
+          defaultPicture
       );
-      console.log("++++++++++++++++++++");
-      console.log(result);
-      console.log("++++++++++++++++++++");
+      console.log("++++++++++++++++++++")
+      console.log(result)
       req.session.userId = result.result.userid || 30;
-      res
-        .status(result.status)
-        .json({ result: result.result, message: result.message });
+      res.status(result.status).json({result: result.result, message: result.message});
 
-      console.log(req.session);
+      console.log(req.session)
       // console.log(req.session)
     } catch (error) {
       console.error(error.message);
@@ -79,14 +83,14 @@ class UserController {
   }
   static async updateUser(req, res) {
     const { id } = req.params;
-    const { username, password, email, date } = req.body;
+    const { username, password, email, birthday } = req.body;
     try {
       const result = await UserModel.updateUser(
         id,
         username,
         password,
         email,
-        date,
+        birthday,
         res
       );
       res.status(200).json({ message: "User updated successfully" });
