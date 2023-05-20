@@ -1,5 +1,28 @@
 import React from "react";
+import { useState, useEffect } from "react";
+
 function Stats() {
+  const [totalJobs, setTotalJobs] = useState(0);
+  const [totalUsers, setTotalUsers] = useState(0);
+  useEffect(() => {
+    fetch("/dashboard/total-jobs")
+      .then((response) => response.text())
+      .then((data) => {
+        console.log(data);
+        setTotalJobs(parseInt(data));
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  useEffect(() => {
+    fetch("/dashboard/total-users")
+      .then((response) => response.text())
+      .then((data) => {
+        console.log(data);
+        setTotalUsers(parseInt(data));
+      })
+      .catch((error) => console.error(error));
+  }, []);
   return (
     <div class=" py-24 sm:py-32 w-full ">
       <div class="  ">
@@ -24,9 +47,9 @@ function Stats() {
                   </svg>
                 </div>
                 <h2 class="text-xl font-bold text-gray-700 mb-2">
-                  Total users:
+                  Total Users
                 </h2>
-                <p class="text-3xl font-bold text-gray-900">44 million</p>
+                <p class="text-3xl font-bold text-gray-900">{totalUsers}</p>
               </div>
             </div>
             <div class="bg-gray-50 shadow-md rounded-lg overflow-hidden">
@@ -48,9 +71,9 @@ function Stats() {
                   </svg>
                 </div>
                 <h2 class="text-xl font-bold text-gray-700 mb-2">
-                  Total Jobs:
+                  Total Number of Jobs
                 </h2>
-                <p class="text-3xl font-bold text-gray-900">$119 trillion</p>
+                <p class="text-3xl font-bold text-gray-900">{totalJobs}</p>
               </div>
             </div>
             <div class="bg-gray-50 shadow-md rounded-lg overflow-hidden">

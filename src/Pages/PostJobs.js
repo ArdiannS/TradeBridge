@@ -47,7 +47,12 @@ function PostJobs() {
             class="w-full h-auto rounded-full"
           />
         </div>
-        <form action="/postjobs" method="POST" class="w-full md:w-1/2 px-4" enctype="multipart/form-data"> 
+        <form
+          action="/postjobs"
+          method="POST"
+          class="w-full md:w-1/2 px-4"
+          encType="multipart/form-data"
+        >
           <h1 class="text-3xl font-bold mb-4 text-center text-gray-800">
             Post a New Job
           </h1>
@@ -142,11 +147,11 @@ function PostJobs() {
                 Description
               </label>
               <textarea
-                name="jobDescription"
                 id="description"
                 cols="50"
                 rows="5"
                 class=" resize-none border border-gray-400"
+                name="jobDescription"
               ></textarea>
             </div>
 
@@ -173,7 +178,7 @@ function PostJobs() {
                   type="text"
                   class="focus:border-blue-600 appearance-none block w-full bg-white text-gray-700 border border-gray-400 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500"
                   id="jobPrice"
-                  placeholder="Please type in euro"
+                  placeholder="The price should be in euro"
                 />
               </div>
             </div>

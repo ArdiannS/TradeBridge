@@ -38,13 +38,11 @@ function JobSearch() {
         data.forEach((job) => {
           const jobDiv = document.createElement("div");
           jobDiv.setAttribute("key", job.jobId);
-          // jobDiv.setAttribute("onclick", handleJobClick(job));
           jobDiv.addEventListener("click", () => {
             handleJobClick(job);
           });
 
           const key = jobDiv.getAttribute("key");
-          // const onClick = jobDiv.getAttribute("onclick");
           
           
         jobDiv.className = `
@@ -96,9 +94,7 @@ function JobSearch() {
           </div>
         </div>
       `;
-  
-          // Append the job div to the container element on the page
-          container.appendChild(jobDiv);
+            container.appendChild(jobDiv);
         });
       })
       .catch((error) => {
@@ -148,6 +144,7 @@ function JobSearch() {
       })
       .catch((err) => console.error(err.message));
   }, []);
+  console.log(jobs[0]);
 
   return (
     <>
@@ -424,9 +421,147 @@ function JobSearch() {
 
               <Footer />
             </div>
-          ) : (
-            <p></p>
+          )  : (
+            <div className="w-full flex justify-center">
+              {jobs.length>0 && (  
+            <div className="rounded-lg h-full w-full">
+              <div className="flex justify-between my-7 mx-6">
+                <div className=" h-1/4 w-1/2 mx-9">
+                  <div className="mt-10  h-20 flex items-center">
+                    <FaFacebook size={60} className="text-blue-800 ml-3" />
+                    Profili i userit qe e ka postu
+                  </div>
+                  <div className="mt-3">
+                    <h3 className=" font-extralight text-2xl">
+                      {jobs[0].iduser}Ktu vjen kush e ka postu punen
+                    </h3>
+                  </div>
+                  <div className="mt-3">
+                    <h3 className="font-bold text-2xl">
+                      JobCategory:{jobs[0].jobCategory}
+                    </h3>
+                  </div>
+                  <div className="mt-3">
+                    <h3 className="font-bold text-4xl">
+                      JobTitle:{jobs[0].jobTitle}
+                    </h3>
+                  </div>
+                  <div className="mt-3">
+                    <p className=" text-l font-semibold">
+                      Job City:{jobs[0].jobCity}
+                    </p>
+                  </div>
+                  <div className="mt-3 ml-2">
+                    <button className=" bg-white text-sm border border-black font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out">
+                      Start Today
+                    </button>
+                  </div>
+                  <div class="my-4 border-b border-gray-500 w-1/2"></div>
+                  <div className="mt-3 flex justify-between w-1/2 text-2xl">
+                    <p className="text-2xl font-bold">Job Type </p>
+                    <p className=" text-lg font-light">{jobs[0].jobType}</p>
+                  </div>
+                  <div class="my-4 border-b border-gray-500 w-1/2"></div>
+                  <div className="mt-3 flex justify-between w-1/2 text-2xl">
+                    <p className=" text-2xl font-bold">Hours </p>
+                    <p className=" text-lg font-light">Set own</p>
+                  </div>
+                  <div className="flex mt-5">
+                    <div className="mt-3 ml-2">
+                      <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                        Jep Oferten
+                      </button>
+                    </div>
+                    <div className="mt-3 ml-2">
+                      <button className="bg-white text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                        <FaHeart size={26} icon="fa-regular fa-heart" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
+                    <img
+                      src={images[currentIndex]}
+                      class="max-w-auto max-h-auto"
+                      alt="User avatar"
+                    />
+                  </div>
+                  <div class="flex justify-center mt-2">
+                    <button onClick={nextImage} class="mx-2">
+                      Prev
+                    </button>
+                    <button onClick={prevImage} class="mx-2">
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="my-4 border-b border-gray-200 w-full mb-10"></div>
+              <div className=" flex justify-between">
+                <div className=" w-1/2 pr-4">
+                  <h3 className="text-center cursor-pointer">
+                    {" "}
+                    About this Job{" "}
+                  </h3>
+                  <div className="flex justify-center">
+                    <div className="my-4 text-center border-b-4 cursor-pointer  border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
+                  </div>
+                  <div className="">
+                    <h2 className="text-l font-light mt-3">
+                      {jobs[0].jobDescription}
+                    </h2>
+                  </div>
+                </div>
+                <div className=" w-1/2">
+                  <h3 className="text-center">Comments</h3>
+                  <div className="flex flex-col gap-4 p-4">
+                    <div className="flex flex-col gap-2">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src="https://randomuser.me/api/portraits/women/68.jpg"
+                          alt="User avatar"
+                          className="w-8 h-8 rounded-full"
+                        />
+                        <h4 className="text-black">Jane Doe</h4>
+                      </div>
+                      <p className="text-black">So good.</p>
+                    </div>
+                    <form
+                      action="/commentForm"
+                      method="POST"
+                      className="flex flex-col gap-2"
+                    >
+                      <input type="hidden" name="userId" value={user?.userid} />
+                      <input
+                        type="hidden"
+                        name="jobId"
+                        value={jobs[0].jobId}
+                      />
+
+                      <textarea
+                        placeholder="Leave a comment"
+                        className="p-2 rounded-lg"
+                        name="commentContent"
+                      ></textarea>
+                      <button
+                        type="submit"
+                        className="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
+                      >
+                        Post Comment
+                      </button>
+                    </form>
+                  </div>
+                </div>
+                </div>
+
+              </div>
+                  
+              )}
+
+            </div>
           )}
+
         </div>
       </div>
     </>

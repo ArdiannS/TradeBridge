@@ -10,7 +10,6 @@ class ProductController {
       jobCity,
       jobPrice,
     } = req.body;
-    console.log(req.file)
     const buffer = req.file.buffer;
     const jobPhoto = buffer.toString("base64");
 
@@ -30,13 +29,23 @@ class ProductController {
       res.status(500).send("Error adding job");
     }
   }
-
-  static async select(req, res) {
+  static async getNumberOfAllJobs(req, res) {
     try {
-      console.log("ii")
+      const totalJobs = await ProductModel.getNumberOfAllJobs();
+      if (totalJobs) {
+        res.send(totalJobs.toString());
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving jobs");
+    }
+  }
+
+  static async getSimilarJobs(req, res) {
+    try {
      const jobCategory = req.body.jobCategory;
      console.log(jobCategory);
-      const jobs = await ProductModel.select(jobCategory);
+      const jobs = await ProductModel.getSimilarJobs(jobCategory);
       res.send(jobs);
     } catch (error) {
       console.log(error);

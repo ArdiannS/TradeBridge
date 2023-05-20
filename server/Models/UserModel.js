@@ -52,6 +52,22 @@ class UserModel {
       });
     });
   }
+  static async getNumberOfAllUsers() {
+    return new Promise((resolve, reject) => {
+      database.query(
+        "SELECT COUNT(*) AS totalUsers FROM Users",
+        [],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            const totalUsers = result[0].totalUsers;
+            resolve(totalUsers);
+          }
+        }
+      );
+    });
+  }
 
   static async getUserById(id) {
     return new Promise((resolve, reject) => {
@@ -182,6 +198,7 @@ class UserModel {
       );
     });
   }
+
   static async updateUser(id, username, password, email, birthday) {
     return new Promise((resolve) => {
       database.query(

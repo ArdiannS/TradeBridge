@@ -7,6 +7,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 const router = express.Router();
 
 const { isLoggedIn, isGuest } = require("../middelware/auth");
+const DashboardController = require("../Controllers/DashboardController");
 router.post(
   "/postjobs",
   upload.single("jobPhoto"),
@@ -26,7 +27,7 @@ router.delete("/users/:id", UserController.deleteUser);
 router.put("/users/:id", UserController.updateUser);
 router.post("/postjobs", ProductController.insertJobs);
 router.get("/jobs", ProductController.getJobs);
-router.post('/jobsearch', ProductController.select);
+router.post('/jobsearch', ProductController.getSimilarJobs);
 // router.get('/jobsCategory', ProductController.select);
 router.get("/jobs/:id", ProductController.getJobById);
 router.put("/jobs/:id", ProductController.updateJob);
@@ -40,5 +41,6 @@ router.get("/comments", CommentController.getComments);
 router.get("/comments/:id", CommentController.getComments);
 router.post("/editcomment/:id", CommentController.updateComment);
 router.delete("/comments/:id", CommentController.deleteComment);
-
+router.get("/dashboard/total-jobs", DashboardController.getNumberOfAllJobs);
+router.get("/dashboard/total-users", DashboardController.getNumberOfAllUsers);
 module.exports = router;

@@ -1,7 +1,7 @@
 import React from "react";
 import Stats from "../Components/Stats";
 import Sidebar from "../Components/Sidebar";
-import { Link }  from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../api/axiosInstance";
 
@@ -20,6 +20,16 @@ function Dashboard() {
       })
       .catch((error) => console.error(error));
   }, []);
+  const [totalJobs, setTotalJobs] = useState(0);
+  useEffect(() => {
+    fetch("/dashboard")
+      .then((response) => response.text())
+      .then((data) => {
+        console.log(data);
+        setTotalJobs(parseInt(data));
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   useEffect(() => {
     fetch("/comments")
@@ -33,30 +43,32 @@ function Dashboard() {
 
   const handleDelete = async (id) => {
     try {
-      axios.delete(`/users/${id}`)
-          .then((res) => {
-            setUserData(userData.filter(x => x.userid != id));
-          }).catch(err => {
-        console.log('err', err.message)
-      });
+      axios
+        .delete(`/users/${id}`)
+        .then((res) => {
+          setUserData(userData.filter((x) => x.userid != id));
+        })
+        .catch((err) => {
+          console.log("err", err.message);
+        });
     } catch (error) {
       console.error(error);
     }
   };
 
-
   const handleDeleteComment = async (id) => {
     try {
-      axios.delete(`/comments/${id}`)
-          .then((res) => {
-            setCommentData(commentData.filter(x => x.commentId != id));
-          }).catch(err => {
-        console.log('err', err.message)
-      });
+      axios
+        .delete(`/comments/${id}`)
+        .then((res) => {
+          setCommentData(commentData.filter((x) => x.commentId != id));
+        })
+        .catch((err) => {
+          console.log("err", err.message);
+        });
     } catch (error) {
       console.error(error);
     }
-
   };
 
   const handleEdit = async (id) => {
@@ -73,14 +85,14 @@ function Dashboard() {
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
-    fetch("/jobs")  
+    fetch("/jobs")
       .then((res) => res.json())
       .then((data) => setJobs(data))
       .catch((err) => console.error(err.message));
   }, []);
   const jobDeleting = async (id) => {
     try {
-      const response = await axios.delete(`/jobs/${id}`)
+      const response = await axios.delete(`/jobs/${id}`);
 
       // const deletedJob = await response.json();
       console.log("deletedJob", response);
@@ -111,12 +123,6 @@ function Dashboard() {
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         User ID
-                      </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        User Profile Pic
                       </th>
                       <th
                         scope="col"
@@ -162,13 +168,6 @@ function Dashboard() {
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
                             {user.userid}
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            <img
-                            className="w-8 h-8 mr-2 rounded-full"
-                            src={`data:image/jpeg;base64,${user.userProfilePicture}`} alt="My Image"/>
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -380,7 +379,7 @@ function Dashboard() {
                       <tr>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {comment.commentid}
+                            {comment.commentId}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -403,13 +402,15 @@ function Dashboard() {
                           <div class="flex justify-center">
                             <button
                               class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
-                              onClick={() => handleDeleteComment(comment.commentid)}
+                              onClick={() =>
+                                handleDeleteComment(comment.commentId)
+                              }
                             >
                               Delete
                             </button>
                             <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
                               <Link
-                                to={`/editComment/${comment.commentid}`}
+                                to={`/editComment/${comment.commentId}`}
                                 class="text-white"
                               >
                                 Edit

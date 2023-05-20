@@ -1,6 +1,16 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 function EditJobs() {
+  const [file, setFile] = useState(null);
+
+  function handleFileChange(event) {
+    setFile(event.target.files[0]);
+  }
+  function handleSubmit(event) {
+    event.preventDefault();
+    // submit form data with file
+  }
+
   const [message, setMessage] = useState("");
   const handleChange = (event) => {
     setMessage(event.target.value);
@@ -37,7 +47,7 @@ function EditJobs() {
         <form
           class="bg-white shadow-md rounded-lg mx-20 my-12 action={`/editjobs/${jobData.jobId}`}
           "
-          method="POST"
+          method="post"
         >
           <div class="mb-4">
             <label class="block text-gray-700 font-medium mb-2" for="job_title">
@@ -136,17 +146,13 @@ function EditJobs() {
               onChange={handleChange}
             />
           </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 font-medium mb-2" for="job_photo">
-              Job Photo
+          {/* <div class="mb-4">
+            <label>
+              Job Photo:
+              {file && <span>{file.name}</span>}
+              <input type="file" name="jobPhoto" onChange={handleFileChange} />
             </label>
-            <input
-              class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="job_photo"
-              type="file"
-              accept="image/*"
-            />
-          </div>
+          </div> */}
           <div class="mb-4">
             <button
               class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
