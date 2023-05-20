@@ -68,60 +68,55 @@ class UserModel {
       );
     });
   }
-  static async addUser(username, password, email, birthday, usertype) {
+  static async addUser(
+    username,
+    password,
+    email,
+    birthday,
+    usertype,
+    userProfilePicture
+  ) {
     return new Promise((resolve) => {
-      database.query(
-        "SELECT * FROM Users WHERE username = ? OR email = ?",
-        [username, email],
-        (error, result1) => {
-          if (error) {
-            console.error(error.message);
-            resolve({ status: 500, message: "There was an error" });
-          }
-          if (result1.length > 0) {
-            resolve({
-              status: 404,
-              message:
-                "Vetem se ekziston nje perdorues me kete username apo email",
-            });
-          } else {
-            bcrypt.hash(password, 10, (err, hashedPassword) => {
-              if (err) {
-                resolve({ status: 500, message: "Error hashing the password" });
-              } else {
-                database.query(
-                  "INSERT INTO Users (username, passwordi, email, birthday, usertype) values(?,?,?,?,?)",
-                  [username, hashedPassword, email, birthday, usertype],
-                  (error, result2) => {
-                    if (error) {
-                      resolve({ status: 500, message: "error" });
-                    } else {
-                      database.query(
-                        "SELECT * FROM Users WHERE username = ? OR email = ? LIMIT 1",
-                        [username, email],
-                        (error, result3) => {
-                          if (error) {
-                            console.log(error.message);
-                            resolve({ status: 500, message: "error" });
-                          } else {
-                            let data = { ...result3[0] };
-                            delete data.passwordi;
-                            resolve({
-                              status: 200,
-                              result: data,
-                              message: "All good",
+        database.query(
+            "SELECT * FROM Users WHERE username = ? OR email = ?",
+            [username, email],
+            (error, result1) => {
+                if (error) {
+                    console.error(error.message);
+                    resolve({status: 500, message: "There was an error"});
+                }
+                if (result1.length > 0) {
+                    resolve({status: 404, message: "Vetem se ekziston nje perdorues me kete username apo email"});
+                } else {
+                    bcrypt.hash(password, 10, (err, hashedPassword) => {
+                        if (err) {
+                            resolve({status: 500, message: "Error hashing the password"});
+                        } else {
+                            database.query(
+                            "INSERT INTO Users (username, password, email, birthday, usertype,userProfilePicture) values(?,?,?,?,?,?)",
+                            [username, hashedPassword, email, birthday, usertype,userProfilePicture],
+                            (error, result2) => {
+                                if(error) {
+                                    resolve({status: 500, message: "error"});
+                                } else {
+                                    database.query("SELECT * FROM Users WHERE username = ? OR email = ? LIMIT 1",
+                                        [username, email], (error, result3) => {
+                                            if(error) {
+                                                console.log(error.message)
+                                                resolve({status: 500, message: "error"});
+                                            } else {
+                                                let data = {...result3[0]};
+                                                delete data.password;
+                                                resolve({status: 200, result: data, message: "All good"});
+                                            }
+                                        })
+                                }
                             });
-                          }
                         }
-                      );
-                    }
-                  }
-                );
-              }
-            });
-          }
-        }
-      );
+                    });
+                }
+            }
+        )
     });
   }
 
@@ -141,12 +136,12 @@ class UserModel {
               });
             } else {
               const existsTheUsername =
-                "SELECT passwordi FROM Users WHERE username = ? LIMIT 1";
+                "SELECT password FROM Users WHERE username = ? LIMIT 1";
               database.query(existsTheUsername, [username], (err, results2) => {
                 if (err) {
                   return console.error(err.message);
                 }
-                const hashedPasswordFromDB = results2?.[0]?.passwordi;
+                const hashedPasswordFromDB = results2?.[0]?.password;
                 bcrypt.compare(
                   password,
                   hashedPasswordFromDB,
@@ -190,12 +185,13 @@ class UserModel {
   static async updateUser(id, username, password, email, birthday) {
     return new Promise((resolve) => {
       database.query(
-        "Update Users set username = ?,passwordi=?,email=?,birthday=? where userid = ?",
+        "Update Users set username = ?,password=?,email=?,birthday=? where userid = ?",
         [username, password, email, birthday, id],
         (err, result) => {
           if (err) {
             return console.error(err.message);
           }
+
           resolve(result);
         }
       );

@@ -47,7 +47,7 @@ function PostJobs() {
             class="w-full h-auto rounded-full"
           />
         </div>
-        <form action="/postjobs" method="POST" class="w-full md:w-1/2 px-4">
+        <form action="/postjobs" method="POST" class="w-full md:w-1/2 px-4" enctype="multipart/form-data"> 
           <h1 class="text-3xl font-bold mb-4 text-center text-gray-800">
             Post a New Job
           </h1>

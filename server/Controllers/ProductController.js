@@ -10,6 +10,7 @@ class ProductController {
       jobCity,
       jobPrice,
     } = req.body;
+    console.log(req.file)
     const buffer = req.file.buffer;
     const jobPhoto = buffer.toString("base64");
 
@@ -27,6 +28,19 @@ class ProductController {
     } catch (err) {
       console.error(err);
       res.status(500).send("Error adding job");
+    }
+  }
+
+  static async select(req, res) {
+    try {
+      console.log("ii")
+     const jobCategory = req.body.jobCategory;
+     console.log(jobCategory);
+      const jobs = await ProductModel.select(jobCategory);
+      res.send(jobs);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Error retrieving jobs by category');
     }
   }
   static async getJobs(req, res) {

@@ -86,6 +86,7 @@ function Navbar() {
           </button>
         </div>
         <div className="hidden md:flex md:items-center md:space-x-6">
+          {!userIsLogged && (
           <div className="flex items-center space-x-6">
             <Link to="/signup">
               <button className="bg-white text-gray-900 py-2 px-6 rounded-full border border-gray-200 hover:bg-gray-200 hover:text-gray-900 transition duration-300 ease-in-out">
@@ -98,6 +99,7 @@ function Navbar() {
               </button>
             </Link>
           </div>
+          )}
         </div>
         {
             userIsLogged && (

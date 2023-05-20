@@ -1,5 +1,4 @@
 import React from "react";
-
 function Stats() {
   return (
     <div class=" py-24 sm:py-32 w-full ">
@@ -25,7 +24,7 @@ function Stats() {
                   </svg>
                 </div>
                 <h2 class="text-xl font-bold text-gray-700 mb-2">
-                  Transactions every 24 hours
+                  Total users:
                 </h2>
                 <p class="text-3xl font-bold text-gray-900">44 million</p>
               </div>
@@ -49,7 +48,7 @@ function Stats() {
                   </svg>
                 </div>
                 <h2 class="text-xl font-bold text-gray-700 mb-2">
-                  Assets under holding
+                  Total Jobs:
                 </h2>
                 <p class="text-3xl font-bold text-gray-900">$119 trillion</p>
               </div>

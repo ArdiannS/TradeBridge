@@ -11,7 +11,7 @@ function SignUpForm() {
     e.preventDefault();
     axios.post('/signup',formData)
       .then(res => {
-        localStorage.setItem('user', JSON.stringify(res.data.userData) || "");
+        localStorage.setItem('user', JSON.stringify(res.data.result) || "");
         navigate('/dashboard');
       }).catch(({response}) => {
         // TODO: set error
@@ -94,30 +94,32 @@ function SignUpForm() {
             />
           </div>
           <div className="flex flex-col mb-4">
-  <div className="flex items-center justify-center mb-4">
-    <h4 className="font-bold text-center flex-1 text-lg">Dua te regjistrohem si:</h4>
-  </div>
-  <div className="flex justify-betweenw-1/2 ml-20">
-    <label className="mr-4 ">
-      <input
-        type="radio"
-        className="border p-2 rounded-lg"
-        name="userType"
-        value="punedhenes"
-      />
-  <span className="pl-2 font-bold text-lg">Punedhenes</span> 
-    </label>
-    <label>
-      <input
-        type="radio"
-        className="border p-2 rounded-lg"
-        name="userType"
-        value="punemarres"
-      />
-  <span className="pl-2 font-bold text-lg">Punemarres</span> 
-    </label>
-  </div>
-</div>
+            <div className="flex items-center justify-center mb-4">
+              <h4 className="font-bold text-center flex-1 text-lg">Dua te regjistrohem si:</h4>
+            </div>
+            <div className="flex justify-betweenw-1/2 ml-20">
+              <label className="mr-4 ">
+                <input
+                  type="radio"
+                  className="border p-2 rounded-lg"
+                  name="userType"
+                  value="punedhenes"
+                  onInput={(e) => setFormData({...formData, userType: e.target.value})}
+                />
+            <span className="pl-2 font-bold text-lg">Punedhenes</span> 
+              </label>
+              <label>
+                <input
+                  type="radio"
+                  className="border p-2 rounded-lg"
+                  name="userType"
+                  value="punemarres"
+                  onInput={(e) => setFormData({...formData, userType: e.target.value})}
+                />
+            <span className="pl-2 font-bold text-lg">Punemarres</span> 
+              </label>
+            </div>
+          </div>
 
           <button onClick={handleSignUp} className="border rounded-lg w-full my-5 py-2 bg-indigo-600 hover:bg-green-800 text-white font-semibold">
             Sign up

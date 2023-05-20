@@ -13,8 +13,105 @@ import Footer from "../Components/Footer";
 
 const user = JSON.parse(localStorage.getItem("user"));
 console.log("user", user);
-
 function JobSearch() {
+  const [categoryJobs, setCategoryJobs] = useState(null);
+
+  function jobCategory(jobCategoryData) {
+    console.log("jobCategory1", jobCategoryData);
+  
+    fetch("/jobsearch", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ jobCategory: jobCategoryData }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Response data:", data);
+  
+        // Clear the container before appending new job divs
+        const container = document.getElementById("jobsContainer");
+        container.innerHTML = "";
+  
+        
+        data.forEach((job) => {
+          const jobDiv = document.createElement("div");
+          jobDiv.setAttribute("key", job.jobId);
+          // jobDiv.setAttribute("onclick", handleJobClick(job));
+          jobDiv.addEventListener("click", () => {
+            handleJobClick(job);
+          });
+
+          const key = jobDiv.getAttribute("key");
+          // const onClick = jobDiv.getAttribute("onclick");
+          
+          
+        jobDiv.className = `
+          h-full rounded-lg w-1/3 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3
+        `;
+
+  
+
+        jobDiv.innerHTML = `
+        <div class="rounded-lg mt-5" data-key="${job.jobId}">
+          <div class="mt-5 flex justify-between items-center">
+            <div class="">
+              <FaFacebook size={43} class="ml-4 mt-4" />
+            </div>
+            <div class="ml-auto">
+              <h2 class="ml-4 mt-4 mr-4 text-3xl font-mono">
+                ${job.jobCategory}
+              </h2>
+              <div class="flex">
+                <MdOutlineInfo class="ml-4 mt-4 text-blue-500" />
+                <p class="pt-2 px-1">per hour</p>
+              </div>
+            </div>
+          </div>
+          <div class="mt-7">
+            <h2 class="font-bold text-2xl ml-2">
+              ${job.jobTitle}
+            </h2>
+            <span class="font-light text-xl ml-2">DoorDash</span>
+            <div class="mt-3 ml-2">
+              <button class="bg-white border border-black font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out">
+                Start Today
+              </button>
+            </div>
+            <div class="flex mt-5 bg-slate-600 justify-center">
+              <div class="mt-3 w-full-10">
+                <button class="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
+                  <p>Apply</p>
+                </button>
+              </div>
+              <div class="mt-3 ml-2">
+              <button class="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
+              <FaHeart size={26} icon="fa-regular fa-heart" />
+              <p>Jep Oferten</p>
+
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+  
+          // Append the job div to the container element on the page
+          container.appendChild(jobDiv);
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+      
+  }
+  useEffect(()=>{
+    setSelectedJob()
+  },[]);
+  
+
+
   console.log("userid", user?.userid);
 
   const images = [First, Second, Third, Fourth];
@@ -47,7 +144,7 @@ function JobSearch() {
       .then((res) => res.json())
       .then((data) => {
         setJobs(data);
-        console.log(data); // add this line to check data
+        console.log(data);
       })
       .catch((err) => console.error(err.message));
   }, []);
@@ -297,8 +394,6 @@ function JobSearch() {
                         value={selectedJob.jobId}
                       />
 
-                      <p>Product ID: {selectedJob.jobId}</p>
-
                       <textarea
                         placeholder="Leave a comment"
                         className="p-2 rounded-lg"
@@ -318,136 +413,19 @@ function JobSearch() {
               <div className="ml-3">
                 <h3 className="font-bold text-xl">Similar Jobs</h3>
               </div>
-              <div className="flex justify-between">
-                <div className="h-full rounded-lg w-1/3 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3">
-                  <div className="rounded-lg  mt-5">
-                    <div className="mt-5 flex justify-between items-center">
-                      <div className="">
-                        <FaFacebook size={43} className="ml-4 mt-4" />
-                      </div>
-                      <div className="ml-auto">
-                        <h2 className="ml-4 mt-4 mr-4 text-3xl font-mono">
-                          Flexible
-                        </h2>
-                        <div className="flex">
-                          <MdOutlineInfo className="ml-4 mt-4 text-blue-500" />
-                          <p className="pt-2 px-1">per hour</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className=" mt-7">
-                      <h2 className="font-bold text-2xl ml-2">
-                        DoorDash Dashers - Start Delivering Today
-                      </h2>
-                      <span className="font-light text-xl ml-2"> DoorDash</span>
-                      <div className="mt-3 ml-2">
-                        <button className="bg-white border border-black font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out">
-                          Start Today
-                        </button>
-                      </div>
-                      <div className="flex mt-5 bg-slate-600 justify-center">
-                        <div className="mt-3 w-full-10 ">
-                          <button className="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-                            <p>Apply </p>
-                          </button>
-                        </div>
-                        <div className="mt-3 ml-2">
-                          <button className="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-                            <FaHeart size={26} icon="fa-regular fa-heart" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="h-full rounded-lg w-1/3 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3">
-                  <div className="rounded-lg  mt-5">
-                    <div className="mt-5 flex justify-between items-center">
-                      <div className="">
-                        <FaFacebook size={43} className="ml-4 mt-4" />
-                      </div>
-                      <div className="ml-auto">
-                        <h2 className="ml-4 mt-4 mr-4 text-3xl font-mono">
-                          Flexible
-                        </h2>
-                        <div className="flex">
-                          <MdOutlineInfo className="ml-4 mt-4 text-blue-500" />
-                          <p className="pt-2 px-1">per hour</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className=" mt-7">
-                      <h2 className="font-bold text-2xl ml-2">
-                        DoorDash Dashers - Start Delivering Today
-                      </h2>
-                      <span className="font-light text-xl ml-2"> DoorDash</span>
-                      <div className="mt-3 ml-2">
-                        <button className="bg-white border border-black font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out">
-                          Start Today
-                        </button>
-                      </div>
-                      <div className="flex mt-5 bg-slate-600 justify-center">
-                        <div className="mt-3 w-full-10 ">
-                          <button className="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-                            <p>Apply </p>
-                          </button>
-                        </div>
-                        <div className="mt-3 ml-2">
-                          <button className="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-                            <FaHeart size={26} icon="fa-regular fa-heart" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="h-full rounded-lg w-1/3 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3">
-                  <div className="rounded-lg  mt-5">
-                    <div className="mt-5 flex justify-between items-center">
-                      <div className="">
-                        <FaFacebook size={43} className="ml-4 mt-4" />
-                      </div>
-                      <div className="ml-auto">
-                        <h2 className="ml-4 mt-4 mr-4 text-3xl font-mono">
-                          Flexible
-                        </h2>
-                        <div className="flex">
-                          <MdOutlineInfo className="ml-4 mt-4 text-blue-500" />
-                          <p className="pt-2 px-1">per hour</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className=" mt-7">
-                      <h2 className="font-bold text-2xl ml-2">
-                        DoorDash Dashers - Start Delivering Today
-                      </h2>
-                      <span className="font-light text-xl ml-2"> DoorDash</span>
-                      <div className="mt-3 ml-2">
-                        <button className="bg-white border border-black font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out">
-                          Start Today
-                        </button>
-                      </div>
-                      <div className="flex mt-5 bg-slate-600 justify-center">
-                        <div className="mt-3 w-full-10 ">
-                          <button className="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-                            <p>Apply </p>
-                          </button>
-                        </div>
-                        <div className="mt-3 ml-2">
-                          <button className="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-                            <FaHeart size={26} icon="fa-regular fa-heart" />
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+              <div id="jobsContainer" className="flex justify-between">
+                <div
+                  className={`flex justify-between ${jobCategory(
+                    selectedJob.jobCategory
+                  
+                  )}`}
+                ></div>
               </div>
+
               <Footer />
             </div>
           ) : (
-            <p>No job selected.</p>
+            <p></p>
           )}
         </div>
       </div>
