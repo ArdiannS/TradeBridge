@@ -28,6 +28,7 @@ const EditUserProfile = () => {
     try {
       await axios.put("/user/profile", user);
       alert("User profile updated successfully");
+      window.location.reload();
     } catch (error) {
       console.error(error);
       alert("Failed to update user profile");
@@ -72,7 +73,7 @@ const EditUserProfile = () => {
           />
         </label>
         <label className="block mb-4">
-          <span className="text-gray-700 text-lg font-medium">Password:</span>
+          <span className="text-gray-700 text-lg font-medium">Birthday:</span>
           <input
             type="date"
             name="birthday"
