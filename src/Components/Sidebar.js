@@ -9,13 +9,14 @@ function Sidebar() {
         </div>
         <ul class="flex flex-col py-4">
           <li>
-            <a
+            <Link
+              to="/user/profile"
               href="#"
               class="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
             >
-              <i class="bx bx-home mr-3"></i>
+              <i class="bx bx-music mr-3"></i>
               <span>User Profile</span>
-            </a>
+            </Link>
           </li>
           <li>
             <Link
