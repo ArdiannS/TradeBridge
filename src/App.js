@@ -14,6 +14,7 @@ import Dashboard from "./Pages/Dashboard";
 import EditUser from "./Pages/EditUser";
 import PrivateRoute from "./utils/ProtectedRoute";
 import EditComment from "./Pages/EditComment";
+import EditMyInfo from "./Pages/EditUserProfile";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -58,6 +59,7 @@ function App() {
             <Route path="/edituser/:id" exact element={<EditUser />} />
             <Route path="/editjobs/:id" exact element={<EditJobs />} />
             <Route path="/editComment/:id" exact element={<EditComment />} />
+            <Route path="/user/profile" exact element={<EditMyInfo />} />
           </Routes>
         </Router>
       )}

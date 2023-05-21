@@ -93,46 +93,65 @@ class UserModel {
     userProfilePicture
   ) {
     return new Promise((resolve) => {
-        database.query(
-            "SELECT * FROM Users WHERE username = ? OR email = ?",
-            [username, email],
-            (error, result1) => {
-                if (error) {
-                    console.error(error.message);
-                    resolve({status: 500, message: "There was an error"});
-                }
-                if (result1.length > 0) {
-                    resolve({status: 404, message: "Vetem se ekziston nje perdorues me kete username apo email"});
-                } else {
-                    bcrypt.hash(password, 10, (err, hashedPassword) => {
-                        if (err) {
-                            resolve({status: 500, message: "Error hashing the password"});
-                        } else {
-                            database.query(
-                            "INSERT INTO Users (username, password, email, birthday, usertype,userProfilePicture) values(?,?,?,?,?,?)",
-                            [username, hashedPassword, email, birthday, usertype,userProfilePicture],
-                            (error, result2) => {
-                                if(error) {
-                                    resolve({status: 500, message: "error"});
-                                } else {
-                                    database.query("SELECT * FROM Users WHERE username = ? OR email = ? LIMIT 1",
-                                        [username, email], (error, result3) => {
-                                            if(error) {
-                                                console.log(error.message)
-                                                resolve({status: 500, message: "error"});
-                                            } else {
-                                                let data = {...result3[0]};
-                                                delete data.password;
-                                                resolve({status: 200, result: data, message: "All good"});
-                                            }
-                                        })
-                                }
+      database.query(
+        "SELECT * FROM Users WHERE username = ? OR email = ?",
+        [username, email],
+        (error, result1) => {
+          if (error) {
+            console.error(error.message);
+            resolve({ status: 500, message: "There was an error" });
+          }
+          if (result1.length > 0) {
+            resolve({
+              status: 404,
+              message:
+                "Vetem se ekziston nje perdorues me kete username apo email",
+            });
+          } else {
+            bcrypt.hash(password, 10, (err, hashedPassword) => {
+              if (err) {
+                resolve({ status: 500, message: "Error hashing the password" });
+              } else {
+                database.query(
+                  "INSERT INTO Users (username, password, email, birthday, usertype,userProfilePicture) values(?,?,?,?,?,?)",
+                  [
+                    username,
+                    hashedPassword,
+                    email,
+                    birthday,
+                    usertype,
+                    userProfilePicture,
+                  ],
+                  (error, result2) => {
+                    if (error) {
+                      resolve({ status: 500, message: "error" });
+                    } else {
+                      database.query(
+                        "SELECT * FROM Users WHERE username = ? OR email = ? LIMIT 1",
+                        [username, email],
+                        (error, result3) => {
+                          if (error) {
+                            console.log(error.message);
+                            resolve({ status: 500, message: "error" });
+                          } else {
+                            let data = { ...result3[0] };
+                            delete data.password;
+                            resolve({
+                              status: 200,
+                              result: data,
+                              message: "All good",
                             });
+                          }
                         }
-                    });
-                }
-            }
-        )
+                      );
+                    }
+                  }
+                );
+              }
+            });
+          }
+        }
+      );
     });
   }
 
@@ -210,6 +229,35 @@ class UserModel {
           }
 
           resolve(result);
+        }
+      );
+    });
+  }
+  static async getUserByIdd(userId) {
+    return new Promise((resolve, reject) => {
+      database.query(
+        "SELECT * FROM Users WHERE userid = ?",
+        [userId],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          }
+          resolve(results[0]);
+        }
+      );
+    });
+  }
+
+  static async updateUserProfile(userId, username, email, birthday) {
+    return new Promise((resolve, reject) => {
+      database.query(
+        "UPDATE Users SET username = ?, email = ?, birthday = ? WHERE userid = ?",
+        [username, email, birthday, userId],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          }
+          resolve();
         }
       );
     });
