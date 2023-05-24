@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios from "../api/axiosInstance";
 
 const EditUserProfile = () => {
   const [user, setUser] = useState({});
@@ -9,6 +9,7 @@ const EditUserProfile = () => {
       try {
         const userResponse = await axios.get("/user/profile");
         const userData = userResponse.data.user[0];
+
         setUser({
           username: userData.username,
           email: userData.email,
@@ -27,7 +28,6 @@ const EditUserProfile = () => {
 
     try {
       await axios.put("/user/profile", user);
-      alert("User profile updated successfully");
       window.location.reload();
     } catch (error) {
       console.error(error);
