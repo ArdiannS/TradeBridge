@@ -30,6 +30,7 @@ function SignUpForm() {
       .then((res) => {
         // console.log(res.data.result);
         localStorage.setItem("user", JSON.stringify(res.data.result) || "");
+
         navigate("/dashboard");
       })
       .catch(({ response }) => {
