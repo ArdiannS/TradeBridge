@@ -45,4 +45,6 @@ router.post("/editcomment/:id", CommentController.updateComment);
 router.delete("/comments/:id", CommentController.deleteComment);
 router.get("/dashboard/total-jobs", DashboardController.getNumberOfAllJobs);
 router.get("/dashboard/total-users", DashboardController.getNumberOfAllUsers);
+router.get("/user/profile", UserController.getUserProfile);
+router.put("/user/profile", UserController.updateUserProfile);
 module.exports = router;

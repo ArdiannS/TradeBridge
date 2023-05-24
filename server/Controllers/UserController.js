@@ -1,7 +1,6 @@
 const UserModel = require("../Models/UserModel");
 const util = require("util");
-const fs = require('fs');
-
+const fs = require("fs");
 
 class UserController {
   static async getAllUser(req, res) {
@@ -13,25 +12,27 @@ class UserController {
 
   static async addUser(req, res) {
     const { username, password, email, date, userType } = req.body;
-    const pathToImage = './uploads/182145777.jpg';
+    const pathToImage = "./uploads/182145777.jpg";
     const buffer = fs.readFileSync(pathToImage);
-    const defaultPicture = buffer.toString('base64');
+    const defaultPicture = buffer.toString("base64");
 
     try {
       const result = await UserModel.addUser(
-          username,
-          password,
-          email,
-          date,
-          userType,
-          defaultPicture
+        username,
+        password,
+        email,
+        date,
+        userType,
+        defaultPicture
       );
       console.log("++++++++++++++++++++");
       console.log(result)
       req.session.userId = result.result.userid || 30;
-      res.status(result.status).json({result: result.result, message: result.message});
+      res
+        .status(result.status)
+        .json({ result: result.result, message: result.message });
 
-      console.log(req.session)
+      console.log(req.session);
       // console.log(req.session)
     } catch (error) {
       console.error(error.message);
@@ -97,6 +98,39 @@ class UserController {
     } catch (error) {
       console.error(error);
       res.status(500).send("Error updating user");
+    }
+  }
+
+  static async getUserProfile(req, res) {
+    const userId = req.session.userId;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+
+    try {
+      const user = await UserModel.getUserById(userId);
+
+      res.json({ user });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+
+  static async updateUserProfile(req, res) {
+    const userId = req.session.userId;
+    const { username, email, birthday } = req.body;
+
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    try {
+      await UserModel.updateUserProfile(userId, username, email, birthday);
+      res.json({ message: "User profile updated successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Server error" });
     }
   }
 }
