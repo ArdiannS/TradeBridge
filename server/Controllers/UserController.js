@@ -26,7 +26,7 @@ class UserController {
         defaultPicture
       );
       console.log("++++++++++++++++++++");
-      console.log(result);
+      console.log(result)
       req.session.userId = result.result.userid || 30;
       res
         .status(result.status)
