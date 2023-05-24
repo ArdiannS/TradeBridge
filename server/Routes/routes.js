@@ -28,6 +28,8 @@ router.put("/users/:id", UserController.updateUser);
 router.post("/postjobs", ProductController.insertJobs);
 router.get("/jobs", ProductController.getJobs);
 router.post('/jobsearch', ProductController.getSimilarJobs);
+router.post('/jobcategory', ProductController.getJobsByCategory);
+
 // router.get('/jobsCategory', ProductController.select);
 router.get("/jobs/:id", ProductController.getJobById);
 router.put("/jobs/:id", ProductController.updateJob);

@@ -89,6 +89,21 @@ class ProductModel {
         );
     });
 }
+static async getJobsByCategory(category) {
+  return new Promise((resolve, reject) => {
+      database.query(
+          "SELECT * FROM Jobs WHERE jobCategory = ?",
+          [category],
+          (error, result) => {
+              if (error) {
+                  reject(error);
+              } else {
+                  resolve(result);
+              }
+          }
+      );
+  });
+}
   static async getJobPhotoById(id) {
     return new Promise((resolve, reject) => {
       database.query(
