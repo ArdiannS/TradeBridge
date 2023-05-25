@@ -40,6 +40,18 @@ class ProductController {
       res.status(500).send("Error retrieving jobs");
     }
   }
+  static async getJobsByCategory(req,res){
+    try{
+      const jobCategory = req.body.jobByCategory;
+      console.log(jobCategory);
+      const jobs = await ProductModel.getJobsByCategory(jobCategory);
+      res.send(jobs);
+    } catch (error) {
+      console.log(error);
+      res.status(500).send('Error retrieving jobs by category');
+    }
+    }
+
 
   static async getSimilarJobs(req, res) {
     try {
