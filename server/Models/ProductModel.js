@@ -88,22 +88,22 @@ class ProductModel {
         }
       );
     });
-}
-static async getJobsByCategory(category) {
-  return new Promise((resolve, reject) => {
+  }
+  static async getJobsByCategory(category) {
+    return new Promise((resolve, reject) => {
       database.query(
-          "SELECT * FROM Jobs WHERE jobCategory = ?",
-          [category],
-          (error, result) => {
-              if (error) {
-                  reject(error);
-              } else {
-                  resolve(result);
-              }
+        "SELECT * FROM Jobs WHERE jobCategory = ?",
+        [category],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
           }
+        }
       );
-  });
-}
+    });
+  }
   static async getJobPhotoById(id) {
     return new Promise((resolve, reject) => {
       database.query(
@@ -163,6 +163,32 @@ static async getJobsByCategory(category) {
         }
       );
     });
+  }
+
+  static async getJobsByUserId(userId) {
+    return new Promise((resolve, reject) => {
+      database.query(
+        "SELECT * FROM jobs WHERE idusers = ?",
+        [userId],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          }
+          resolve(results);
+        }
+      );
+    });
+  }
+
+  static async searchJobsByTitle(title) {
+    const query = "SELECT * FROM jobs WHERE title LIKE ?";
+    const searchTitle = `%${title}%`;
+    try {
+      const [rows] = await db.query(query, [searchTitle]);
+      return rows;
+    } catch (error) {
+      throw new Error(`Error searching jobs: ${error.message}`);
+    }
   }
 }
 module.exports = ProductModel;
