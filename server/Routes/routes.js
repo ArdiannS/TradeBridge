@@ -45,4 +45,5 @@ router.get("/dashboard/total-jobs", DashboardController.getNumberOfAllJobs);
 router.get("/dashboard/total-users", DashboardController.getNumberOfAllUsers);
 router.get("/user/profile", UserController.getUserProfile);
 router.put("/user/profile", UserController.updateUserProfile);
+router.get("/jobs", ProductController.searchJobs);
 module.exports = router;
