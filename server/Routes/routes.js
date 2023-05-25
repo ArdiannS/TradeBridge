@@ -18,7 +18,7 @@ router.post(
 //   upload.single("jobPhoto"),
 //   ProductController.insertJobs
 // );
-router.get("/users", isLoggedIn, UserController.getAllUser);
+router.get("/users", UserController.getAllUser);
 router.get("/users", UserController.getAllUser);
 router.post("/signup", UserController.addUser);
 router.post("/signin", UserController.login);
