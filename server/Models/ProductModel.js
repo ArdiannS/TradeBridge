@@ -164,5 +164,15 @@ static async getJobsByCategory(category) {
       );
     });
   }
+  static async searchJobsByTitle(title) {
+    const query = "SELECT * FROM jobs WHERE title LIKE ?";
+    const searchTitle = `%${title}%`;
+    try {
+      const [rows] = await db.query(query, [searchTitle]);
+      return rows;
+    } catch (error) {
+      throw new Error(`Error searching jobs: ${error.message}`);
+    }
+  }
 }
 module.exports = ProductModel;

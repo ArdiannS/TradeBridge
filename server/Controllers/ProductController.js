@@ -138,6 +138,16 @@ class ProductController {
       res.status(500).send("Error Updating Job");
     }
   }
+
+  static async searchJobs(req, res) {
+    const { title } = req.query;
+    try {
+      const jobs = await JobModel.searchJobsByTitle(title);
+      res.json(jobs);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 }
 
 module.exports = ProductController;

@@ -11,10 +11,24 @@ import Select from "react-select";
 import { MdOutlineInfo } from "react-icons/md";
 import { BsSliders } from "react-icons/bs";
 import Footer from "../Components/Footer";
-
+import axios from "../api/axiosInstance";
 const user = JSON.parse(localStorage.getItem("user"));
 console.log("user", user);
 function JobSearch() {
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+  const handleSearch = async () => {
+    try {
+      const response = await axios.get("/jobs", {
+        params: {
+          title: searchTerm,
+        },
+      });
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const customStyles = {
     control: (provided) => ({
       ...provided,
@@ -173,6 +187,17 @@ function JobSearch() {
   //     });
 
   // }
+  const [filtering, setFiltering] = useState(false);
+  const [totalJobs, setTotalJobs] = useState(0);
+  useEffect(() => {
+    fetch("/dashboard/total-jobs")
+      .then((response) => response.text())
+      .then((data) => {
+        console.log(data);
+        setTotalJobs(parseInt(data));
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
 
   const handleDropdownToggle = () => {
@@ -194,7 +219,6 @@ function JobSearch() {
       setFilteredJobs(filtered);
     }
   };
-  console.log(filteredJobs[0]);
 
   const categories = [
     { value: "all", label: "All Categories" },
@@ -209,9 +233,7 @@ function JobSearch() {
     let jobid = null;
     if (selectedJob && selectedJob.jobId) {
       console.log("useeff1" , selectedJob.jobId);
-
       jobid = selectedJob.jobId;
-
     } else if (filteredJobs && filteredJobs.jobId) {
       console.log("useeff2" , filteredJobs[0].jobId);
       jobid = filteredJobs[0].jobId;
@@ -242,7 +264,7 @@ function JobSearch() {
           <div className="flex flex-col justify-center items-center rounded-lg shadow-md w-full mx-auto">
             <h2 className="font-light text-3xl ml-2 mt-4">Jobs</h2>
             <div className="mt-4 ml-2 flex justify-between gap-4">
-              <p className="">3,377,966 jobs</p>
+            <p className="">Total jobs: {totalJobs}</p>
 
               <div className="relative inline-block">
                 <button
@@ -281,46 +303,74 @@ function JobSearch() {
                 )}
               </div>
             </div>
-            {(isFiltering ? filteredJobs : jobs).map((job) => (
-              <div
-                key={job.jobId}
-                className="flex  flex-col justify-center items-center bg-white rounded-lg shadow-md cursor-pointer w-4/8 mx-auto my-5"
-                onClick={() => handleJobClick(job)}
-              >
-                <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
-                  <FaFacebook size={36} className="text-white" />
-                </div>
-                <div className="flex flex-col justify-center items-center p-6">
-                  <h2 className="text-3xl font-bold mb-2">{job.jobCity}</h2>
-                  <div className="flex items-center">
-                    <MdOutlineInfo size={24} className="text-indigo-500 mr-2" />
-                    <p className="text-lg text-gray-600 font-medium">
-                      {job.jobCity}
-                    </p>
-                  </div>
-                  <div className="mt-8 w-full">
-                    <h2 className="text-2xl font-bold mb-4">{job.jobCity}</h2>
-                    <span className="text-xl text-gray-600 font-medium mb-6">
-                      {job.jobPrice}
-                    </span>
-                    <div className="flex items-center justify-between w-full">
-                      <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition duration-300 ease-in-out">
-                        Start Today
-                      </button>
+            <input
+              type="search"
+              id="default-search"
+              className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="Search jobs by title"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              required
+            />
+            <button
+              onClick={handleSearch}
+              className="bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-opacity-80 transition duration-300 ease-in-out"
+            >
+              Search
+              </button>
+              {(isFiltering ? filteredJobs : jobs).map((job) => {
+              const title = job.jobTitle || ""; // Handle undefined job.title
+              if (
+                !searchTerm ||
+                title.toLowerCase().includes(searchTerm.toLowerCase())
+              ) {
+                return (
+                  <div
+                    key={job.jobId}
+                    className="flex flex-col justify-center items-center bg-white rounded-lg shadow-md cursor-pointer w-4/8 mx-auto my-5"
+                    onClick={() => handleJobClick(job)}
+                  >
+                    <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
+                      <FaFacebook size={36} className="text-white" />
+                    </div>
+                    <div className="flex flex-col justify-center items-center p-6">
+                      <h2 className="text-3xl font-bold mb-2">{job.jobCity}</h2>
                       <div className="flex items-center">
-                        <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out mr-4">
-                          Jep Oferten
-                        </button>
-                        <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                          <FaHeart size={26} />
-                        </button>
+                        <MdOutlineInfo
+                          size={24}
+                          className="text-indigo-500 mr-2"
+                        />
+                        <p className="text-lg text-gray-600 font-medium">
+                          {job.jobCity}
+                        </p>
+                      </div>
+                      <div className="mt-8 w-full">
+                        <h2 className="text-2xl font-bold mb-4">
+                          {job.jobCity}
+                        </h2>
+                        <span className="text-xl text-gray-600 font-medium mb-6">
+                          {job.jobPrice}
+                        </span>
+                        <div className="flex items-center justify-between w-full">
+                          <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition duration-300 ease-in-out">
+                            Start Today
+                          </button>
+                          <div className="flex items-center">
+                            <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out mr-4">
+                              Jep Oferten
+                            </button>
+                            <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                              <FaHeart size={26} />
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            ))}
-
+                );
+              }
+              return null;
+            })}
             <div class="flex flex-col items-center">
               <span class="text-sm text-gray-700 dark:text-gray-400">
                 Showing{" "}

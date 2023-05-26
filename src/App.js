@@ -43,8 +43,12 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" exact element={<Home />} />
-            <Route path="/signin" element={<LogInForm />} />
-            <Route path="/signup" element={<SignUpForm />} />
+          
+            <Route path="/signup"   element={
+                <PrivateRoute>
+                  <SignUpForm />
+                </PrivateRoute>
+              } />
             <Route
               path="/dashboard"
               exact
@@ -54,6 +58,9 @@ function App() {
                 </PrivateRoute>
               }
             />
+              <Route path="/signin"exact element={<PrivateRoute>
+                  <LogInForm />
+                </PrivateRoute>} />
             <Route path="/postjobs" exact element={<PostJobs />} />
             <Route path="/jobsearch" exact element={<JobSearch />} />
             <Route path="/edituser/:id" exact element={<EditUser />} />
