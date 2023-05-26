@@ -7,6 +7,7 @@ const PrivateRoute = ({ children}) =>{
     if(!userIsLogged) {
         return <Navigate to={'/signin'} />
     }
+    
     return children;
 }
 

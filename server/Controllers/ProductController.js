@@ -40,9 +40,10 @@ class ProductController {
       res.status(500).send("Error retrieving jobs");
     }
   }
-  static async getJobsByCategory(req,res){
+  static async getJobByCategory(req,res){
     try{
-      const jobCategory = req.body.jobByCategory;
+      const jobCategory = req.params.category;
+      console.log("+++++++++++");
       console.log(jobCategory);
       const jobs = await ProductModel.getJobsByCategory(jobCategory);
       res.send(jobs);

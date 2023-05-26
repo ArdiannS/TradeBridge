@@ -94,7 +94,6 @@ function Dashboard() {
     try {
       const response = await axios.delete(`/jobs/${id}`);
 
-      // const deletedJob = await response.json();
       console.log("deletedJob", response);
 
       setJobs((jobs) => jobs.filter((job) => job._id !== response._id));
@@ -128,14 +127,15 @@ function Dashboard() {
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Username
+                        User Profile Pic
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Password
+                       Username
                       </th>
+                      
                       <th
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -170,16 +170,18 @@ function Dashboard() {
                             {user.userid}
                           </div>
                         </td>
+                        <td className="px-6 py-4 whitespace-nowrap" >
+                          <div className="text-sm text-gray-900">
+                        <img src={`data:image/jpeg;base64,${user.userProfilePicture}`}  className="w-8 h-8 rounded-full"
+alt="My Image" />
+                          </div>
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
                             {user.username}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            {user.password}
-                          </div>
-                        </td>
+                      
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
                             {user.email}
