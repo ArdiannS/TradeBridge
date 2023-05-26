@@ -165,20 +165,20 @@ class ProductModel {
     });
   }
 
-  static async getJobsByUserId(userId) {
-    return new Promise((resolve, reject) => {
-      database.query(
-        "SELECT * FROM jobs WHERE idusers = ?",
-        [userId],
-        (error, results) => {
-          if (error) {
-            reject(error);
-          }
-          resolve(results);
+static async getJobsByUserId(userId) {
+  return new Promise((resolve, reject) => {
+    database.query(
+      "SELECT * FROM jobs WHERE idusers = ?",
+      [userId],
+      (error, results) => {
+        if (error) {
+          reject(error);
         }
-      );
-    });
-  }
+        resolve(results);
+      }
+    );
+  });
+}
 
   static async searchJobsByTitle(title) {
     const query = "SELECT * FROM jobs WHERE title LIKE ?";

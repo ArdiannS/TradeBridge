@@ -204,6 +204,15 @@ function JobSearch() {
   const [filtering, setFiltering] = useState(false);
   const [totalJobs, setTotalJobs] = useState(0);
 
+  useEffect(() => {
+    fetch("/dashboard/total-jobs")
+      .then((response) => response.text())
+      .then((data) => {
+        console.log(data);
+        setTotalJobs(parseInt(data));
+      })
+      .catch((error) => console.error(error));
+  }, []);
 
   return (
     <>

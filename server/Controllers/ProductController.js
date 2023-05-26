@@ -162,6 +162,7 @@ class ProductController {
       res.status(500).json({ error: "Server error" });
     }
   }
+
 }
 
 module.exports = ProductController;
