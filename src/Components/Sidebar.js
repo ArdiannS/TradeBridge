@@ -1,5 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
+const user = JSON.parse(localStorage.getItem("user"));
+console.log("user", user);
+
 function Sidebar() {
   return (
     <div>
@@ -20,11 +23,10 @@ function Sidebar() {
           </li>
           <li>
             <Link
-              to="/myjobs"
-              href="#"
-              class="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
+              to={`/myjobs/${user.userid}`}
+              className="flex items-center px-6 py-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100"
             >
-              <i class="bx bx-music mr-3"></i>
+              <i className="bx bx-music mr-3"></i>
               <span>My jobs</span>
             </Link>
           </li>

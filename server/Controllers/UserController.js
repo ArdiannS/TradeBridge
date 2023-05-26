@@ -26,10 +26,14 @@ class UserController {
         defaultPicture
       );
       console.log("++++++++++++++++++++");
-      console.log(result)
-      req.session.userId = result.result.userid || 30;
-      res
-        .status(result.status)
+      if(result){
+        console.log(result);
+
+        console.log("+++++++++++++++++result+++");
+      }        
+      console.log(result.result);
+      req.session.userid = result.result.userid || 30;
+      res.status(result.status)
         .json({ result: result.result, message: result.message });
 
       console.log(req.session);

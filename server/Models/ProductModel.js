@@ -12,7 +12,7 @@ class ProductModel {
   ) {
     return new Promise((resolve, reject) => {
       database.query(
-        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity, jobPrice,jobPhoto) VALUES (?, ?, ?, ?, ?,?,?)",
+        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity, jobPrice,idusers,jobPhoto) VALUES (?, ?, ?, ?, ?,?,64,?)",
         [
           jobTitle,
           jobDescription,
@@ -88,22 +88,22 @@ class ProductModel {
         }
       );
     });
-}
-static async getJobsByCategory(category) {
-  return new Promise((resolve, reject) => {
+  }
+  static async getJobsByCategory(category) {
+    return new Promise((resolve, reject) => {
       database.query(
-          "SELECT * FROM Jobs WHERE jobCategory = ?",
-          [category],
-          (error, result) => {
-              if (error) {
-                  reject(error);
-              } else {
-                  resolve(result);
-              }
+        "SELECT * FROM Jobs WHERE jobCategory = ?",
+        [category],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
           }
+        }
       );
-  });
-}
+    });
+  }
   static async getJobPhotoById(id) {
     return new Promise((resolve, reject) => {
       database.query(
@@ -164,6 +164,22 @@ static async getJobsByCategory(category) {
       );
     });
   }
+
+static async getJobsByUserId(userId) {
+  return new Promise((resolve, reject) => {
+    database.query(
+      "SELECT * FROM jobs WHERE idusers = ?",
+      [userId],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(results);
+      }
+    );
+  });
+}
+
   static async searchJobsByTitle(title) {
     const query = "SELECT * FROM jobs WHERE title LIKE ?";
     const searchTitle = `%${title}%`;

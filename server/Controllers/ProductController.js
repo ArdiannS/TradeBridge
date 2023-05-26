@@ -40,18 +40,17 @@ class ProductController {
       res.status(500).send("Error retrieving jobs");
     }
   }
-  static async getJobsByCategory(req,res){
-    try{
+  static async getJobsByCategory(req, res) {
+    try {
       const jobCategory = req.body.jobByCategory;
       console.log(jobCategory);
       const jobs = await ProductModel.getJobsByCategory(jobCategory);
       res.send(jobs);
     } catch (error) {
       console.log(error);
-      res.status(500).send('Error retrieving jobs by category');
+      res.status(500).send("Error retrieving jobs by category");
     }
-    }
-
+  }
 
   static async getSimilarJobs(req, res) {
     try {
@@ -147,6 +146,23 @@ class ProductController {
       res.status(500).json({ error: error.message });
     }
   }
+
+  static async getJobsByUserId(req, res) {
+    const userId = req.session.userId;
+    console.log(userId);
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    try {
+      const jobs = await ProductModel.getJobsByUserId(userId);
+      res.json({ jobs });
+      console.log(jobs);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+
 }
 
 module.exports = ProductController;

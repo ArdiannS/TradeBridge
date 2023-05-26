@@ -7,30 +7,31 @@ import axios from "../api/axiosInstance";
 function SignUpForm() {
   const navigate = useNavigate();
 
-  // const handleSignUp = (e) => {
-  //   e.preventDefault();
-  //   axios
-  //     .post("/signup", formData)
-  //     .then((res) => {
-  //       localStorage.setItem(
-  //         "user",
-  //         JSON.stringify(res.data.userData?.[0]) || ""
-  //       );
+//  const handleSignUp = (e) => {
+//     e.preventDefault();
+//     axios
+//       .post("/signup", formData)
+//       .then((res) => {
+//         localStorage.setItem(
+//           "user",
+//           JSON.stringify(res.data.userData?.[0]) || ""
+//         );
 
-  //       navigate("/dashboard");
-  //     })
-  //     .catch(({ response }) => {
-  //       // TODO: set error
-  //     });
-  // };
+//         navigate("/dashboard");
+//       })
+//       .catch(({ response }) => {
+//         // TODO: set error
+//       });  
+//    };
   const handleSignUp = (e) => {
     e.preventDefault();
     axios
       .post("/signup", formData)
       .then((res) => {
         // console.log(res.data.result);
+        console.log("ress");
+        console.log(res.data);
         localStorage.setItem("user", JSON.stringify(res.data.result) || "");
-
         navigate("/dashboard");
       })
       .catch(({ response }) => {
@@ -43,7 +44,7 @@ function SignUpForm() {
     password: "",
     email: "",
     date: "",
-    userType: "",
+    userType: "", 
   });
 
   return (
