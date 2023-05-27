@@ -5,8 +5,6 @@ import First from "../images/bgImg.jpeg";
 import Second from "../images/foto1.jpg";
 import Third from "../images/login.jpg";
 import Fourth from "../images/logoo2.png";
-import Select from "react-select";
-
 // import { HiOutlineArrowsExpand  } from 'react-icons/hi';
 import { MdOutlineInfo } from "react-icons/md";
 import { BsSliders } from "react-icons/bs";
@@ -150,7 +148,6 @@ function JobSearch() {
   };
 
   const [selectedJob, setSelectedJob] = useState(null);
-
 
   function handleJobClick(job) {
     const jobId = job.jobId;
@@ -298,14 +295,16 @@ function JobSearch() {
                       <FaFacebook size={36} className="text-white" />
                     </div>
                     <div className="flex flex-col justify-center items-center p-6">
-                      <h2 className="text-3xl font-bold mb-2">{job.jobCity}</h2>
+                      <h2 className="text-3xl font-bold mb-2">
+                        {job.jobTitle}
+                      </h2>
                       <div className="flex items-center">
                         <MdOutlineInfo
                           size={24}
                           className="text-indigo-500 mr-2"
                         />
                         <p className="text-lg text-gray-600 font-medium">
-                          {job.jobCity}
+                          {job.jobCategory}
                         </p>
                       </div>
                       <div className="mt-8 w-full">
