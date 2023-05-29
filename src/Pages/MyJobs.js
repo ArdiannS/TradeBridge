@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "../api/axiosInstance";
 import { useParams } from "react-router-dom";
-
+const user = JSON.parse(localStorage.getItem("user"));
+console.log("user", user);
 function MyJobs() {
   const id = useParams();
   const [jobs, setJobs] = useState([]);

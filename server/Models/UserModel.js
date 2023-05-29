@@ -44,10 +44,16 @@ const session = require("../Routes/routes.js");
 
 class UserModel {
   static async getUsers() {
-    return new Promise((resolve) => {
-      database.query("SELECT * FROM Users", [], (error, result) => {
-        if (!error) {
-          resolve(result);
+    return new Promise((resolve, reject) => {
+      database.query("SELECT * FROM Users", (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          const users = result.map(user => {
+            const { password, ...userWithoutPassword } = user;
+            return userWithoutPassword;
+          });
+          resolve(users);
         }
       });
     });
@@ -217,7 +223,6 @@ class UserModel {
       );
     });
   }
-
   static async updateUser(id, username, password, email, birthday) {
     return new Promise((resolve) => {
       database.query(
@@ -229,35 +234,6 @@ class UserModel {
           }
 
           resolve(result);
-        }
-      );
-    });
-  }
-  static async getUserByIdd(userId) {
-    return new Promise((resolve, reject) => {
-      database.query(
-        "SELECT * FROM Users WHERE userid = ?",
-        [userId],
-        (error, results) => {
-          if (error) {
-            reject(error);
-          }
-          resolve(results[0]);
-        }
-      );
-    });
-  }
-
-  static async updateUserProfile(userId, username, email, birthday) {
-    return new Promise((resolve, reject) => {
-      database.query(
-        "UPDATE Users SET username = ?, email = ?, birthday = ? WHERE userid = ?",
-        [username, email, birthday, userId],
-        (error, results) => {
-          if (error) {
-            reject(error);
-          }
-          resolve();
         }
       );
     });

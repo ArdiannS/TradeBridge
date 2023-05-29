@@ -16,6 +16,14 @@ class CommentController {
       res.send(result);
     }
   }
+  static async getCommentsByJobId(req, res) {
+    const jobId = req.params.id;
+    console.log(jobId);
+    var result = await CommentModel.getCommentsByJobId(jobId);
+    if (result) {
+      res.send(result);
+    }
+  }
   static async updateComment(req, res) {
     const {commentContent} = req.body;
     const {id} = req.params;
