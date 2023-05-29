@@ -164,14 +164,12 @@ function JobSearch() {
       })
       .catch((err) => console.error(err.message));
   }, []);
-  console.log(jobs[0]);
+
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isFiltering, setIsFiltering] = useState(false);
   const [filteredJobs, setFilteredJobs] = useState([]);
-
-
 
   // function commentsForJob(jobId) {
   //   fetch(`/comments/${jobId}`, {
@@ -199,7 +197,6 @@ function JobSearch() {
       })
       .catch((error) => console.error(error));
   }, []);
-
 
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -233,15 +230,15 @@ function JobSearch() {
   useEffect(() => {
     let jobid = null;
     if (selectedJob && selectedJob.jobId) {
-      console.log("useeff1" , selectedJob.jobId);
+      console.log("useeff1", selectedJob.jobId);
       jobid = selectedJob.jobId;
     } else if (filteredJobs && filteredJobs.jobId) {
-      console.log("useeff2" , filteredJobs[0].jobId);
+      console.log("useeff2", filteredJobs[0].jobId);
       jobid = filteredJobs[0].jobId;
     } else if (jobs && jobs.jobId) {
       jobid = jobs[0].jobId;
     }
-  
+
     if (jobid) {
       fetch(`/comments/${jobid}`)
         .then((res) => res.json())
@@ -252,7 +249,28 @@ function JobSearch() {
         .catch((err) => console.error(err.message));
     }
   }, [selectedJob, filteredJobs, jobs]);
-  
+  const [jobOffers, setJobOffers] = useState([]);
+
+  useEffect(() => {
+    let jobid = null;
+    if (selectedJob && selectedJob.jobId) {
+      console.log("useeff1", selectedJob.jobId);
+      jobid = selectedJob.jobId;
+    } else if (filteredJobs && filteredJobs[0] && filteredJobs[0].jobId) {
+      console.log("useeff2", filteredJobs[0].jobId);
+      jobid = filteredJobs[0].jobId;
+    } else if (jobs.length > 0) {
+      console.log("useeff3", jobs[0].jobId);
+      jobid = jobs[0].jobId;
+    }
+    fetch(`/jobOffer/${jobid}`)
+      .then((res) => res.json())
+      .then((data) => {
+        setJobOffers(data);
+        console.log(data);
+      })
+      .catch((err) => console.error(err.message));
+  }, [selectedJob, filteredJobs, jobs]);
   
   return (
     <>
@@ -265,7 +283,7 @@ function JobSearch() {
           <div className="flex flex-col justify-center items-center rounded-lg shadow-md w-full mx-auto">
             <h2 className="font-light text-3xl ml-2 mt-4">Jobs</h2>
             <div className="mt-4 ml-2 flex justify-between gap-4">
-            <p className="">Total jobs: {totalJobs}</p>
+              <p className="">Total jobs: {totalJobs}</p>
 
               <div className="relative inline-block">
                 <button
@@ -318,8 +336,8 @@ function JobSearch() {
               className="bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-opacity-80 transition duration-300 ease-in-out"
             >
               Search
-              </button>
-              {(isFiltering ? filteredJobs : jobs).map((job) => {
+            </button>
+            {(isFiltering ? filteredJobs : jobs).map((job) => {
               const title = job.jobTitle || ""; // Handle undefined job.title
               if (
                 !searchTerm ||
@@ -485,37 +503,122 @@ function JobSearch() {
                     <p className=" text-lg font-light">Set own</p>
                   </div>
                   <div className="flex mt-5">
-                    <div className="mt-3 ml-2">
-                      <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                        Jep Oferten
-                      </button>
-                    </div>
-                    <div className="mt-3 ml-2">
-                      <button className="bg-white text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                        <FaHeart size={26} icon="fa-regular fa-heart" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
-                    <img
-                      src={images[currentIndex]}
-                      class="max-w-auto max-h-auto"
-                      alt="User avatar"
-                    />
-                  </div>
-                  <div class="flex justify-center mt-2">
-                    <button onClick={nextImage} class="mx-2">
-                      Prev
-                    </button>
-                    <button onClick={prevImage} class="mx-2">
-                      Next
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div class="my-4 border-b border-gray-200 w-full mb-10"></div>
+                            <form action="/jobsearch" method="POST">
+                              <div class="my-5">
+                                <div class="mt-2 flex flex-col ">
+                                  <div className="flex justify-between">
+                                    <label
+                                      htmlFor="bidAmount"
+                                      className="block text-xl font-semibold"
+                                    >
+                                      Place Your Bid:
+                                      <br />
+                                    </label>
+                                    <input
+                                      type="number"
+                                      id="jobPrice"
+                                      name="jobPrice"
+                                      className="w-40 items-center px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-10"
+                                      placeholder="Enter amount"
+                                      required
+                                    />
+
+                                    <div className="ml-2 flex">
+                                      <button className="bg-white items-center h-11 text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                                        <FaHeart
+                                          size={26}
+                                          icon="fa-regular fa-heart"
+                                        />
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <div class="flex flex-col ">
+                                    <label
+                                      for="bidDescription"
+                                      class="block text-xl font-semibold"
+                                    >
+                                      Bid Description
+                                    </label>
+                                    <textarea
+                                      id="bidDescription"
+                                      name="bidDescription"
+                                      class="w-96 px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-24"
+                                      placeholder="Enter description"
+                                    ></textarea>
+                                  </div>
+                                  <input
+                                    type="hidden"
+                                    id="jobId"
+                                    name="jobId"
+                                    value={selectedJob.jobId}
+                                  />
+                                  <input
+                                    type="hidden"
+                                    id="userId"
+                                    name="userId"
+                                    value={user?.userid}
+                                  />
+                                  <button
+                                    type="submit"
+                                    class="px-6 mt-3 py-2 bg-indigo-500 text-white font-bold rounded-r-md hover:bg-indigo-600 transition duration-300 ease-in-out shadow-md"
+                                  >
+                                    Submit
+                                  </button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
+                            <img
+                              src={images[currentIndex]}
+                              class="max-w-auto max-h-auto"
+                              alt="User avatar"
+                            />
+                          </div>
+                          <div class="flex justify-center mt-2">
+                            <button onClick={nextImage} class="mx-2">
+                              Prev
+                            </button>
+                            <button onClick={prevImage} class="mx-2">
+                              Next
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <h2 className="text-2xl text-center font-bold">
+  Bids for this Job:
+</h2>
+<div className="flex justify-between">
+{jobOffers.map((offer) => (
+    <div className="mt-8 w-1/3"key={offer.idoffer}>
+      <ul className="mt-4 space-y-4">
+        <li className="border border-gray-300 rounded-lg p-4">
+          <div className="flex items-start justify-between">
+            <div className="flex flex-col">
+              <p className="text-lg font-bold">Bid From: {offer.username}</p>
+              <p className="text-sm text-gray-500">
+                Bid Date: {offer.bidTime}
+              </p>
+            </div>
+            <p className="text-xl font-bold">
+              Bid Amount:
+              <br />
+              ${offer.jobOffer}
+            </p>
+          </div>
+          <p className="mt-2 text-gray-700">Bid Description: {offer.bidDescription}</p>
+        </li>
+        {/* Add more li elements for additional bids */}
+      </ul>
+    </div>
+))}
+</div>
+
               <div className=" flex justify-between">
                 <div className=" w-1/2 pr-4">
                   <h3 className="text-center cursor-pointer">
@@ -628,7 +731,10 @@ function JobSearch() {
                           Start Today
                         </button>
                       </div>
-                      <input type="hidden" value={filteredJobs[0].jobId}></input>
+                      <input
+                        type="hidden"
+                        value={filteredJobs[0].jobId}
+                      ></input>
                       <div class="my-4 border-b border-gray-500 w-1/2"></div>
                       <div className="mt-3 flex justify-between w-1/2 text-2xl">
                         <p className="text-2xl font-bold">Job Type </p>
@@ -642,67 +748,120 @@ function JobSearch() {
                         <p className=" text-lg font-light">Set own</p>
                       </div>
                       <div className="flex mt-5">
-              <form action="/jobsearch" method="POST"
->
-  <div class="my-5">
-    <label for="bidAmount" class="block text-xl font-semibold">Place Your Bid</label>
-    <div class="mt-2 flex">
-      <input
-        type="number"
-        id="jobPrice"
-        name="jobPrice"
-        class="w-40 px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md"
-        placeholder="Enter amount"
-        required
-      />
-      <input
-        type="hidden"
-        id="jobId"
-        name="jobId"
-        value={filteredJobs[0].jobId}
-      />
-      <input
-        type="hidden"
-        id="userId"
-        name="userId"
-        value={user?.userid}
-      />
-      <button
-        type="submit"
-        class="px-6 py-2 bg-indigo-500 text-white font-bold rounded-r-md hover:bg-indigo-600 transition duration-300 ease-in-out shadow-md"
-      >
-        Submit
-      </button>
-    </div>
-  </div>
-</form>
+                            <form action="/jobsearch" method="POST">
+                              <div class="my-5">
+                                <div class="mt-2 flex flex-col ">
+                                  <div className="flex justify-between">
+                                    <label
+                                      htmlFor="bidAmount"
+                                      className="block text-xl font-semibold"
+                                    >
+                                      Place Your Bid:
+                                      <br />
+                                    </label>
+                                    <input
+                                      type="number"
+                                      id="jobPrice"
+                                      name="jobPrice"
+                                      className="w-40 items-center px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-10"
+                                      placeholder="Enter amount"
+                                      required
+                                    />
 
-                        <div className="mt-11 ml-2 flex items-center">
-                          <button className="bg-white text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                            <FaHeart size={26} icon="fa-regular fa-heart" />
-                          </button>
+                                    <div className="ml-2 flex">
+                                      <button className="bg-white items-center h-11 text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                                        <FaHeart
+                                          size={26}
+                                          icon="fa-regular fa-heart"
+                                        />
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <div class="flex flex-col ">
+                                    <label
+                                      for="bidDescription"
+                                      class="block text-xl font-semibold"
+                                    >
+                                      Bid Description
+                                    </label>
+                                    <textarea
+                                      id="bidDescription"
+                                      name="bidDescription"
+                                      class="w-96 px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-24"
+                                      placeholder="Enter description"
+                                    ></textarea>
+                                  </div>
+                                  <input
+                                    type="hidden"
+                                    id="jobId"
+                                    name="jobId"
+                                    value={selectedJob.jobId}
+                                  />
+                                  <input
+                                    type="hidden"
+                                    id="userId"
+                                    name="userId"
+                                    value={user?.userid}
+                                  />
+                                  <button
+                                    type="submit"
+                                    class="px-6 mt-3 py-2 bg-indigo-500 text-white font-bold rounded-r-md hover:bg-indigo-600 transition duration-300 ease-in-out shadow-md"
+                                  >
+                                    Submit
+                                  </button>
+                                </div>
+                              </div>
+                            </form>
+                          </div>
+                        </div>
+
+                        <div>
+                          <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
+                            <img
+                              src={images[currentIndex]}
+                              class="max-w-auto max-h-auto"
+                              alt="User avatar"
+                            />
+                          </div>
+                          <div class="flex justify-center mt-2">
+                            <button onClick={nextImage} class="mx-2">
+                              Prev
+                            </button>
+                            <button onClick={prevImage} class="mx-2">
+                              Next
+                            </button>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div>
-                      <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
-                        <img
-                          src={images[currentIndex]}
-                          class="max-w-auto max-h-auto"
-                          alt="User avatar"
-                        />
-                      </div>
-                      <div class="flex justify-center mt-2">
-                        <button onClick={nextImage} class="mx-2">
-                          Prev
-                        </button>
-                        <button onClick={prevImage} class="mx-2">
-                          Next
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="my-4 border-b border-gray-200 w-full mb-10"></div>
+                      <h2 className="text-2xl text-center font-bold">
+  Bids for this Job:
+</h2>
+<div className="flex justify-between">
+{jobOffers.map((offer) => (
+    <div className="mt-8 w-1/3"key={offer.idoffer}>
+      <ul className="mt-4 space-y-4">
+        <li className="border border-gray-300 rounded-lg p-4">
+          <div className="flex items-start justify-between">
+            <div className="flex flex-col">
+              <p className="text-lg font-bold">Bid From: {offer.username}</p>
+              <p className="text-sm text-gray-500">
+                Bid Date: {offer.birthdate}
+              </p>
+            </div>
+            <p className="text-xl font-bold">
+              Bid Amount:
+              <br />
+              ${offer.jobOffer}
+            </p>
+          </div>
+          <p className="mt-2 text-gray-700">Bid Description: {offer.bidDescription}</p>
+        </li>
+        {/* Add more li elements for additional bids */}
+      </ul>
+    </div>
+))}
+</div>
                   <div className=" flex justify-between">
                     <div className=" w-1/2 pr-4">
                       <h3 className="text-center cursor-pointer">
@@ -719,27 +878,29 @@ function JobSearch() {
                       </div>
                     </div>
                     <div className="w-1/2">
-                  <h3 className="text-center">Comments</h3>
-                  <div className="flex flex-col gap-4 p-4">
-                    {comments.map((comment) => (
-                      <div
-                        className="flex flex-col gap-2"
-                        key={comment.commentid}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div>
-                            <h4>{user?.username}</h4>
+                      <h3 className="text-center">Comments</h3>
+                      <div className="flex flex-col gap-4 p-4">
+                        {comments.map((comment) => (
+                          <div
+                            className="flex flex-col gap-2"
+                            key={comment.commentid}
+                          >
+                            <div className="flex items-center gap-2">
+                              <div>
+                                <h4>{user?.username}</h4>
+                              </div>
+                              <img
+                                src={`data:image/jpeg;base64,${user?.userProfilePicture}`}
+                                className="w-8 h-8 rounded-full"
+                                alt="My Image"
+                              />
+                            </div>
+                            <p className="text-black">
+                              {comment.commentContent}
+                            </p>
                           </div>
-                          <img
-                            src={`data:image/jpeg;base64,${user?.userProfilePicture}`}
-                            className="w-8 h-8 rounded-full"
-                            alt="My Image"
-                          />
-                        </div>
-                        <p className="text-black">{comment.commentContent}</p>
-                      </div>
-                    ))}
-                    <form
+                        ))}
+                        <form
                           action="/commentForm"
                           method="POST"
                           className="flex flex-col gap-2"
@@ -821,18 +982,74 @@ function JobSearch() {
                             <p className=" text-lg font-light">Set own</p>
                           </div>
                           <div className="flex mt-5">
-                            <div className="mt-3 ml-2">
-                              <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                                Jep Oferten
-                              </button>
-                            </div>
-                            <div className="mt-3 ml-2">
-                              <button className="bg-white text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                                <FaHeart size={26} icon="fa-regular fa-heart" />
-                              </button>
-                            </div>
+                            <form action="/jobsearch" method="POST">
+                              <div class="my-5">
+                                <div class="mt-2 flex flex-col ">
+                                  <div className="flex justify-between">
+                                    <label
+                                      htmlFor="bidAmount"
+                                      className="block text-xl font-semibold"
+                                    >
+                                      Place Your Bid:
+                                      <br />
+                                    </label>
+                                    <input
+                                      type="number"
+                                      id="jobPrice"
+                                      name="jobPrice"
+                                      className="w-40 items-center px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-10"
+                                      placeholder="Enter amount"
+                                      required
+                                    />
+
+                                    <div className="ml-2 flex">
+                                      <button className="bg-white items-center h-11 text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                                        <FaHeart
+                                          size={26}
+                                          icon="fa-regular fa-heart"
+                                        />
+                                      </button>
+                                    </div>
+                                  </div>
+
+                                  <div class="flex flex-col ">
+                                    <label
+                                      for="bidDescription"
+                                      class="block text-xl font-semibold"
+                                    >
+                                      Bid Description
+                                    </label>
+                                    <textarea
+                                      id="bidDescription"
+                                      name="bidDescription"
+                                      class="w-96 px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-24"
+                                      placeholder="Enter description"
+                                    ></textarea>
+                                  </div>
+                                  <input
+                                    type="hidden"
+                                    id="jobId"
+                                    name="jobId"
+                                    value={jobs[0].jobId}
+                                  />
+                                  <input
+                                    type="hidden"
+                                    id="userId"
+                                    name="userId"
+                                    value={user?.userid}
+                                  />
+                                  <button
+                                    type="submit"
+                                    class="px-6 mt-3 py-2 bg-indigo-500 text-white font-bold rounded-r-md hover:bg-indigo-600 transition duration-300 ease-in-out shadow-md"
+                                  >
+                                    Submit
+                                  </button>
+                                </div>
+                              </div>
+                            </form>
                           </div>
                         </div>
+
                         <div>
                           <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
                             <img
@@ -851,7 +1068,34 @@ function JobSearch() {
                           </div>
                         </div>
                       </div>
-                      <div class="my-4 border-b border-gray-200 w-full mb-10"></div>
+                      <h2 className="text-2xl text-center font-bold">
+                        Bids for this Job:
+                      </h2>
+                      <div className="flex justify-between">
+                      {jobOffers.map((offer) => (
+                          <div className="mt-8 w-1/3"key={offer.idoffer}>
+                            <ul className="mt-4 space-y-4">
+                              <li className="border border-gray-300 rounded-lg p-4">
+                                <div className="flex items-start justify-between">
+                                  <div className="flex flex-col">
+                                    <p className="text-lg font-bold">Bid From: {offer.username}</p>
+                                    <p className="text-sm text-gray-500">
+                                      Bid Date: {offer.bidTime}
+                                    </p>
+                                  </div>
+                                  <p className="text-xl font-bold">
+                                    Bid Amount:
+                                    <br />
+                                    ${offer.jobOffer}
+                                  </p>
+                                </div>
+                                <p className="mt-2 text-gray-700">Bid Description: {offer.bidDescription}</p>
+                              </li>
+                              {/* Add more li elements for additional bids */}
+                            </ul>
+                          </div>
+                      ))}
+</div>
                       <div className=" flex justify-between">
                         <div className=" w-1/2 pr-4">
                           <h3 className="text-center cursor-pointer">
@@ -868,26 +1112,28 @@ function JobSearch() {
                           </div>
                         </div>
                         <div className="w-1/2">
-                  <h3 className="text-center">Comments</h3>
-                  <div className="flex flex-col gap-4 p-4">
-                    {comments.map((comment) => (
-                      <div
-                        className="flex flex-col gap-2"
-                        key={comment.commentid}
-                      >
-                        <div className="flex items-center gap-2">
-                          <div>
-                            <h4>{user?.username}</h4>
-                          </div>
-                          <img
-                            src={`data:image/jpeg;base64,${user?.userProfilePicture}`}
-                            className="w-8 h-8 rounded-full"
-                            alt="My Image"
-                          />
-                        </div>
-                        <p className="text-black">{comment.commentContent}</p>
-                      </div>
-                    ))}
+                          <h3 className="text-center">Comments</h3>
+                          <div className="flex flex-col gap-4 p-4">
+                            {comments.map((comment) => (
+                              <div
+                                className="flex flex-col gap-2"
+                                key={comment.commentid}
+                              >
+                                <div className="flex items-center gap-2">
+                                  <div>
+                                    <h4>{user?.username}</h4>
+                                  </div>
+                                  <img
+                                    src={`data:image/jpeg;base64,${user?.userProfilePicture}`}
+                                    className="w-8 h-8 rounded-full"
+                                    alt="My Image"
+                                  />
+                                </div>
+                                <p className="text-black">
+                                  {comment.commentContent}
+                                </p>
+                              </div>
+                            ))}
                             {/* Comment form */}
                             <form
                               action="/commentForm"

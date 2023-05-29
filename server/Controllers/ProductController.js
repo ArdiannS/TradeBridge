@@ -37,14 +37,16 @@ class ProductController {
     const {
       jobPrice,
       userId,
-      jobId
+      jobId,
+      bidDescription
     } = req.body;
 
     try {
       const result = await ProductModel.insertJobOffer(
         userId,
         jobId,
-        jobPrice
+        jobPrice,
+        bidDescription
 
 
       );
@@ -99,6 +101,20 @@ class ProductController {
     } catch (err) {
       console.error(err);
       res.status(500).send("Error retrieving products");
+    }
+  }
+  static async getJobOffers(req, res) {
+    const id = req.params.id;
+    console.log("job offer", id);
+    
+        try {
+      const result = await ProductModel.getJobOffersByJobId(id);
+      if (result) {
+        res.send(result);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving Job Offers");
     }
   }
   static async getJobById(req, res) {
