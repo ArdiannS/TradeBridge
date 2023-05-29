@@ -30,7 +30,7 @@ class UserController {
         console.log(result);
 
         console.log("+++++++++++++++++result+++");
-      }        
+      }
       console.log(result.result);
       req.session.userid = result.result.userid || 30;
       res.status(result.status)

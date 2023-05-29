@@ -353,14 +353,16 @@ function JobSearch() {
                       <FaFacebook size={36} className="text-white" />
                     </div>
                     <div className="flex flex-col justify-center items-center p-6">
-                      <h2 className="text-3xl font-bold mb-2">{job.jobCity}</h2>
+                      <h2 className="text-3xl font-bold mb-2">
+                        {job.jobTitle}
+                      </h2>
                       <div className="flex items-center">
                         <MdOutlineInfo
                           size={24}
                           className="text-indigo-500 mr-2"
                         />
                         <p className="text-lg text-gray-600 font-medium">
-                          {job.jobCity}
+                          {job.jobCategory}
                         </p>
                       </div>
                       <div className="mt-8 w-full">
