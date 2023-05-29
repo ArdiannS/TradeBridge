@@ -1,26 +1,49 @@
 const database = require("../Configuration/DataBaseConnection");
 
 class ProductModel {
+  
   static async insertJobs(
     jobTitle,
     jobDescription,
     jobType,
     jobCategory,
     jobCity,
-    jobPrice,
-    jobPhoto
+    jobPhoto,
+    idUser
   ) {
     return new Promise((resolve, reject) => {
       database.query(
-        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity, jobPrice,idusers,jobPhoto) VALUES (?, ?, ?, ?, ?,?,64,?)",
+        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity,jobPhoto,idusers) VALUES (?, ?, ?, ?, ?,?,?)",
         [
           jobTitle,
           jobDescription,
           jobType,
           jobCategory,
           jobCity,
-          jobPrice,
           jobPhoto,
+          idUser
+        ],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  }
+  static async insertJobOffer(
+          idUser,
+          jobId,
+          jobPrice
+  ) {
+    return new Promise((resolve, reject) => {
+      database.query(
+        "INSERT INTO jobOffer(idusers,jobid, jobOffer) VALUES (?, ?, ?)",
+        [idUser,
+          jobId,
+          jobPrice
         ],
         (error, result) => {
           if (error) {
@@ -92,15 +115,15 @@ class ProductModel {
   static async getJobsByCategory(category) {
     return new Promise((resolve, reject) => {
       database.query(
-        "SELECT * FROM Jobs WHERE jobCategory = ?",
-        [category],
-        (error, result) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(result);
+          "SELECT * FROM Jobs WHERE jobCategory = ? LIMIT 3",
+          [category],
+          (error, result) => {
+              if (error) {
+                  reject(error);
+              } else {
+                  resolve(result);
+              }
           }
-        }
       );
     });
   }
@@ -184,7 +207,7 @@ static async getJobsByUserId(userId) {
     const query = "SELECT * FROM jobs WHERE title LIKE ?";
     const searchTitle = `%${title}%`;
     try {
-      const [rows] = await db.query(query, [searchTitle]);
+      const [rows] = await database.query(query, [searchTitle]);
       return rows;
     } catch (error) {
       throw new Error(`Error searching jobs: ${error.message}`);

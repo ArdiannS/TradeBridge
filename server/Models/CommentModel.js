@@ -27,6 +27,17 @@ class CommentModel {
       });
     });
   }
+  static async getCommentsByJobId(id) {
+    return new Promise((resolve, reject) => {
+      database.query("SELECT * FROM Comments WHERE jobId = ?", [id], (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
   static async deleteComment(id) {
     return new Promise((resolve) => {
       database.query(

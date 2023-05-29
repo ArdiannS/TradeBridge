@@ -49,17 +49,15 @@ function JobSearch() {
 
   function jobCategory(jobCategoryData) {
     console.log("jobCategory1", jobCategoryData);
-
-    fetch("/jobsearch", {
-      method: "POST",
+    fetch(`/jobs/${jobCategoryData}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ jobCategory: jobCategoryData }),
     })
       .then((response) => response.json())
       .then((data) => {
-        console.log("Response data:", data);
+        console.log("Kjo osht per similarjobs:", data);
         const container = document.getElementById("jobsContainer");
         container.innerHTML = "";
 
@@ -173,6 +171,36 @@ function JobSearch() {
   const [isFiltering, setIsFiltering] = useState(false);
   const [filteredJobs, setFilteredJobs] = useState([]);
 
+
+
+  // function commentsForJob(jobId) {
+  //   fetch(`/comments/${jobId}`, {
+  //     method: "GET",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching comments:", error);
+  //     });
+
+  // }
+  const [filtering, setFiltering] = useState(false);
+  const [totalJobs, setTotalJobs] = useState(0);
+  useEffect(() => {
+    fetch("/dashboard/total-jobs")
+      .then((response) => response.text())
+      .then((data) => {
+        console.log(data);
+        setTotalJobs(parseInt(data));
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+
   const handleDropdownToggle = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
@@ -192,7 +220,6 @@ function JobSearch() {
       setFilteredJobs(filtered);
     }
   };
-  console.log(filteredJobs[0]);
 
   const categories = [
     { value: "all", label: "All Categories" },
@@ -201,19 +228,32 @@ function JobSearch() {
     { value: "Hidraulik", label: "Hidraulik" },
     { value: "Mekanik", label: "Mekanik" },
   ];
-  const [filtering, setFiltering] = useState(false);
-  const [totalJobs, setTotalJobs] = useState(0);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
-    fetch("/dashboard/total-jobs")
-      .then((response) => response.text())
-      .then((data) => {
-        console.log(data);
-        setTotalJobs(parseInt(data));
-      })
-      .catch((error) => console.error(error));
-  }, []);
-
+    let jobid = null;
+    if (selectedJob && selectedJob.jobId) {
+      console.log("useeff1" , selectedJob.jobId);
+      jobid = selectedJob.jobId;
+    } else if (filteredJobs && filteredJobs.jobId) {
+      console.log("useeff2" , filteredJobs[0].jobId);
+      jobid = filteredJobs[0].jobId;
+    } else if (jobs && jobs.jobId) {
+      jobid = jobs[0].jobId;
+    }
+  
+    if (jobid) {
+      fetch(`/comments/${jobid}`)
+        .then((res) => res.json())
+        .then((data) => {
+          setComments(data);
+          console.log("comment per ni pune ", data);
+        })
+        .catch((err) => console.error(err.message));
+    }
+  }, [selectedJob, filteredJobs, jobs]);
+  
+  
   return (
     <>
       <header>{/* <Navbar /> */}</header>
@@ -225,7 +265,7 @@ function JobSearch() {
           <div className="flex flex-col justify-center items-center rounded-lg shadow-md w-full mx-auto">
             <h2 className="font-light text-3xl ml-2 mt-4">Jobs</h2>
             <div className="mt-4 ml-2 flex justify-between gap-4">
-              <p className="">Total jobs: {totalJobs}</p>
+            <p className="">Total jobs: {totalJobs}</p>
 
               <div className="relative inline-block">
                 <button
@@ -264,7 +304,6 @@ function JobSearch() {
                 )}
               </div>
             </div>
-
             <input
               type="search"
               id="default-search"
@@ -279,8 +318,8 @@ function JobSearch() {
               className="bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-opacity-80 transition duration-300 ease-in-out"
             >
               Search
-            </button>
-            {(isFiltering ? filteredJobs : jobs).map((job) => {
+              </button>
+              {(isFiltering ? filteredJobs : jobs).map((job) => {
               const title = job.jobTitle || ""; // Handle undefined job.title
               if (
                 !searchTerm ||
@@ -333,7 +372,6 @@ function JobSearch() {
               }
               return null;
             })}
-
             <div class="flex flex-col items-center">
               <span class="text-sm text-gray-700 dark:text-gray-400">
                 Showing{" "}
@@ -401,7 +439,7 @@ function JobSearch() {
         <div className="w-3/4 flex justify-center">
           {/* Content for the right div */}
           {selectedJob ? (
-            <div className="rounded-lg h-full w-full">
+            <div className="rounded-lg h-full w-full ">
               <div className="flex justify-between my-7 mx-6">
                 <div className=" h-1/4 w-1/2 mx-9">
                   <div className="mt-10  h-20 flex items-center">
@@ -493,20 +531,27 @@ function JobSearch() {
                     </h2>
                   </div>
                 </div>
-                <div className=" w-1/2">
+                <div className="w-1/2">
                   <h3 className="text-center">Comments</h3>
                   <div className="flex flex-col gap-4 p-4">
-                    <div className="flex flex-col gap-2">
-                      <div className="flex items-center gap-2">
-                        <img
-                          src="https://randomuser.me/api/portraits/women/68.jpg"
-                          alt="User avatar"
-                          className="w-8 h-8 rounded-full"
-                        />
-                        <h4 className="text-black">Jane Doe</h4>
+                    {comments.map((comment) => (
+                      <div
+                        className="flex flex-col gap-2"
+                        key={comment.commentid}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <h4>{user?.username}</h4>
+                          </div>
+                          <img
+                            src={`data:image/jpeg;base64,${user?.userProfilePicture}`}
+                            className="w-8 h-8 rounded-full"
+                            alt="My Image"
+                          />
+                        </div>
+                        <p className="text-black">{comment.commentContent}</p>
                       </div>
-                      <p className="text-black">So good.</p>
-                    </div>
+                    ))}
                     <form
                       action="/commentForm"
                       method="POST"
@@ -518,7 +563,6 @@ function JobSearch() {
                         name="jobId"
                         value={selectedJob.jobId}
                       />
-
                       <textarea
                         placeholder="Leave a comment"
                         className="p-2 rounded-lg"
@@ -584,6 +628,7 @@ function JobSearch() {
                           Start Today
                         </button>
                       </div>
+                      <input type="hidden" value={filteredJobs[0].jobId}></input>
                       <div class="my-4 border-b border-gray-500 w-1/2"></div>
                       <div className="mt-3 flex justify-between w-1/2 text-2xl">
                         <p className="text-2xl font-bold">Job Type </p>
@@ -597,12 +642,42 @@ function JobSearch() {
                         <p className=" text-lg font-light">Set own</p>
                       </div>
                       <div className="flex mt-5">
-                        <div className="mt-3 ml-2">
-                          <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                            Jep Oferten
-                          </button>
-                        </div>
-                        <div className="mt-3 ml-2">
+              <form action="/jobsearch" method="POST"
+>
+  <div class="my-5">
+    <label for="bidAmount" class="block text-xl font-semibold">Place Your Bid</label>
+    <div class="mt-2 flex">
+      <input
+        type="number"
+        id="jobPrice"
+        name="jobPrice"
+        class="w-40 px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md"
+        placeholder="Enter amount"
+        required
+      />
+      <input
+        type="hidden"
+        id="jobId"
+        name="jobId"
+        value={filteredJobs[0].jobId}
+      />
+      <input
+        type="hidden"
+        id="userId"
+        name="userId"
+        value={user?.userid}
+      />
+      <button
+        type="submit"
+        class="px-6 py-2 bg-indigo-500 text-white font-bold rounded-r-md hover:bg-indigo-600 transition duration-300 ease-in-out shadow-md"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</form>
+
+                        <div className="mt-11 ml-2 flex items-center">
                           <button className="bg-white text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
                             <FaHeart size={26} icon="fa-regular fa-heart" />
                           </button>
@@ -643,21 +718,28 @@ function JobSearch() {
                         </h2>
                       </div>
                     </div>
-                    <div className=" w-1/2">
-                      <h3 className="text-center">Comments</h3>
-                      <div className="flex flex-col gap-4 p-4">
-                        <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-2">
-                            <img
-                              src="https://randomuser.me/api/portraits/women/68.jpg"
-                              alt="User avatar"
-                              className="w-8 h-8 rounded-full"
-                            />
-                            <h4 className="text-black">Jane Doe</h4>
+                    <div className="w-1/2">
+                  <h3 className="text-center">Comments</h3>
+                  <div className="flex flex-col gap-4 p-4">
+                    {comments.map((comment) => (
+                      <div
+                        className="flex flex-col gap-2"
+                        key={comment.commentid}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <h4>{user?.username}</h4>
                           </div>
-                          <p className="text-black">So good.</p>
+                          <img
+                            src={`data:image/jpeg;base64,${user?.userProfilePicture}`}
+                            className="w-8 h-8 rounded-full"
+                            alt="My Image"
+                          />
                         </div>
-                        <form
+                        <p className="text-black">{comment.commentContent}</p>
+                      </div>
+                    ))}
+                    <form
                           action="/commentForm"
                           method="POST"
                           className="flex flex-col gap-2"
@@ -672,7 +754,6 @@ function JobSearch() {
                             name="jobId"
                             value={filteredJobs[0].jobId}
                           />
-
                           <textarea
                             placeholder="Leave a comment"
                             className="p-2 rounded-lg"
@@ -786,20 +867,28 @@ function JobSearch() {
                             </h2>
                           </div>
                         </div>
-                        <div className=" w-1/2">
-                          <h3 className="text-center">Comments</h3>
-                          <div className="flex flex-col gap-4 p-4">
-                            <div className="flex flex-col gap-2">
-                              <div className="flex items-center gap-2">
-                                <img
-                                  src="https://randomuser.me/api/portraits/women/68.jpg"
-                                  alt="User avatar"
-                                  className="w-8 h-8 rounded-full"
-                                />
-                                <h4 className="text-black">Jane Doe</h4>
-                              </div>
-                              <p className="text-black">So good.</p>
-                            </div>
+                        <div className="w-1/2">
+                  <h3 className="text-center">Comments</h3>
+                  <div className="flex flex-col gap-4 p-4">
+                    {comments.map((comment) => (
+                      <div
+                        className="flex flex-col gap-2"
+                        key={comment.commentid}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <h4>{user?.username}</h4>
+                          </div>
+                          <img
+                            src={`data:image/jpeg;base64,${user?.userProfilePicture}`}
+                            className="w-8 h-8 rounded-full"
+                            alt="My Image"
+                          />
+                        </div>
+                        <p className="text-black">{comment.commentContent}</p>
+                      </div>
+                    ))}
+                            {/* Comment form */}
                             <form
                               action="/commentForm"
                               method="POST"
@@ -813,9 +902,8 @@ function JobSearch() {
                               <input
                                 type="hidden"
                                 name="jobId"
-                                value={jobs[0].jobId}
+                                value={jobs[0]?.jobId}
                               />
-
                               <textarea
                                 placeholder="Leave a comment"
                                 className="p-2 rounded-lg"

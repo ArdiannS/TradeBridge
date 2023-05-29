@@ -8,10 +8,13 @@ class ProductController {
       jobType,
       jobCategory,
       jobCity,
-      jobPrice,
     } = req.body;
+    console.log(req.file);
     const buffer = req.file.buffer;
     const jobPhoto = buffer.toString("base64");
+    console.log("ididid")
+    const userid = req.session.userId;
+    console.log(userid);
 
     try {
       const result = await ProductModel.insertJobs(
@@ -20,13 +23,35 @@ class ProductController {
         jobType,
         jobCategory,
         jobCity,
-        jobPrice,
-        jobPhoto
+        jobPhoto,
+        userid
       );
+    
       res.send("Job added successfully");
     } catch (err) {
       console.error(err);
       res.status(500).send("Error adding job");
+    }
+  }
+  static async insertOffer(req, res) {
+    const {
+      jobPrice,
+      userId,
+      jobId
+    } = req.body;
+
+    try {
+      const result = await ProductModel.insertJobOffer(
+        userId,
+        jobId,
+        jobPrice
+
+
+      );
+      res.send("Offer added successfully");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error adding Offer");
     }
   }
   static async getNumberOfAllJobs(req, res) {
@@ -40,17 +65,19 @@ class ProductController {
       res.status(500).send("Error retrieving jobs");
     }
   }
-  static async getJobsByCategory(req, res) {
-    try {
-      const jobCategory = req.body.jobByCategory;
+  static async getJobByCategory(req,res){
+    try{
+      const jobCategory = req.params.category;
+      console.log("+++++++++++");
       console.log(jobCategory);
       const jobs = await ProductModel.getJobsByCategory(jobCategory);
       res.send(jobs);
     } catch (error) {
       console.log(error);
-      res.status(500).send("Error retrieving jobs by category");
+      res.status(500).send('Error retrieving jobs by category');
     }
-  }
+    }
+
 
   static async getSimilarJobs(req, res) {
     try {
@@ -136,18 +163,8 @@ class ProductController {
       res.status(500).send("Error Updating Job");
     }
   }
-
-  static async searchJobs(req, res) {
-    const { title } = req.query;
-    try {
-      const jobs = await JobModel.searchJobsByTitle(title);
-      res.json(jobs);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
-
   static async getJobsByUserId(req, res) {
+    console.log("ididid")
     const userId = req.session.userId;
     console.log(userId);
     if (!userId) {
@@ -163,6 +180,15 @@ class ProductController {
     }
   }
 
+  static async searchJobs(req, res) {
+    const { title } = req.query;
+    try {
+      const jobs = await ProductModel.searchJobsByTitle(title);
+      res.json(jobs);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
 }
 
 module.exports = ProductController;
