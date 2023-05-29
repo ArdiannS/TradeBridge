@@ -18,6 +18,8 @@ router.post(
 //   upload.single("jobPhoto"),
 //   ProductController.insertJobs
 // );
+router.post("/jobsearch",ProductController.insertOffer);
+
 router.get("/users", isLoggedIn, UserController.getAllUser);
 router.get("/users", UserController.getAllUser);
 router.post("/signup", UserController.addUser);
@@ -44,6 +46,7 @@ router.delete("/comments/:id", CommentController.deleteComment);
 router.get("/dashboard/total-jobs", DashboardController.getNumberOfAllJobs);
 router.get("/dashboard/total-users", DashboardController.getNumberOfAllUsers);
 router.get("/user/profile", UserController.getUserProfile);
+router.get("/myjobs/:id", ProductController.getJobsByUserId);
 router.put("/user/profile", UserController.updateUserProfile);
 router.get("/jobs", ProductController.searchJobs);
 module.exports = router;

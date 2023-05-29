@@ -1,76 +1,80 @@
-import Stats from "../Components/Stats";
-// import Dashboard from "./Dashboard";
-import { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
+import axios from "../api/axiosInstance";
+import { useParams } from "react-router-dom";
+const user = JSON.parse(localStorage.getItem("user"));
+console.log("user", user);
 function MyJobs() {
-  const [userData, setUserData] = useState([]);
-  const [editingUser, setEditingUsername] = useState([]);
-
+  const id = useParams();
+  const [jobs, setJobs] = useState([]);
+  const [user, setUser] = useState(null);
+  console.log(id);
   useEffect(() => {
-    fetch("/users")
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        setUserData(data);
-      })
-      .catch((error) => console.error(error));
+    const fetchJobs = async () => {
+      try {
+        // Fetch the user's information
+        const userResponse = await axios.get("/user/profile");
+        const userData = userResponse.data.user[0];
+        setUser(userData);
+        // Fetch the jobs associated with the user
+        fetch(`/myjobs/${id}`)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            const jobs = data.jobs;
+            setJobs(jobs);
+
+            // Do something with the jobs data
+            console.log(jobs);
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    fetchJobs();
   }, []);
 
   const handleDelete = async (id) => {
     try {
-      const response = await fetch(`/users/${id}`, {
-        method: "DELETE",
-      });
-      const data = await response.json();
-      console.log(data);
+      await axios.delete(`/jobs/${id}`);
+      setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
     } catch (error) {
       console.error(error);
     }
   };
-
-  const handleEdit = async (id) => {
-    try {
-      const response = await fetch(`/users/${id}`, {
-        method: "PUT",
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-  const [jobs, setJobs] = useState([]);
-
-  useEffect(() => {
-    fetch("/jobs")
-      .then((res) => res.json())
-      .then((data) => setJobs(data))
-      .catch((err) => console.error(err.message));
-  }, []);
 
   return (
-    <div>
-      {/* <Dashboard/> */}
-      <table>
+    <div className="flex justify-center items-center h-screen">
+      <table className="w-full max-w-md bg-white rounded-lg shadow-lg">
         <thead>
-          <tr>
-            <th>Job Title</th>
-            <th>Job Type</th>
-            <th>Job Category</th>
-            <th>Description</th>
-            <th>Price</th>
-            <th>City</th>
+          <tr className="bg-gray-100">
+            <th className="py-2 px-4">Job Title</th>
+            <th className="py-2 px-4">Job Type</th>
+            <th className="py-2 px-4">Job Category</th>
+            <th className="py-2 px-4">Description</th>
+            <th className="py-2 px-4">Price</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
           {jobs.map((job) => (
-            <tr key={job.id}>
-              <td>{job.jobTitle}</td>
-              <td>{job.jobType}</td>
-              <td>{job.jobCategory}</td>
-              <td>{job.jobDescription}</td>
-              <td>{job.jobPrice}</td>
-              <td>{job.jobCity}</td>
+            <tr key={job.id} className="border-b hover:bg-gray-100">
+              <td className="py-2 px-4">{job.jobTitle}</td>
+              <td className="py-2 px-4">{job.jobType}</td>
+              <td className="py-2 px-4">{job.jobCategory}</td>
+              <td className="py-2 px-4">{job.jobDescription}</td>
+              <td className="py-2 px-4">{job.jobPrice}</td>
+              <td className="py-2 px-4">
+                <button
+                  onClick={() => handleDelete(job.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

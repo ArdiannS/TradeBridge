@@ -8,10 +8,13 @@ class ProductController {
       jobType,
       jobCategory,
       jobCity,
-      jobPrice,
     } = req.body;
+    console.log(req.file);
     const buffer = req.file.buffer;
     const jobPhoto = buffer.toString("base64");
+    console.log("ididid")
+    const userid = req.session.userId;
+    console.log(userid);
 
     try {
       const result = await ProductModel.insertJobs(
@@ -20,13 +23,35 @@ class ProductController {
         jobType,
         jobCategory,
         jobCity,
-        jobPrice,
-        jobPhoto
+        jobPhoto,
+        userid
       );
+    
       res.send("Job added successfully");
     } catch (err) {
       console.error(err);
       res.status(500).send("Error adding job");
+    }
+  }
+  static async insertOffer(req, res) {
+    const {
+      jobPrice,
+      userId,
+      jobId
+    } = req.body;
+
+    try {
+      const result = await ProductModel.insertJobOffer(
+        userId,
+        jobId,
+        jobPrice
+
+
+      );
+      res.send("Offer added successfully");
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error adding Offer");
     }
   }
   static async getNumberOfAllJobs(req, res) {
@@ -138,11 +163,27 @@ class ProductController {
       res.status(500).send("Error Updating Job");
     }
   }
+  static async getJobsByUserId(req, res) {
+    console.log("ididid")
+    const userId = req.session.userId;
+    console.log(userId);
+    if (!userId) {
+      return res.status(401).json({ error: "Unauthorized" });
+    }
+    try {
+      const jobs = await ProductModel.getJobsByUserId(userId);
+      res.json({ jobs });
+      console.log(jobs);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Server error" });
+    }
+  }
 
   static async searchJobs(req, res) {
     const { title } = req.query;
     try {
-      const jobs = await JobModel.searchJobsByTitle(title);
+      const jobs = await ProductModel.searchJobsByTitle(title);
       res.json(jobs);
     } catch (error) {
       res.status(500).json({ error: error.message });

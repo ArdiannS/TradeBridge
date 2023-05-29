@@ -5,7 +5,6 @@ import First from "../images/bgImg.jpeg";
 import Second from "../images/foto1.jpg";
 import Third from "../images/login.jpg";
 import Fourth from "../images/logoo2.png";
-import Select from "react-select";
 
 // import { HiOutlineArrowsExpand  } from 'react-icons/hi';
 import { MdOutlineInfo } from "react-icons/md";
@@ -171,6 +170,8 @@ function JobSearch() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isFiltering, setIsFiltering] = useState(false);
   const [filteredJobs, setFilteredJobs] = useState([]);
+
+
 
   // function commentsForJob(jobId) {
   //   fetch(`/comments/${jobId}`, {
@@ -627,6 +628,7 @@ function JobSearch() {
                           Start Today
                         </button>
                       </div>
+                      <input type="hidden" value={filteredJobs[0].jobId}></input>
                       <div class="my-4 border-b border-gray-500 w-1/2"></div>
                       <div className="mt-3 flex justify-between w-1/2 text-2xl">
                         <p className="text-2xl font-bold">Job Type </p>
@@ -640,12 +642,42 @@ function JobSearch() {
                         <p className=" text-lg font-light">Set own</p>
                       </div>
                       <div className="flex mt-5">
-                        <div className="mt-3 ml-2">
-                          <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                            Jep Oferten
-                          </button>
-                        </div>
-                        <div className="mt-3 ml-2">
+              <form action="/jobsearch" method="POST"
+>
+  <div class="my-5">
+    <label for="bidAmount" class="block text-xl font-semibold">Place Your Bid</label>
+    <div class="mt-2 flex">
+      <input
+        type="number"
+        id="jobPrice"
+        name="jobPrice"
+        class="w-40 px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md"
+        placeholder="Enter amount"
+        required
+      />
+      <input
+        type="hidden"
+        id="jobId"
+        name="jobId"
+        value={filteredJobs[0].jobId}
+      />
+      <input
+        type="hidden"
+        id="userId"
+        name="userId"
+        value={user?.userid}
+      />
+      <button
+        type="submit"
+        class="px-6 py-2 bg-indigo-500 text-white font-bold rounded-r-md hover:bg-indigo-600 transition duration-300 ease-in-out shadow-md"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</form>
+
+                        <div className="mt-11 ml-2 flex items-center">
                           <button className="bg-white text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
                             <FaHeart size={26} icon="fa-regular fa-heart" />
                           </button>

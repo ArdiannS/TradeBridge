@@ -1,26 +1,49 @@
 const database = require("../Configuration/DataBaseConnection");
 
 class ProductModel {
+  
   static async insertJobs(
     jobTitle,
     jobDescription,
     jobType,
     jobCategory,
     jobCity,
-    jobPrice,
-    jobPhoto
+    jobPhoto,
+    idUser
   ) {
     return new Promise((resolve, reject) => {
       database.query(
-        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity, jobPrice,jobPhoto) VALUES (?, ?, ?, ?, ?,?,?)",
+        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity,jobPhoto,idusers) VALUES (?, ?, ?, ?, ?,?,?)",
         [
           jobTitle,
           jobDescription,
           jobType,
           jobCategory,
           jobCity,
-          jobPrice,
           jobPhoto,
+          idUser
+        ],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  }
+  static async insertJobOffer(
+          idUser,
+          jobId,
+          jobPrice
+  ) {
+    return new Promise((resolve, reject) => {
+      database.query(
+        "INSERT INTO jobOffer(idusers,jobid, jobOffer) VALUES (?, ?, ?)",
+        [idUser,
+          jobId,
+          jobPrice
         ],
         (error, result) => {
           if (error) {
@@ -88,9 +111,9 @@ class ProductModel {
         }
       );
     });
-}
-static async getJobsByCategory(category) {
-  return new Promise((resolve, reject) => {
+  }
+  static async getJobsByCategory(category) {
+    return new Promise((resolve, reject) => {
       database.query(
           "SELECT * FROM Jobs WHERE jobCategory = ? LIMIT 3",
           [category],
@@ -102,8 +125,8 @@ static async getJobsByCategory(category) {
               }
           }
       );
-  });
-}
+    });
+  }
   static async getJobPhotoById(id) {
     return new Promise((resolve, reject) => {
       database.query(
@@ -164,11 +187,27 @@ static async getJobsByCategory(category) {
       );
     });
   }
+
+static async getJobsByUserId(userId) {
+  return new Promise((resolve, reject) => {
+    database.query(
+      "SELECT * FROM jobs WHERE idusers = ?",
+      [userId],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        resolve(results);
+      }
+    );
+  });
+}
+
   static async searchJobsByTitle(title) {
     const query = "SELECT * FROM jobs WHERE title LIKE ?";
     const searchTitle = `%${title}%`;
     try {
-      const [rows] = await db.query(query, [searchTitle]);
+      const [rows] = await database.query(query, [searchTitle]);
       return rows;
     } catch (error) {
       throw new Error(`Error searching jobs: ${error.message}`);

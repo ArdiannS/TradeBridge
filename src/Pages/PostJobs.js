@@ -1,7 +1,10 @@
 import mainIMG from "../images/photo.jpg";
 import { useRef, useEffect } from "react";
 import Footer from "../Components/Footer";
-function PostJobs() {
+const user = JSON.parse(localStorage.getItem("user"));
+console.log("user", user);
+  function PostJobs() {
+
   const sectionRef1 = useRef(null);
   const sectionRef2 = useRef(null);
   const sectionRef3 = useRef(null);
@@ -168,19 +171,6 @@ function PostJobs() {
                   placeholder="Ex: Prishtine"
                 />
               </div>
-
-              <div class="w-full md:w-1/2 px-3 mb-4 md:mb-0">
-                <label for="company" class=" block text-gray-700 text-sm mb-2">
-                  Price
-                </label>
-                <input
-                  name="jobPrice"
-                  type="text"
-                  class="focus:border-blue-600 appearance-none block w-full bg-white text-gray-700 border border-gray-400 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500"
-                  id="jobPrice"
-                  placeholder="The price should be in euro"
-                />
-              </div>
             </div>
 
             <div class="mb-4 md:mb-0">
@@ -198,7 +188,6 @@ function PostJobs() {
               />
             </div>
           </div>
-
           <div>
             <button
               class="bg-teal-500 hover:bg-teal-600 text-white py-2 px-3 rounded"
