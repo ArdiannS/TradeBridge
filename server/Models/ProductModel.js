@@ -13,7 +13,7 @@ class ProductModel {
   ) {
     return new Promise((resolve, reject) => {
       database.query(
-        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity,jobPhoto,idusers) VALUES (?, ?, ?, ?, ?,?,?)",
+        "INSERT INTO Jobs(jobTitle,jobDescription, jobType, jobCategory, jobCity,jobPhoto,idusers) VALUES (?, ?, ?, ?,?,?,?)",
         [
           jobTitle,
           jobDescription,
@@ -36,14 +36,16 @@ class ProductModel {
   static async insertJobOffer(
           idUser,
           jobId,
-          jobPrice
+          jobPrice,
+          bidDescription
   ) {
     return new Promise((resolve, reject) => {
       database.query(
-        "INSERT INTO jobOffer(idusers,jobid, jobOffer) VALUES (?, ?, ?)",
+        "INSERT INTO jobOffer(idusers,jobid, jobOffer,bidDescription,bidTime) VALUES (?, ?, ?, ?, NOW())",
         [idUser,
           jobId,
-          jobPrice
+          jobPrice,
+          bidDescription,
         ],
         (error, result) => {
           if (error) {
@@ -58,6 +60,18 @@ class ProductModel {
   static async getAllJobs() {
     return new Promise((resolve, reject) => {
       database.query("SELECT * FROM Jobs", [], (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
+  static async getJobOffersByJobId(id)
+ {
+    return new Promise((resolve, reject) => {
+      database.query("Select * From jobOffer o inner join Jobs j on o.jobid= j.jobId inner join Users u on u.userid = j.idusers where o.jobid = ? order by bidTime desc LIMIT 3", [id], (error, result) => {
         if (error) {
           reject(error);
         } else {

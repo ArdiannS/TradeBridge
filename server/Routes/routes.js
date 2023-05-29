@@ -49,4 +49,6 @@ router.get("/user/profile", UserController.getUserProfile);
 router.get("/myjobs/:id", ProductController.getJobsByUserId);
 router.put("/user/profile", UserController.updateUserProfile);
 router.get("/jobs", ProductController.searchJobs);
+router.get("/jobOffer/:id", ProductController.getJobOffers);
+
 module.exports = router;
