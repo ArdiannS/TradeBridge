@@ -27,7 +27,7 @@ class ProductController {
         userid
       );
     
-      res.send("Job added successfully");
+      res.redirect("/jobsearch");
     } catch (err) {
       console.error(err);
       res.status(500).send("Error adding job");
@@ -40,17 +40,16 @@ class ProductController {
       jobId,
       bidDescription
     } = req.body;
-
+    console.log(jobId);
+    console.log("userid" , userId);
     try {
       const result = await ProductModel.insertJobOffer(
         userId,
         jobId,
         jobPrice,
         bidDescription
-
-
       );
-      res.send("Offer added successfully");
+      res.redirect("/jobsearch"); // Redirect to the "jobsearch" page
     } catch (err) {
       console.error(err);
       res.status(500).send("Error adding Offer");
@@ -70,8 +69,6 @@ class ProductController {
   static async getJobByCategory(req,res){
     try{
       const jobCategory = req.params.category;
-      console.log("+++++++++++");
-      console.log(jobCategory);
       const jobs = await ProductModel.getJobsByCategory(jobCategory);
       res.send(jobs);
     } catch (error) {
@@ -103,11 +100,21 @@ class ProductController {
       res.status(500).send("Error retrieving products");
     }
   }
+  static async getAllJobOffers(req, res) {
+      try {
+      const result = await ProductModel.getAllJobOffers();
+      if (result) {
+        res.send(result);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving Job Offers");
+    }
+  }
   static async getJobOffers(req, res) {
     const id = req.params.id;
     console.log("job offer", id);
-    
-        try {
+      try {
       const result = await ProductModel.getJobOffersByJobId(id);
       if (result) {
         res.send(result);
@@ -147,6 +154,17 @@ class ProductController {
     try {
       const result = await ProductModel.deleteJob(id, res);
       res.status(200).json({ message: "Job deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error deleting job");
+    }
+  }
+  static async deleteJobOfferById(req, res) {
+    const { id } = req.params;
+    console.log("id e ofertes" , id);
+    try {
+      const result = await ProductModel.deleteJobOffer(id);
+      res.status(200).json({ message: "Job Offer deleted successfully" });
     } catch (error) {
       console.error(error);
       res.status(500).send("Error deleting job");

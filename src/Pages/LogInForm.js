@@ -16,7 +16,6 @@ function LogInForm() {
     axios.post('/signin', formData)
         .then(res => {
           localStorage.setItem('user', JSON.stringify(res.data.userData?.[0]) || "");
-          window.location.reload();
           navigate('/dashboard');
         }).catch(({response}) => {
           setError(response.data.message)

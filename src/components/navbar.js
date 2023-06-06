@@ -125,11 +125,8 @@ function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
             >
               <span className="sr-only">Open user menu</span>
-              <img
-                className="w-8 h-8 mr-2 rounded-full"
-                src={require("../images/logoo2.png")}
-                alt="user photo"
-              />
+              <img src={`data:image/jpeg;base64,${user.userProfilePicture}`}  className="w-10 h-10 rounded-full"
+alt="My Image" />
               {user.username}
               <svg
                 className="w-4 h-4 mx-1.5"

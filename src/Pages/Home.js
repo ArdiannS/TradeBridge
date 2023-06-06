@@ -64,6 +64,7 @@ const Home = () => {
       <div>
         <Support />
       </div>
+      <Footer/>
     </> 
   );
 };

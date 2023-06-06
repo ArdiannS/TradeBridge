@@ -59,7 +59,7 @@ class ProductModel {
   }
   static async getAllJobs() {
     return new Promise((resolve, reject) => {
-      database.query("SELECT * FROM Jobs", [], (error, result) => {
+      database.query("SELECT * FROM Jobs j inner join Users u on u.userid = j.idusers", [], (error, result) => {
         if (error) {
           reject(error);
         } else {
@@ -71,7 +71,7 @@ class ProductModel {
   static async getJobOffersByJobId(id)
  {
     return new Promise((resolve, reject) => {
-      database.query("Select * From jobOffer o inner join Jobs j on o.jobid= j.jobId inner join Users u on u.userid = j.idusers where o.jobid = ? order by bidTime desc LIMIT 3", [id], (error, result) => {
+      database.query("Select * From jobOffer o inner join Users u on u.userid = o.idusers  where o.jobid = ? order by bidTime desc LIMIT 3", [id], (error, result) => {
         if (error) {
           reject(error);
         } else {
@@ -80,6 +80,18 @@ class ProductModel {
       });
     });
   }
+  static async getAllJobOffers(id)
+  {
+     return new Promise((resolve, reject) => {
+       database.query("Select * From jobOffer ",[], (error, result) => {
+         if (error) {
+           reject(error);
+         } else {
+           resolve(result);
+         }
+       });
+     });
+   }
   static async getNumberOfAllJobs() {
     return new Promise((resolve, reject) => {
       database.query(
@@ -160,6 +172,20 @@ class ProductModel {
     return new Promise((resolve) => {
       database.query(
         "Delete From Jobs where jobId = ?",
+        [id],
+        (err, result) => {
+          if (err) {
+            return console.error(err.message);
+          }
+          resolve(result);
+        }
+      );
+    });
+  }
+  static async deleteJobOffer(id) {
+    return new Promise((resolve) => {
+      database.query(
+        "Delete From jobOffer where idoffer = ?",
         [id],
         (err, result) => {
           if (err) {

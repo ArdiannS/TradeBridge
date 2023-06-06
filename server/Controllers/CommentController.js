@@ -6,7 +6,7 @@ class CommentController {
 
     const result = await CommentModel.addComent(commentContent, jobId, userId);
     if (result) {
-      return res.status(200).json({ message: "Comment added succesfully" });
+      return res.redirect("/jobsearch");
     }
     res.status(400).json({ message: "error" });
   }
@@ -29,13 +29,14 @@ class CommentController {
     const {id} = req.params;
     var result = await CommentModel.updateComment(commentContent,id);
     if (result) {
-      return res.status(200).json({ message: "Comment updated succesfully" });
+      return res.redirect("/jobsearch");
     }
   }
   static async deleteComment(req, res) {
     const { id } = req.params;
+    console.log("this " , id);
     try {
-      const result = await CommentModel.deleteComment(id, res);
+      const result = await CommentModel.deleteComment(id);
       res.status(200).json({ message: "Comment deleted successfully" });
     } catch (error) {
       console.error(error);

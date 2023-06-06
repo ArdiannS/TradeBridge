@@ -14,6 +14,8 @@ import axios from "../api/axiosInstance";
 const user = JSON.parse(localStorage.getItem("user"));
 console.log("user", user);
 function JobSearch() {
+  const useri = user?.username;
+  console.log(useri);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const handleSearch = async () => {
@@ -80,6 +82,7 @@ function JobSearch() {
             <div class="">
               <FaFacebook size={43} class="ml-4 mt-4" />
             </div>
+            
             <div class="ml-auto">
               <h2 class="ml-4 mt-4 mr-4 text-3xl font-mono">
                 ${job.jobCategory}
@@ -165,7 +168,6 @@ function JobSearch() {
       .catch((err) => console.error(err.message));
   }, []);
 
-
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isFiltering, setIsFiltering] = useState(false);
@@ -186,7 +188,6 @@ function JobSearch() {
   //     });
 
   // }
-  const [filtering, setFiltering] = useState(false);
   const [totalJobs, setTotalJobs] = useState(0);
   useEffect(() => {
     fetch("/dashboard/total-jobs")
@@ -224,19 +225,35 @@ function JobSearch() {
     { value: "Pastrim", label: "Pastrim" },
     { value: "Hidraulik", label: "Hidraulik" },
     { value: "Mekanik", label: "Mekanik" },
+    { value: "IT", label: "IT" },
+
   ];
+  const [Allcomments, setAllComments] = useState([]);
+  useEffect(() => {
+    fetch("/comments")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setAllComments(data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
   const [comments, setComments] = useState([]);
+  const [jobOfferData, setJobOfferData] = useState([]);
+
 
   useEffect(() => {
     let jobid = null;
+    if (jobs.length > 0) {
+      console.log("useeff3", jobs[0].jobId);
+      jobid = jobs[0].jobId;
+    }
     if (selectedJob && selectedJob.jobId) {
       console.log("useeff1", selectedJob.jobId);
       jobid = selectedJob.jobId;
-    } else if (filteredJobs && filteredJobs.jobId) {
+    }  else if (filteredJobs && filteredJobs[0] && filteredJobs[0].jobId) {
       console.log("useeff2", filteredJobs[0].jobId);
       jobid = filteredJobs[0].jobId;
-    } else if (jobs && jobs.jobId) {
-      jobid = jobs[0].jobId;
     }
 
     if (jobid) {
@@ -253,15 +270,16 @@ function JobSearch() {
 
   useEffect(() => {
     let jobid = null;
+    if(jobs.length > 0) {
+      console.log("useeff3", jobs[0].jobId);
+      jobid = jobs[0].jobId;
+    }
     if (selectedJob && selectedJob.jobId) {
       console.log("useeff1", selectedJob.jobId);
       jobid = selectedJob.jobId;
     } else if (filteredJobs && filteredJobs[0] && filteredJobs[0].jobId) {
       console.log("useeff2", filteredJobs[0].jobId);
       jobid = filteredJobs[0].jobId;
-    } else if (jobs.length > 0) {
-      console.log("useeff3", jobs[0].jobId);
-      jobid = jobs[0].jobId;
     }
     fetch(`/jobOffer/${jobid}`)
       .then((res) => res.json())
@@ -271,7 +289,49 @@ function JobSearch() {
       })
       .catch((err) => console.error(err.message));
   }, [selectedJob, filteredJobs, jobs]);
-  
+  const [selectedOfferId, setSelectedOfferId] = useState(null);
+  const handleEdit = (offerId) => {
+    setSelectedOfferId(offerId);
+  };
+  useEffect(() => {
+    fetch("/jobOffers")
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setJobOffers(data);
+      })
+      .catch((error) => console.error(error));
+  }, []);
+  const handleDelete = (offerId) => {
+      try {
+      axios
+        .delete(`/jobOffer/${offerId}`)
+        .then((res) => {
+          setJobOffers(jobOfferData.filter((x) => x.offerid != offerId));
+        })
+        .catch((err) => {
+          console.log("err", err.message);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleDeleteComment = (commentId) => {
+    try {
+    axios
+      .delete(`/comments/${commentId}`)
+      .then((res) => {
+        setComments(comments.filter((x) => x.commentid != commentId));
+      })
+      .catch((err) => {
+        console.log("err", err.message);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+
   return (
     <>
       <header>{/* <Navbar /> */}</header>
@@ -297,7 +357,8 @@ function JobSearch() {
                 {isDropdownOpen && (
                   <div
                     className="absolute z-10 mt-2 w-52 bg-white border border-gray-300 rounded shadow-lg"
-                    onClick={() => setSelectedJob(null)}
+                    onClick={() => setSelectedJob(null) }
+                    
                   >
                     <ul className="py-2">
                       {categories.map((category) => (
@@ -468,8 +529,8 @@ function JobSearch() {
                   </div>
                   <div className="mt-3">
                     <h3 className=" font-extralight text-2xl">
-                      Posted by Duhet prej databaze:
-                      {user?.username}
+                      Posted by:
+                      {selectedJob.username}
                     </h3>
                   </div>
                   <div className="mt-3">
@@ -502,122 +563,164 @@ function JobSearch() {
                     <p className=" text-2xl font-bold">Hours </p>
                     <p className=" text-lg font-light">Set own</p>
                   </div>
+
                   <div className="flex mt-5">
-                            <form action="/jobsearch" method="POST">
-                              <div class="my-5">
-                                <div class="mt-2 flex flex-col ">
-                                  <div className="flex justify-between">
-                                    <label
-                                      htmlFor="bidAmount"
-                                      className="block text-xl font-semibold"
-                                    >
-                                      Place Your Bid:
-                                      <br />
-                                    </label>
-                                    <input
-                                      type="number"
-                                      id="jobPrice"
-                                      name="jobPrice"
-                                      className="w-40 items-center px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-10"
-                                      placeholder="Enter amount"
-                                      required
+                    {/* Nese useri osht logged in me account qe e ka postu punen ather smunet me bo bid produktit t'vet veq me fshi */}
+                    {useri === selectedJob.username ? (
+                      <div className="flex mt-4 space-x-4"></div>
+                    ) : (
+                      <div>
+                        <form action="/jobsearch" method="POST">
+                          <div class="my-5">
+                            <div class="mt-2 flex flex-col ">
+                              <div className="flex justify-between">
+                                <label
+                                  htmlFor="bidAmount"
+                                  className="block text-xl font-semibold"
+                                >
+                                  Place Your Bid:
+                                  <br />
+                                </label>
+                                <input
+                                  type="number"
+                                  id="jobPrice"
+                                  name="jobPrice"
+                                  className="w-40 items-center px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-10"
+                                  placeholder="Enter amount"
+                                  required
+                                />
+
+                                <div className="ml-2 flex">
+                                  <button className="bg-white items-center h-11 text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                                    <FaHeart
+                                      size={26}
+                                      icon="fa-regular fa-heart"
                                     />
-
-                                    <div className="ml-2 flex">
-                                      <button className="bg-white items-center h-11 text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                                        <FaHeart
-                                          size={26}
-                                          icon="fa-regular fa-heart"
-                                        />
-                                      </button>
-                                    </div>
-                                  </div>
-
-                                  <div class="flex flex-col ">
-                                    <label
-                                      for="bidDescription"
-                                      class="block text-xl font-semibold"
-                                    >
-                                      Bid Description
-                                    </label>
-                                    <textarea
-                                      id="bidDescription"
-                                      name="bidDescription"
-                                      class="w-96 px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-24"
-                                      placeholder="Enter description"
-                                    ></textarea>
-                                  </div>
-                                  <input
-                                    type="hidden"
-                                    id="jobId"
-                                    name="jobId"
-                                    value={selectedJob.jobId}
-                                  />
-                                  <input
-                                    type="hidden"
-                                    id="userId"
-                                    name="userId"
-                                    value={user?.userid}
-                                  />
-                                  <button
-                                    type="submit"
-                                    class="px-6 mt-3 py-2 bg-indigo-500 text-white font-bold rounded-r-md hover:bg-indigo-600 transition duration-300 ease-in-out shadow-md"
-                                  >
-                                    Submit
                                   </button>
                                 </div>
                               </div>
-                            </form>
-                          </div>
-                        </div>
 
-                        <div>
-                          <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
-                            <img
-                              src={images[currentIndex]}
-                              class="max-w-auto max-h-auto"
-                              alt="User avatar"
-                            />
+                              <div class="flex flex-col ">
+                                <label
+                                  for="bidDescription"
+                                  class="block text-xl font-semibold"
+                                >
+                                  Bid Description
+                                </label>
+                                <textarea
+                                  id="bidDescription"
+                                  name="bidDescription"
+                                  class="w-96 px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-24"
+                                  placeholder="Enter description"
+                                ></textarea>
+                              </div>
+                              <input
+                                type="hidden"
+                                id="jobId"
+                                name="jobId"
+                                value={selectedJob.jobId}
+                              />
+                              <input
+                                type="hidden"
+                                id="userId"
+                                name="userId"
+                                value={user?.userid}
+                              />
+                              <button
+                                type="submit"
+                                class="px-6 mt-3 py-2 bg-indigo-500 text-white font-bold rounded-r-md hover:bg-indigo-600 transition duration-300 ease-in-out shadow-md"
+                              >
+                                Submit
+                              </button>
+                            </div>
                           </div>
-                          <div class="flex justify-center mt-2">
-                            <button onClick={nextImage} class="mx-2">
-                              Prev
-                            </button>
-                            <button onClick={prevImage} class="mx-2">
-                              Next
-                            </button>
-                          </div>
-                        </div>
+                        </form>
                       </div>
-                      
-                      <h2 className="text-2xl text-center font-bold">
-  Bids for this Job:
-</h2>
-<div className="flex justify-between">
-{jobOffers.map((offer) => (
-    <div className="mt-8 w-1/3"key={offer.idoffer}>
-      <ul className="mt-4 space-y-4">
-        <li className="border border-gray-300 rounded-lg p-4">
-          <div className="flex items-start justify-between">
-            <div className="flex flex-col">
-              <p className="text-lg font-bold">Bid From: {offer.username}</p>
-              <p className="text-sm text-gray-500">
-                Bid Date: {offer.bidTime}
-              </p>
-            </div>
-            <p className="text-xl font-bold">
-              Bid Amount:
-              <br />
-              ${offer.jobOffer}
-            </p>
-          </div>
-          <p className="mt-2 text-gray-700">Bid Description: {offer.bidDescription}</p>
-        </li>
-        {/* Add more li elements for additional bids */}
-      </ul>
-    </div>
-))}
-</div>
+                    )}
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
+                    <img
+                      src={images[currentIndex]}
+                      class="max-w-auto max-h-auto"
+                      alt="User avatar"
+                    />
+                  </div>
+                  <div class="flex justify-center mt-2">
+                    <button onClick={nextImage} class="mx-2">
+                      Prev
+                    </button>
+                    <button onClick={prevImage} class="mx-2">
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <h2 className="text-2xl text-center font-bold">
+                Bids for this Job:
+              </h2>
+              <div className="flex justify-between">
+                {jobOffers.map((offer) => (
+                  <div className="mt-8 w-1/3" key={offer.idoffer}>
+                    <ul className="mt-4 space-y-4">
+                      <li className="border border-gray-300 rounded-lg p-4">
+                        <div className="flex items-start justify-between">
+                          <div className="flex flex-col">
+                            <p className="text-lg font-bold">
+                              Bid From: {offer.username}
+                            </p>
+                            <p className="text-sm text-gray-500">
+                              Bid Date: {offer.bidTime}
+                            </p>
+                          </div>
+                          <p className="text-xl font-bold">
+                            Bid Amount:
+                            <br />${offer.jobOffer}
+                          </p>
+                        </div>
+                        <p className="mt-2 text-gray-700">
+                          Bid Description: {offer.bidDescription}
+                        </p>
+                        {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
+                        {useri === offer.username ? (
+                              <div className="flex mt-4 space-x-4">
+                                <button
+                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleEdit(offer.idoffer)}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleDelete(offer.idoffer)}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            ) : (
+                              <div>
+                                {useri === selectedJob.username && (
+                                  <div className="flex mt-4 space-x-4">
+                                    <button
+                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                      onClick={() =>
+                                        handleDelete(offer.idoffer)
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                      </li>
+                    </ul>
+                  </div>
+                ))}
+              </div>
 
               <div className=" flex justify-between">
                 <div className=" w-1/2 pr-4">
@@ -644,17 +747,51 @@ function JobSearch() {
                       >
                         <div className="flex items-center gap-2">
                           <div>
-                            <h4>{user?.username}</h4>
+                            <h4>{comment.username}</h4>
                           </div>
                           <img
-                            src={`data:image/jpeg;base64,${user?.userProfilePicture}`}
+                            src={`data:image/jpeg;base64,${comment.userProfilePicture}`}
                             className="w-8 h-8 rounded-full"
                             alt="My Image"
                           />
                         </div>
                         <p className="text-black">{comment.commentContent}</p>
+                        {useri === comment.username ? (
+                              <div className="flex mt-4 space-x-4  justify-end">
+                                <button
+                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleEdit(comment.commentid)}
+                                >
+                                  Edit
+                                </button>
+                                <button
+  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+  onClick={() => handleDeleteComment(comment.commentid)}
+>
+  Delete
+</button>
+
+                              </div>
+                            ) : (
+                              <div className="flex justify-end">
+                                {useri === selectedJob.username && (
+                                  <div className="flex mt-4 space-x-4">
+                                    <button
+                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                      onClick={() =>
+                                        handleDeleteComment(comment.commentid)
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                       </div>
+                      
                     ))}
+                    
                     <form
                       action="/commentForm"
                       method="POST"
@@ -707,7 +844,7 @@ function JobSearch() {
                       </div>
                       <div className="mt-3">
                         <h3 className=" font-extralight text-2xl">
-                          Posted by Duhet prej databaze kansa:
+                          Posted by:
                           {filteredJobs[0]?.username}
                         </h3>
                       </div>
@@ -748,6 +885,11 @@ function JobSearch() {
                         <p className=" text-lg font-light">Set own</p>
                       </div>
                       <div className="flex mt-5">
+                        {/* Nese useri osht logged in me account qe e ka postu punen ather smunet me bo bid produktit t'vet veq me fshi */}
+                        {useri === filteredJobs[0].username ? (
+                          <div className="flex mt-4 space-x-4"></div>
+                        ) : (
+                          <div>
                             <form action="/jobsearch" method="POST">
                               <div class="my-5">
                                 <div class="mt-2 flex flex-col ">
@@ -796,7 +938,7 @@ function JobSearch() {
                                     type="hidden"
                                     id="jobId"
                                     name="jobId"
-                                    value={selectedJob.jobId}
+                                    value={filteredJobs[0].jobId}
                                   />
                                   <input
                                     type="hidden"
@@ -814,54 +956,90 @@ function JobSearch() {
                               </div>
                             </form>
                           </div>
-                        </div>
-
-                        <div>
-                          <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
-                            <img
-                              src={images[currentIndex]}
-                              class="max-w-auto max-h-auto"
-                              alt="User avatar"
-                            />
-                          </div>
-                          <div class="flex justify-center mt-2">
-                            <button onClick={nextImage} class="mx-2">
-                              Prev
-                            </button>
-                            <button onClick={prevImage} class="mx-2">
-                              Next
-                            </button>
-                          </div>
-                        </div>
+                        )}
                       </div>
-                      <h2 className="text-2xl text-center font-bold">
-  Bids for this Job:
-</h2>
-<div className="flex justify-between">
-{jobOffers.map((offer) => (
-    <div className="mt-8 w-1/3"key={offer.idoffer}>
-      <ul className="mt-4 space-y-4">
-        <li className="border border-gray-300 rounded-lg p-4">
-          <div className="flex items-start justify-between">
-            <div className="flex flex-col">
-              <p className="text-lg font-bold">Bid From: {offer.username}</p>
-              <p className="text-sm text-gray-500">
-                Bid Date: {offer.birthdate}
-              </p>
-            </div>
-            <p className="text-xl font-bold">
-              Bid Amount:
-              <br />
-              ${offer.jobOffer}
-            </p>
-          </div>
-          <p className="mt-2 text-gray-700">Bid Description: {offer.bidDescription}</p>
-        </li>
-        {/* Add more li elements for additional bids */}
-      </ul>
-    </div>
-))}
-</div>
+                    </div>
+
+                    <div>
+                      <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
+                        <img
+                          src={images[currentIndex]}
+                          class="max-w-auto max-h-auto"
+                          alt="User avatar"
+                        />
+                      </div>
+                      <div class="flex justify-center mt-2">
+                        <button onClick={nextImage} class="mx-2">
+                          Prev
+                        </button>
+                        <button onClick={prevImage} class="mx-2">
+                          Next
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <h2 className="text-2xl text-center font-bold">
+                    Bids for this Job:
+                  </h2>
+                  <div className="flex justify-between">
+                    {jobOffers.map((offer) => (
+                      <div className="mt-8 w-1/3" key={offer.idoffer}>
+                        <ul className="mt-4 space-y-4">
+                          <li className="border border-gray-300 rounded-lg p-4">
+                            <div className="flex items-start justify-between">
+                              <div className="flex flex-col">
+                                <p className="text-lg font-bold">
+                                  Bid From: {offer.username}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  Bid Date: {offer.bidTime}
+                                </p>
+                              </div>
+                              <p className="text-xl font-bold">
+                                Bid Amount:
+                                <br />${offer.jobOffer}
+                              </p>
+                            </div>
+                            <p className="mt-2 text-gray-700">
+                              Bid Description: {offer.bidDescription}
+                            </p>
+                            {useri === offer.username ? (
+                              <div className="flex mt-4 space-x-4">
+                                <button
+                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleEdit(offer.idoffer)}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleDelete(offer.idoffer)}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            ) : (
+                              <div>
+                                {useri === filteredJobs[0].username && (
+                                  <div className="flex mt-4 space-x-4">
+                                    <button
+                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                      onClick={() =>
+                                        handleDelete(offer.idoffer)
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}{" "}
+                          </li>
+                          {/* Add more li elements for additional bids */}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
                   <div className=" flex justify-between">
                     <div className=" w-1/2 pr-4">
                       <h3 className="text-center cursor-pointer">
@@ -887,10 +1065,10 @@ function JobSearch() {
                           >
                             <div className="flex items-center gap-2">
                               <div>
-                                <h4>{user?.username}</h4>
+                                <h4>{comment.username}</h4>
                               </div>
                               <img
-                                src={`data:image/jpeg;base64,${user?.userProfilePicture}`}
+                                src={`data:image/jpeg;base64,${comment.userProfilePicture}`}
                                 className="w-8 h-8 rounded-full"
                                 alt="My Image"
                               />
@@ -898,6 +1076,37 @@ function JobSearch() {
                             <p className="text-black">
                               {comment.commentContent}
                             </p>
+                            {useri === comment.username ? (
+                              <div className="flex mt-4 space-x-4  justify-end">
+                                <button
+                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleEdit(comment.commentid)}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleDeleteComment(comment.commentid)}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="flex justify-end">
+                                {useri === filteredJobs[0].username && (
+                                  <div className="flex mt-4 space-x-4">
+                                    <button
+                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                      onClick={() =>
+                                        handleDeleteComment(comment.commentid)
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                           </div>
                         ))}
                         <form
@@ -945,7 +1154,7 @@ function JobSearch() {
                           </div>
                           <div className="mt-3">
                             <h3 className=" font-extralight text-2xl">
-                              Posted by Duhet prej databaze kansa:
+                              Posted by k:
                               {jobs[0]?.username}
                             </h3>
                           </div>
@@ -982,71 +1191,78 @@ function JobSearch() {
                             <p className=" text-lg font-light">Set own</p>
                           </div>
                           <div className="flex mt-5">
-                            <form action="/jobsearch" method="POST">
-                              <div class="my-5">
-                                <div class="mt-2 flex flex-col ">
-                                  <div className="flex justify-between">
-                                    <label
-                                      htmlFor="bidAmount"
-                                      className="block text-xl font-semibold"
-                                    >
-                                      Place Your Bid:
-                                      <br />
-                                    </label>
-                                    <input
-                                      type="number"
-                                      id="jobPrice"
-                                      name="jobPrice"
-                                      className="w-40 items-center px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-10"
-                                      placeholder="Enter amount"
-                                      required
-                                    />
-
-                                    <div className="ml-2 flex">
-                                      <button className="bg-white items-center h-11 text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                                        <FaHeart
-                                          size={26}
-                                          icon="fa-regular fa-heart"
+                            {/* Nese useri osht logged in me account qe e ka postu punen ather smunet me bo bid produktit t'vet veq me fshi */}
+                            {useri === jobs[0].username ? (
+                              <div className="flex mt-4 space-x-4"></div>
+                            ) : (
+                              <div>
+                                <form action="/jobsearch" method="POST">
+                                  <div class="my-5">
+                                    <div class="mt-2 flex flex-col ">
+                                      <div className="flex justify-between">
+                                        <label
+                                          htmlFor="bidAmount"
+                                          className="block text-xl font-semibold"
+                                        >
+                                          Place Your Bid:
+                                          <br />
+                                        </label>
+                                        <input
+                                          type="number"
+                                          id="jobPrice"
+                                          name="jobPrice"
+                                          className="w-40 items-center px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-10"
+                                          placeholder="Enter amount"
+                                          required
                                         />
+
+                                        <div className="ml-2 flex">
+                                          <button className="bg-white items-center h-11 text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                                            <FaHeart
+                                              size={26}
+                                              icon="fa-regular fa-heart"
+                                            />
+                                          </button>
+                                        </div>
+                                      </div>
+
+                                      <div class="flex flex-col ">
+                                        <label
+                                          for="bidDescription"
+                                          class="block text-xl font-semibold"
+                                        >
+                                          Bid Description
+                                        </label>
+                                        <textarea
+                                          id="bidDescription"
+                                          name="bidDescription"
+                                          class="w-96 px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-24"
+                                          placeholder="Enter description"
+                                        ></textarea>
+                                      </div>
+                                      <input
+                                        type="hidden"
+                                        id="jobId"
+                                        name="jobId"
+                                        value={jobs[0].jobId}
+                                      />
+                                      <input
+                                        type="hidden"
+                                        id="userId"
+                                        name="userId"
+                                        value={user?.userid}
+                                      />
+                                      <button
+                                        type="submit"
+                                        class="px-6 mt-3 py-2 bg-indigo-500 text-white font-bold rounded-r-md hover:bg-indigo-600 transition duration-300 ease-in-out shadow-md"
+                                      >
+                                        Submit
                                       </button>
                                     </div>
                                   </div>
-
-                                  <div class="flex flex-col ">
-                                    <label
-                                      for="bidDescription"
-                                      class="block text-xl font-semibold"
-                                    >
-                                      Bid Description
-                                    </label>
-                                    <textarea
-                                      id="bidDescription"
-                                      name="bidDescription"
-                                      class="w-96 px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-24"
-                                      placeholder="Enter description"
-                                    ></textarea>
-                                  </div>
-                                  <input
-                                    type="hidden"
-                                    id="jobId"
-                                    name="jobId"
-                                    value={jobs[0].jobId}
-                                  />
-                                  <input
-                                    type="hidden"
-                                    id="userId"
-                                    name="userId"
-                                    value={user?.userid}
-                                  />
-                                  <button
-                                    type="submit"
-                                    class="px-6 mt-3 py-2 bg-indigo-500 text-white font-bold rounded-r-md hover:bg-indigo-600 transition duration-300 ease-in-out shadow-md"
-                                  >
-                                    Submit
-                                  </button>
-                                </div>
+                                </form>
                               </div>
-                            </form>
+                            )}
                           </div>
                         </div>
 
@@ -1072,30 +1288,65 @@ function JobSearch() {
                         Bids for this Job:
                       </h2>
                       <div className="flex justify-between">
-                      {jobOffers.map((offer) => (
-                          <div className="mt-8 w-1/3"key={offer.idoffer}>
+                        {jobOffers.map((offer) => (
+                          <div className="mt-8 w-1/3" key={offer.idoffer}>
                             <ul className="mt-4 space-y-4">
                               <li className="border border-gray-300 rounded-lg p-4">
                                 <div className="flex items-start justify-between">
                                   <div className="flex flex-col">
-                                    <p className="text-lg font-bold">Bid From: {offer.username}</p>
+                                    <p className="text-lg font-bold">
+                                      Bid From: {offer.username}
+                                    </p>
                                     <p className="text-sm text-gray-500">
                                       Bid Date: {offer.bidTime}
                                     </p>
                                   </div>
                                   <p className="text-xl font-bold">
                                     Bid Amount:
-                                    <br />
-                                    ${offer.jobOffer}
+                                    <br />${offer.jobOffer}
                                   </p>
                                 </div>
-                                <p className="mt-2 text-gray-700">Bid Description: {offer.bidDescription}</p>
+                                <p className="mt-2 text-gray-700">
+                                  Bid Description: {offer.bidDescription}
+                                </p>
+                                {useri === offer.username ? (
+                              <div className="flex mt-4 space-x-4">
+                                <button
+                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleEdit(offer.idoffer)}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleDelete(offer.idoffer)}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            ) : (
+                              <div>
+                                {useri === jobs[0].username && (
+                                  <div className="flex mt-4 space-x-4">
+                                    <button
+                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                      onClick={() =>
+                                        handleDelete(offer.idoffer)
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                               </li>
                               {/* Add more li elements for additional bids */}
                             </ul>
                           </div>
-                      ))}
-</div>
+                        ))}
+                      </div>
+
                       <div className=" flex justify-between">
                         <div className=" w-1/2 pr-4">
                           <h3 className="text-center cursor-pointer">
@@ -1121,10 +1372,10 @@ function JobSearch() {
                               >
                                 <div className="flex items-center gap-2">
                                   <div>
-                                    <h4>{user?.username}</h4>
+                                    <h4>{comment.username}</h4>
                                   </div>
                                   <img
-                                    src={`data:image/jpeg;base64,${user?.userProfilePicture}`}
+                                    src={`data:image/jpeg;base64,${comment.userProfilePicture}`}
                                     className="w-8 h-8 rounded-full"
                                     alt="My Image"
                                   />
@@ -1132,6 +1383,37 @@ function JobSearch() {
                                 <p className="text-black">
                                   {comment.commentContent}
                                 </p>
+                                {useri === comment.username ? (
+                              <div className="flex mt-4 space-x-4 flex justify-end">
+                                <button
+                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleEdit(comment.commentid)}
+                                >
+                                  Edit
+                                </button>
+                                <button
+                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                  onClick={() => handleDeleteComment(comment.commentid)}
+                                >
+                                  Delete
+                                </button>
+                              </div>
+                            ) : (
+                              <div className="flex justify-end">
+                                {useri === jobs[0].username && (
+                                  <div className="flex mt-4 space-x-4">
+                                    <button
+                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                      onClick={() =>
+                                        handleDeleteComment(comment.commentid)
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            )}
                               </div>
                             ))}
                             {/* Comment form */}

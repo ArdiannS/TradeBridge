@@ -29,7 +29,7 @@ class CommentModel {
   }
   static async getCommentsByJobId(id) {
     return new Promise((resolve, reject) => {
-      database.query("SELECT * FROM Comments WHERE jobId = ?", [id], (error, result) => {
+      database.query("SELECT * FROM Comments c inner join Users u on u.userid = c.userid WHERE c.jobId = ?", [id], (error, result) => {
         if (error) {
           reject(error);
         } else {
