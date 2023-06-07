@@ -172,22 +172,6 @@ function JobSearch() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isFiltering, setIsFiltering] = useState(false);
   const [filteredJobs, setFilteredJobs] = useState([]);
-
-  // function commentsForJob(jobId) {
-  //   fetch(`/comments/${jobId}`, {
-  //     method: "GET",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching comments:", error);
-  //     });
-
-  // }
   const [totalJobs, setTotalJobs] = useState(0);
   useEffect(() => {
     fetch("/dashboard/total-jobs")
@@ -859,6 +843,9 @@ function JobSearch() {
                             alt="My Image"
                           />
                         </div>
+                        <p className="text-black">
+                              {comment.commentContent}
+                            </p>
                         {isEditing ? (
                           <div className="flex gap-2">
                             <input
@@ -877,6 +864,8 @@ function JobSearch() {
                             </button>
                           </div>
                         ) : (
+                          <>
+                          {useri === comment.username ? (
                           <div>
                             <p className="text-black">
                               {comment.commentContent}
@@ -901,6 +890,27 @@ function JobSearch() {
                               </button>
                             </div>
                           </div>
+                        ):(
+                            <>
+                            <div>
+                                {useri === selectedJob.username && (
+                                  <div className="flex  justify-end  space-x-4">
+                                    <button
+                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                      onClick={() =>
+                                        handleDeleteComment(comment.commentid)
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            
+
+                            </>
+                          )}
+                          </>
                         )}
                       </div>
                     ))}
@@ -1095,64 +1105,112 @@ function JobSearch() {
                     Bids for this Job:
                   </h2>
                   <div className="flex justify-between">
-                    {jobOffers.map((offer) => (
-                      <div className="mt-8 w-1/3" key={offer.idoffer}>
-                        <ul className="mt-4 space-y-4">
-                          <li className="border border-gray-300 rounded-lg p-4">
-                            <div className="flex items-start justify-between">
-                              <div className="flex flex-col">
-                                <p className="text-lg font-bold">
-                                  Bid From: {offer.username}
-                                </p>
-                                <p className="text-sm text-gray-500">
-                                  Bid Date: {offer.bidTime}
-                                </p>
-                              </div>
-                              <p className="text-xl font-bold">
-                                Bid Amount:
-                                <br />${offer.jobOffer}
-                              </p>
-                            </div>
-                            <p className="mt-2 text-gray-700">
-                              Bid Description: {offer.bidDescription}
-                            </p>
-                            {useri === offer.username ? (
-                              <div className="flex mt-4 space-x-4">
-                                <button
-                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleEdit(offer.idoffer)}
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleDelete(offer.idoffer)}
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            ) : (
-                              <div>
-                                {useri === filteredJobs[0].username && (
-                                  <div className="flex mt-4 space-x-4">
-                                    <button
-                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                      onClick={() =>
-                                        handleDelete(offer.idoffer)
-                                      }
-                                    >
-                                      Delete
-                                    </button>
-                                  </div>
-                                )}
-                              </div>
-                            )}{" "}
-                          </li>
-                          {/* Add more li elements for additional bids */}
-                        </ul>
-                      </div>
-                    ))}
+  {jobOffers.map((offer) => (
+    <div className="mt-8 w-1/3" key={offer.idoffer}>
+      <ul className="mt-4 space-y-4">
+        <li className="border border-gray-300 rounded-lg p-4">
+          <div className="flex items-start justify-between">
+            <div className="flex flex-col">
+              <p className="text-lg font-bold">Bid From: {offer.username}</p>
+              <p className="text-sm text-gray-500">Bid Date: {offer.bidTime}</p>
+            </div>
+            <p className="text-xl font-bold">
+              Bid Amount:
+
+              <br />{isEditingBid ? (
+                
+              <></>
+              ):(<>${offer.jobOffer}</>)}
+            </p>
+          </div>
+          <p className="text-xl font-light">
+              Bid Description:
+
+              <br />{isEditingBid ? (
+                
+              <></>
+              ):(<>{offer.bidDescription}</>)}
+            </p>
+
+          {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
+          {useri === offer.username ? (
+            <div className="flex mt-4 space-x-4">
+              {isEditingBid ? (
+                <>
+                          <div>
+
+            <label htmlFor="editedBidDescription">Bid Description:</label>
+              <input
+                type="text"
+                id="editedBidDescription"
+                placeholder="Enter your new Bid Description"
+                className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
+                value={editedBidDescripition}
+                onChange={(e) => setEditedBidDescripition(e.target.value)}
+              />
+            <br/>
+              <label htmlFor="editedBidAmount">Bid Amount:</label>
+              <input
+                type="number"
+                id="editedBidAmount"
+                placeholder="Enter your new Bid Amount"
+                className="p-2 border-2 border-black rounded-lg focus:outline-none ml-6 focus:border-blue-500"
+                value={editedBidAmount}
+                onChange={(e) => setEditedBidAmount(e.target.value)}
+              />
+                          <br/>
+
+
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded"
+                    onClick={() => {
+                      handleSaveBid(offer.idoffer);
+                      setIsEditingBid(false);
+                    }}
+                  >
+                    Save
+                  </button>
                   </div>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => {
+                      handleEdit(offer.idoffer);
+                      setIsEditingBid(true);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => handleDelete(offer.idoffer)}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </div>
+          ) : (
+            <div>
+              {useri === filteredJobs[0].username && (
+                <div className="flex mt-4 space-x-4">
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => handleDelete(offer.idoffer)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </li>
+      </ul>
+    </div>
+  ))}
+</div>
                   <div className=" flex justify-between">
                     <div className=" w-1/2 pr-4">
                       <h3 className="text-center cursor-pointer">
@@ -1171,68 +1229,92 @@ function JobSearch() {
                     <div className="w-1/2">
                       <h3 className="text-center">Comments</h3>
                       <div className="flex flex-col gap-4 p-4">
-                        {comments.map((comment) => (
-                          <div
-                            className="flex flex-col gap-2"
-                            key={comment.commentid}
-                          >
-                            <div className="flex items-center gap-2">
-                              <div>
-                                <h4>{comment.username}</h4>
-                              </div>
-                              <img
-                                src={`data:image/jpeg;base64,${comment.userProfilePicture}`}
-                                className="w-8 h-8 rounded-full"
-                                alt="My Image"
-                              />
-                            </div>
-                            {isEditing ? (
-                              <div className="flex gap-2">
-                                <input
-                                  type="text"
-                                  className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
-                                  value={editedComment}
-                                  onChange={(e) =>
-                                    setEditedComment(e.target.value)
-                                  }
-                                />
-                                <button
-                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() =>
-                                    handleSaveComment(comment.commentid)
-                                  }
-                                >
-                                  Save
-                                </button>
-                              </div>
-                            ) : (
-                              <div>
-                                <p className="text-black">
-                                  {comment.commentContent}
-                                </p>
-                                <div className="flex mt-4 space-x-4 justify-end">
-                                  <button
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                    onClick={() => {
-                                      handleEditComment(comment.commentid);
-                                      setIsEditing(true);
-                                    }}
-                                  >
-                                    Edit
-                                  </button>
-                                  <button
-                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                    onClick={() =>
-                                      handleDeleteComment(comment.commentid)
-                                    }
-                                  >
-                                    Delete
-                                  </button>
-                                </div>
-                              </div>
-                            )}
+                      {comments.map((comment) => (
+                      <div
+                        className="flex flex-col gap-2"
+                        key={comment.commentid}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <h4>{comment.username}</h4>
                           </div>
-                        ))}
+                          <img
+                            src={`data:image/jpeg;base64,${comment.userProfilePicture}`}
+                            className="w-8 h-8 rounded-full"
+                            alt="My Image"
+                          />
+                        </div>
+                        <p className="text-black">
+                              {comment.commentContent}
+                            </p>
+                        {isEditing ? (
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
+                              value={editedComment}
+                              onChange={(e) => setEditedComment(e.target.value)}
+                            />
+                            <button
+                              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                              onClick={() =>
+                                handleSaveComment(comment.commentid)
+                              }
+                            >
+                              Save
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                          {useri === comment.username ? (
+                          <div>
+                            <p className="text-black">
+                              {comment.commentContent}
+                            </p>
+                            <div className="flex mt-4 space-x-4 justify-end">
+                              <button
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => {
+                                  handleEditComment(comment.commentid);
+                                  setIsEditing(true);
+                                }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() =>
+                                  handleDeleteComment(comment.commentid)
+                                }
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        ):(
+                            <>
+                            <div>
+                                {useri === filteredJobs[0].username && (
+                                  <div className="flex  justify-end  space-x-4">
+                                    <button
+                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                      onClick={() =>
+                                        handleDeleteComment(comment.commentid)
+                                      }
+                                    >
+                                      Delete
+                                    </button>
+                                  </div>
+                                )}
+                              </div>
+                            
+
+                            </>
+                          )}
+                          </>
+                        )}
+                      </div>
+                    ))}
                         <form
                           action="/commentForm"
                           method="POST"
@@ -1412,66 +1494,112 @@ function JobSearch() {
                         Bids for this Job:
                       </h2>
                       <div className="flex justify-between">
-                        {jobOffers.map((offer) => (
-                          <div className="mt-8 w-1/3" key={offer.idoffer}>
-                            <ul className="mt-4 space-y-4">
-                              <li className="border border-gray-300 rounded-lg p-4">
-                                <div className="flex items-start justify-between">
-                                  <div className="flex flex-col">
-                                    <p className="text-lg font-bold">
-                                      Bid From: {offer.username}
-                                    </p>
-                                    <p className="text-sm text-gray-500">
-                                      Bid Date: {offer.bidTime}
-                                    </p>
-                                  </div>
-                                  <p className="text-xl font-bold">
-                                    Bid Amount:
-                                    <br />${offer.jobOffer}
-                                  </p>
-                                </div>
-                                <p className="mt-2 text-gray-700">
-                                  Bid Description: {offer.bidDescription}
-                                </p>
-                                {useri === offer.username ? (
-                                  <div className="flex mt-4 space-x-4">
-                                    <button
-                                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                      onClick={() => handleEdit(offer.idoffer)}
-                                    >
-                                      Edit
-                                    </button>
-                                    <button
-                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                      onClick={() =>
-                                        handleDelete(offer.idoffer)
-                                      }
-                                    >
-                                      Delete
-                                    </button>
-                                  </div>
-                                ) : (
-                                  <div>
-                                    {useri === jobs[0].username && (
-                                      <div className="flex mt-4 space-x-4">
-                                        <button
-                                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                          onClick={() =>
-                                            handleDelete(offer.idoffer)
-                                          }
-                                        >
-                                          Delete
-                                        </button>
-                                      </div>
-                                    )}
-                                  </div>
-                                )}
-                              </li>
-                              {/* Add more li elements for additional bids */}
-                            </ul>
-                          </div>
-                        ))}
-                      </div>
+  {jobOffers.map((offer) => (
+    <div className="mt-8 w-1/3" key={offer.idoffer}>
+      <ul className="mt-4 space-y-4">
+        <li className="border border-gray-300 rounded-lg p-4">
+          <div className="flex items-start justify-between">
+            <div className="flex flex-col">
+              <p className="text-lg font-bold">Bid From: {offer.username}</p>
+              <p className="text-sm text-gray-500">Bid Date: {offer.bidTime}</p>
+            </div>
+            <p className="text-xl font-bold">
+              Bid Amount:
+
+              <br />{isEditingBid ? (
+                
+              <></>
+              ):(<>${offer.jobOffer}</>)}
+            </p>
+          </div>
+          <p className="text-xl font-light">
+              Bid Description:
+
+              <br />{isEditingBid ? (
+                
+              <></>
+              ):(<>{offer.bidDescription}</>)}
+            </p>
+
+          {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
+          {useri === offer.username ? (
+            <div className="flex mt-4 space-x-4">
+              {isEditingBid ? (
+                <>
+                          <div>
+
+            <label htmlFor="editedBidDescription">Bid Description:</label>
+              <input
+                type="text"
+                id="editedBidDescription"
+                placeholder="Enter your new Bid Description"
+                className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
+                value={editedBidDescripition}
+                onChange={(e) => setEditedBidDescripition(e.target.value)}
+              />
+            <br/>
+              <label htmlFor="editedBidAmount">Bid Amount:</label>
+              <input
+                type="number"
+                id="editedBidAmount"
+                placeholder="Enter your new Bid Amount"
+                className="p-2 border-2 border-black rounded-lg focus:outline-none ml-6 focus:border-blue-500"
+                value={editedBidAmount}
+                onChange={(e) => setEditedBidAmount(e.target.value)}
+              />
+                          <br/>
+
+
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded"
+                    onClick={() => {
+                      handleSaveBid(offer.idoffer);
+                      setIsEditingBid(false);
+                    }}
+                  >
+                    Save
+                  </button>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => {
+                      handleEdit(offer.idoffer);
+                      setIsEditingBid(true);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => handleDelete(offer.idoffer)}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </div>
+          ) : (
+            <div>
+              {useri === jobs[0].username && (
+                <div className="flex mt-4 space-x-4">
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => handleDelete(offer.idoffer)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </li>
+      </ul>
+    </div>
+  ))}
+</div>
 
                       <div className=" flex justify-between">
                         <div className=" w-1/2 pr-4">
@@ -1491,68 +1619,92 @@ function JobSearch() {
                         <div className="w-1/2">
                           <h3 className="text-center">Comments</h3>
                           <div className="flex flex-col gap-4 p-4">
-                            {comments.map((comment) => (
-                              <div
-                                className="flex flex-col gap-2"
-                                key={comment.commentid}
+                          {comments.map((comment) => (
+                      <div
+                        className="flex flex-col gap-2"
+                        key={comment.commentid}
+                      >
+                        <div className="flex items-center gap-2">
+                          <div>
+                            <h4>{comment.username}</h4>
+                          </div>
+                          <img
+                            src={`data:image/jpeg;base64,${comment.userProfilePicture}`}
+                            className="w-8 h-8 rounded-full"
+                            alt="My Image"
+                          />
+                        </div>
+                        <p className="text-black">
+                              {comment.commentContent}
+                            </p>
+                        {isEditing ? (
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
+                              value={editedComment}
+                              onChange={(e) => setEditedComment(e.target.value)}
+                            />
+                            <button
+                              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                              onClick={() =>
+                                handleSaveComment(comment.commentid)
+                              }
+                            >
+                              Save
+                            </button>
+                          </div>
+                        ) : (
+                          <>
+                          {useri === comment.username ? (
+                          <div>
+                            <p className="text-black">
+                              {comment.commentContent}
+                            </p>
+                            <div className="flex mt-4 space-x-4 justify-end">
+                              <button
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => {
+                                  handleEditComment(comment.commentid);
+                                  setIsEditing(true);
+                                }}
                               >
-                                <div className="flex items-center gap-2">
-                                  <div>
-                                    <h4>{comment.username}</h4>
-                                  </div>
-                                  <img
-                                    src={`data:image/jpeg;base64,${comment.userProfilePicture}`}
-                                    className="w-8 h-8 rounded-full"
-                                    alt="My Image"
-                                  />
-                                </div>
-                                {isEditing ? (
-                                  <div className="flex gap-2">
-                                    <input
-                                      type="text"
-                                      className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
-                                      value={editedComment}
-                                      onChange={(e) =>
-                                        setEditedComment(e.target.value)
-                                      }
-                                    />
+                                Edit
+                              </button>
+                              <button
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() =>
+                                  handleDeleteComment(comment.commentid)
+                                }
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        ):(
+                            <>
+                            <div>
+                                {useri === jobs[0].username && (
+                                  <div className="flex  justify-end  space-x-4">
                                     <button
-                                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                                       onClick={() =>
-                                        handleSaveComment(comment.commentid)
+                                        handleDeleteComment(comment.commentid)
                                       }
                                     >
-                                      Save
+                                      Delete
                                     </button>
-                                  </div>
-                                ) : (
-                                  <div>
-                                    <p className="text-black">
-                                      {comment.commentContent}
-                                    </p>
-                                    <div className="flex mt-4 space-x-4 justify-end">
-                                      <button
-                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                        onClick={() => {
-                                          handleEditComment(comment.commentid);
-                                          setIsEditing(true);
-                                        }}
-                                      >
-                                        Edit
-                                      </button>
-                                      <button
-                                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                        onClick={() =>
-                                          handleDeleteComment(comment.commentid)
-                                        }
-                                      >
-                                        Delete
-                                      </button>
-                                    </div>
                                   </div>
                                 )}
                               </div>
-                            ))}
+                            
+
+                            </>
+                          )}
+                          </>
+                        )}
+                      </div>
+                    ))}
                             {/* Comment form */}
                             <form
                               action="/commentForm"

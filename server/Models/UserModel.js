@@ -1,46 +1,6 @@
 const database = require("../Configuration/DataBaseConnection");
 const bcrypt = require("bcrypt");
 const session = require("../Routes/routes.js");
-// class UserModel {
-// static async getUsers() {
-//   return new Promise((resolve) => {
-//     database.query("Select * From Users", [], (error, result) => {
-//       if (!error) resolve(result);
-//     });
-//   });
-// }
-// static async addUser(username, password, email, birthday, usertype, res) {
-//   return new Promise((resolve) => {
-//     const sqlSelect = `SELECT * FROM Users WHERE username = ? OR email = ?`;
-//     database.query(sqlSelect, [username, email], (err, results) => {
-//       if (err) {
-//         return console.error(err.message);
-//       }
-//       if (results?.length > 0) {
-//         if (typeof res !== "undefined") {
-//           res.status(409).send("User already exists");
-//         }
-//       } else {
-//         bcrypt.hash(password, 10, (err, hashedPassword) => {
-//           if (err) {
-//             return console.error(err.message);
-//           }
-//           database.query(
-//             "Insert into Users(username,passwordi,email,birthday,usertype) values(?,?,?,?,?)",
-//             [username, hashedPassword, email, birthday, usertype],
-//             (error, result) => {
-//               if (!error) {
-//                 resolve(true);
-//               } else {
-//                 resolve(false);
-//               }
-//             }
-//           );
-//         });
-//       }
-//     });
-//   });
-// }
 
 class UserModel {
   static async getUsers() {
@@ -224,6 +184,21 @@ class UserModel {
     });
   }
   static async updateUser(id, username, password, email, birthday) {
+    return new Promise((resolve) => {
+      database.query(
+        "Update Users set username = ?,password=?,email=?,birthday=? where userid = ?",
+        [username, password, email, birthday, id],
+        (err, result) => {
+          if (err) {
+            return console.error(err.message);
+          }
+
+          resolve(result);
+        }
+      );
+    });
+  }
+  static async updateUserProfile(id, username, password, email, birthday) {
     return new Promise((resolve) => {
       database.query(
         "Update Users set username = ?,password=?,email=?,birthday=? where userid = ?",
