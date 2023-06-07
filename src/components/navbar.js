@@ -35,6 +35,8 @@ function Navbar() {
   }, [isProfileUpdated]); // Listen for changes in isProfileUpdated only
 
   const userIsLogged = Object.keys(user).length > 0;
+  const userIsLoggedAsAdmin =
+    Object.keys(user).length > 0 && user.usertype === "admin";
 
   return (
     <div>
@@ -125,8 +127,11 @@ function Navbar() {
               onClick={() => setIsOpen(!isOpen)}
             >
               <span className="sr-only">Open user menu</span>
-              <img src={`data:image/jpeg;base64,${user.userProfilePicture}`}  className="w-10 h-10 rounded-full"
-alt="My Image" />
+              <img
+                src={`data:image/jpeg;base64,${user.userProfilePicture}`}
+                className="w-10 h-10 rounded-full"
+                alt="My Image"
+              />
               {user.username}
               <svg
                 className="w-4 h-4 mx-1.5"
@@ -153,30 +158,37 @@ alt="My Image" />
                   <div className="font-medium capitalize">{user.usertype}</div>
                   <div className="truncate">{user.email}</div>
                 </div>
+
                 <ul
                   className="py-2 text-sm text-gray-700 dark:text-gray-200"
                   aria-labelledby="dropdownInformdropdownAvatarNameationButton"
                 >
-                  <Link to="/dashboard">
+                  {userIsLoggedAsAdmin && (
+                    <Link to="/dashboard">
+                      <li>
+                        <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                          Dashboard
+                        </a>
+                      </li>
+                    </Link>
+                  )}
+                  <Link to="/user/profile">
                     <li>
                       <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                        Dashboard
+                        My Profile
                       </a>
                     </li>
                   </Link>
-                  <li>
-                    <a className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
-                      Settings
-                    </a>
-                  </li>
-                  <li>
-                    <a
-                      href="#"
-                      className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                    >
-                      Earnings
-                    </a>
-                  </li>
+                  <Link to="/myjobs">
+                    <li>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        My Jobs
+                      </a>
+                    </li>
+                  </Link>
                 </ul>
                 <div className="py-2">
                   <p

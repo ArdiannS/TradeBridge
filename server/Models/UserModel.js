@@ -9,7 +9,7 @@ class UserModel {
         if (error) {
           reject(error);
         } else {
-          const users = result.map(user => {
+          const users = result.map((user) => {
             const { password, ...userWithoutPassword } = user;
             return userWithoutPassword;
           });

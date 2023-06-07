@@ -26,14 +26,15 @@ class UserController {
         defaultPicture
       );
       console.log("++++++++++++++++++++");
-      if(result){
+      if (result) {
         console.log(result);
 
         console.log("+++++++++++++++++result+++");
       }
       console.log(result.result);
       req.session.userid = result.result.userid || 30;
-      res.status(result.status)
+      res
+        .status(result.status)
         .json({ result: result.result, message: result.message });
 
       console.log(req.session);
@@ -47,7 +48,6 @@ class UserController {
     const { username, password } = req.body;
     try {
       await UserModel.UserLogIn(username, password, res, req);
-
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Something went wrong." });
