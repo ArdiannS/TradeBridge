@@ -226,7 +226,6 @@ function JobSearch() {
     { value: "Hidraulik", label: "Hidraulik" },
     { value: "Mekanik", label: "Mekanik" },
     { value: "IT", label: "IT" },
-
   ];
   const [Allcomments, setAllComments] = useState([]);
   useEffect(() => {
@@ -241,7 +240,6 @@ function JobSearch() {
   const [comments, setComments] = useState([]);
   const [jobOfferData, setJobOfferData] = useState([]);
 
-
   useEffect(() => {
     let jobid = null;
     if (jobs.length > 0) {
@@ -251,7 +249,7 @@ function JobSearch() {
     if (selectedJob && selectedJob.jobId) {
       console.log("useeff1", selectedJob.jobId);
       jobid = selectedJob.jobId;
-    }  else if (filteredJobs && filteredJobs[0] && filteredJobs[0].jobId) {
+    } else if (filteredJobs && filteredJobs[0] && filteredJobs[0].jobId) {
       console.log("useeff2", filteredJobs[0].jobId);
       jobid = filteredJobs[0].jobId;
     }
@@ -270,7 +268,7 @@ function JobSearch() {
 
   useEffect(() => {
     let jobid = null;
-    if(jobs.length > 0) {
+    if (jobs.length > 0) {
       console.log("useeff3", jobs[0].jobId);
       jobid = jobs[0].jobId;
     }
@@ -291,8 +289,66 @@ function JobSearch() {
   }, [selectedJob, filteredJobs, jobs]);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
   const handleEdit = (offerId) => {
+    console.log(offerId, " OFOFFOFO");
+    const offer = jobOffers.find((c) => c.offerid === offerId);
+    if (offer) {
+      setEditedBidDescripition(offer.bidDescription);
+    }
+    console.log(offerId);
     setSelectedOfferId(offerId);
   };
+  const [isEditingBid,setIsEditingBid]  = useState(false);
+  const [editedBidAmount, setEditedBidAmount] = useState("");
+  const [editedBidDescripition, setEditedBidDescripition] = useState("");
+
+  const handleSaveBid = async (offerId) => {
+    
+    try {
+      const response = await fetch(`/offers/${offerId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ bidAmount: editedBidAmount,
+          bidDescription: editedBidDescripition, }),
+      });
+      if (response.ok) {
+        setEditedComment("");
+        window.location.reload();
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedComment, setEditedComment] = useState("");
+  const handleEditComment = (commentId) => {
+    const comment = comments.find((c) => c.commentid === commentId);
+    if (comment) {
+      setEditedComment(comment.commentContent);
+    }
+    
+  };
+  const handleSaveComment = async (commentId) => {
+    try {
+      const response = await fetch(`/comments/${commentId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ commentContent: editedComment }),
+      });
+      if (response.ok) {
+        setEditedComment("");
+        window.location.reload();
+        setIsEditing(false);
+      }
+    } catch (error) {
+      console.error("Error:", error.message);
+    }
+  };
+
   useEffect(() => {
     fetch("/jobOffers")
       .then((response) => response.json())
@@ -303,7 +359,7 @@ function JobSearch() {
       .catch((error) => console.error(error));
   }, []);
   const handleDelete = (offerId) => {
-      try {
+    try {
       axios
         .delete(`/jobOffer/${offerId}`)
         .then((res) => {
@@ -318,19 +374,18 @@ function JobSearch() {
   };
   const handleDeleteComment = (commentId) => {
     try {
-    axios
-      .delete(`/comments/${commentId}`)
-      .then((res) => {
-        setComments(comments.filter((x) => x.commentid != commentId));
-      })
-      .catch((err) => {
-        console.log("err", err.message);
-      });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
+      axios
+        .delete(`/comments/${commentId}`)
+        .then((res) => {
+          setComments(comments.filter((x) => x.commentid != commentId));
+        })
+        .catch((err) => {
+          console.log("err", err.message);
+        });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -357,8 +412,7 @@ function JobSearch() {
                 {isDropdownOpen && (
                   <div
                     className="absolute z-10 mt-2 w-52 bg-white border border-gray-300 rounded shadow-lg"
-                    onClick={() => setSelectedJob(null) }
-                    
+                    onClick={() => setSelectedJob(null)}
                   >
                     <ul className="py-2">
                       {categories.map((category) => (
@@ -523,7 +577,7 @@ function JobSearch() {
                 <div className=" h-1/4 w-1/2 mx-9">
                   <div className="mt-10  h-20 flex items-center">
                     <img
-                      src={`data:image/jpeg;base64, ${user?.userProfilePicture}`}
+                      src={`data:image/jpeg;base64, ${selectedJob.userProfilePicture}`}
                       className="w-44 h-44 mb-8"
                     />
                   </div>
@@ -663,64 +717,112 @@ function JobSearch() {
                 Bids for this Job:
               </h2>
               <div className="flex justify-between">
-                {jobOffers.map((offer) => (
-                  <div className="mt-8 w-1/3" key={offer.idoffer}>
-                    <ul className="mt-4 space-y-4">
-                      <li className="border border-gray-300 rounded-lg p-4">
-                        <div className="flex items-start justify-between">
-                          <div className="flex flex-col">
-                            <p className="text-lg font-bold">
-                              Bid From: {offer.username}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              Bid Date: {offer.bidTime}
-                            </p>
-                          </div>
-                          <p className="text-xl font-bold">
-                            Bid Amount:
-                            <br />${offer.jobOffer}
-                          </p>
-                        </div>
-                        <p className="mt-2 text-gray-700">
-                          Bid Description: {offer.bidDescription}
-                        </p>
-                        {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
-                        {useri === offer.username ? (
-                              <div className="flex mt-4 space-x-4">
-                                <button
-                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleEdit(offer.idoffer)}
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleDelete(offer.idoffer)}
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            ) : (
-                              <div>
-                                {useri === selectedJob.username && (
-                                  <div className="flex mt-4 space-x-4">
-                                    <button
-                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                      onClick={() =>
-                                        handleDelete(offer.idoffer)
-                                      }
-                                    >
-                                      Delete
-                                    </button>
-                                  </div>
-                                )}
-                              </div>
-                            )}
-                      </li>
-                    </ul>
+  {jobOffers.map((offer) => (
+    <div className="mt-8 w-1/3" key={offer.idoffer}>
+      <ul className="mt-4 space-y-4">
+        <li className="border border-gray-300 rounded-lg p-4">
+          <div className="flex items-start justify-between">
+            <div className="flex flex-col">
+              <p className="text-lg font-bold">Bid From: {offer.username}</p>
+              <p className="text-sm text-gray-500">Bid Date: {offer.bidTime}</p>
+            </div>
+            <p className="text-xl font-bold">
+              Bid Amount:
+
+              <br />{isEditingBid ? (
+                
+              <></>
+              ):(<>${offer.jobOffer}</>)}
+            </p>
+          </div>
+          <p className="text-xl font-light">
+              Bid Description:
+
+              <br />{isEditingBid ? (
+                
+              <></>
+              ):(<>{offer.bidDescription}</>)}
+            </p>
+
+          {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
+          {useri === offer.username ? (
+            <div className="flex mt-4 space-x-4">
+              {isEditingBid ? (
+                <>
+                          <div>
+
+            <label htmlFor="editedBidDescription">Bid Description:</label>
+              <input
+                type="text"
+                id="editedBidDescription"
+                placeholder="Enter your new Bid Description"
+                className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
+                value={editedBidDescripition}
+                onChange={(e) => setEditedBidDescripition(e.target.value)}
+              />
+            <br/>
+              <label htmlFor="editedBidAmount">Bid Amount:</label>
+              <input
+                type="number"
+                id="editedBidAmount"
+                placeholder="Enter your new Bid Amount"
+                className="p-2 border-2 border-black rounded-lg focus:outline-none ml-6 focus:border-blue-500"
+                value={editedBidAmount}
+                onChange={(e) => setEditedBidAmount(e.target.value)}
+              />
+                          <br/>
+
+
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded"
+                    onClick={() => {
+                      handleSaveBid(offer.idoffer);
+                      setIsEditingBid(false);
+                    }}
+                  >
+                    Save
+                  </button>
                   </div>
-                ))}
-              </div>
+                </>
+              ) : (
+                <>
+                  <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => {
+                      handleEdit(offer.idoffer);
+                      setIsEditingBid(true);
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => handleDelete(offer.idoffer)}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </div>
+          ) : (
+            <div>
+              {useri === selectedJob.username && (
+                <div className="flex mt-4 space-x-4">
+                  <button
+                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    onClick={() => handleDelete(offer.idoffer)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </li>
+      </ul>
+    </div>
+  ))}
+</div>
 
               <div className=" flex justify-between">
                 <div className=" w-1/2 pr-4">
@@ -755,43 +857,52 @@ function JobSearch() {
                             alt="My Image"
                           />
                         </div>
-                        <p className="text-black">{comment.commentContent}</p>
-                        {useri === comment.username ? (
-                              <div className="flex mt-4 space-x-4  justify-end">
-                                <button
-                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleEdit(comment.commentid)}
-                                >
-                                  Edit
-                                </button>
-                                <button
-  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-  onClick={() => handleDeleteComment(comment.commentid)}
->
-  Delete
-</button>
-
-                              </div>
-                            ) : (
-                              <div className="flex justify-end">
-                                {useri === selectedJob.username && (
-                                  <div className="flex mt-4 space-x-4">
-                                    <button
-                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                      onClick={() =>
-                                        handleDeleteComment(comment.commentid)
-                                      }
-                                    >
-                                      Delete
-                                    </button>
-                                  </div>
-                                )}
-                              </div>
-                            )}
+                        {isEditing ? (
+                          <div className="flex gap-2">
+                            <input
+                              type="text"
+                              className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
+                              value={editedComment}
+                              onChange={(e) => setEditedComment(e.target.value)}
+                            />
+                            <button
+                              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                              onClick={() =>
+                                handleSaveComment(comment.commentid)
+                              }
+                            >
+                              Save
+                            </button>
+                          </div>
+                        ) : (
+                          <div>
+                            <p className="text-black">
+                              {comment.commentContent}
+                            </p>
+                            <div className="flex mt-4 space-x-4 justify-end">
+                              <button
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() => {
+                                  handleEditComment(comment.commentid);
+                                  setIsEditing(true);
+                                }}
+                              >
+                                Edit
+                              </button>
+                              <button
+                                className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                onClick={() =>
+                                  handleDeleteComment(comment.commentid)
+                                }
+                              >
+                                Delete
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
-                      
                     ))}
-                    
+
                     <form
                       action="/commentForm"
                       method="POST"
@@ -1073,38 +1184,49 @@ function JobSearch() {
                                 alt="My Image"
                               />
                             </div>
-                            <p className="text-black">
-                              {comment.commentContent}
-                            </p>
-                            {useri === comment.username ? (
-                              <div className="flex mt-4 space-x-4  justify-end">
+                            {isEditing ? (
+                              <div className="flex gap-2">
+                                <input
+                                  type="text"
+                                  className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
+                                  value={editedComment}
+                                  onChange={(e) =>
+                                    setEditedComment(e.target.value)
+                                  }
+                                />
                                 <button
                                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleEdit(comment.commentid)}
+                                  onClick={() =>
+                                    handleSaveComment(comment.commentid)
+                                  }
                                 >
-                                  Edit
-                                </button>
-                                <button
-                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleDeleteComment(comment.commentid)}
-                                >
-                                  Delete
+                                  Save
                                 </button>
                               </div>
                             ) : (
-                              <div className="flex justify-end">
-                                {useri === filteredJobs[0].username && (
-                                  <div className="flex mt-4 space-x-4">
-                                    <button
-                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                      onClick={() =>
-                                        handleDeleteComment(comment.commentid)
-                                      }
-                                    >
-                                      Delete
-                                    </button>
-                                  </div>
-                                )}
+                              <div>
+                                <p className="text-black">
+                                  {comment.commentContent}
+                                </p>
+                                <div className="flex mt-4 space-x-4 justify-end">
+                                  <button
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={() => {
+                                      handleEditComment(comment.commentid);
+                                      setIsEditing(true);
+                                    }}
+                                  >
+                                    Edit
+                                  </button>
+                                  <button
+                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                    onClick={() =>
+                                      handleDeleteComment(comment.commentid)
+                                    }
+                                  >
+                                    Delete
+                                  </button>
+                                </div>
                               </div>
                             )}
                           </div>
@@ -1310,24 +1432,13 @@ function JobSearch() {
                                   Bid Description: {offer.bidDescription}
                                 </p>
                                 {useri === offer.username ? (
-                              <div className="flex mt-4 space-x-4">
-                                <button
-                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleEdit(offer.idoffer)}
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleDelete(offer.idoffer)}
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            ) : (
-                              <div>
-                                {useri === jobs[0].username && (
                                   <div className="flex mt-4 space-x-4">
+                                    <button
+                                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                      onClick={() => handleEdit(offer.idoffer)}
+                                    >
+                                      Edit
+                                    </button>
                                     <button
                                       className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                                       onClick={() =>
@@ -1337,9 +1448,22 @@ function JobSearch() {
                                       Delete
                                     </button>
                                   </div>
+                                ) : (
+                                  <div>
+                                    {useri === jobs[0].username && (
+                                      <div className="flex mt-4 space-x-4">
+                                        <button
+                                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                          onClick={() =>
+                                            handleDelete(offer.idoffer)
+                                          }
+                                        >
+                                          Delete
+                                        </button>
+                                      </div>
+                                    )}
+                                  </div>
                                 )}
-                              </div>
-                            )}
                               </li>
                               {/* Add more li elements for additional bids */}
                             </ul>
@@ -1380,40 +1504,51 @@ function JobSearch() {
                                     alt="My Image"
                                   />
                                 </div>
-                                <p className="text-black">
-                                  {comment.commentContent}
-                                </p>
-                                {useri === comment.username ? (
-                              <div className="flex mt-4 space-x-4 flex justify-end">
-                                <button
-                                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleEdit(comment.commentid)}
-                                >
-                                  Edit
-                                </button>
-                                <button
-                                  className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                  onClick={() => handleDeleteComment(comment.commentid)}
-                                >
-                                  Delete
-                                </button>
-                              </div>
-                            ) : (
-                              <div className="flex justify-end">
-                                {useri === jobs[0].username && (
-                                  <div className="flex mt-4 space-x-4">
+                                {isEditing ? (
+                                  <div className="flex gap-2">
+                                    <input
+                                      type="text"
+                                      className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
+                                      value={editedComment}
+                                      onChange={(e) =>
+                                        setEditedComment(e.target.value)
+                                      }
+                                    />
                                     <button
-                                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                       onClick={() =>
-                                        handleDeleteComment(comment.commentid)
+                                        handleSaveComment(comment.commentid)
                                       }
                                     >
-                                      Delete
+                                      Save
                                     </button>
                                   </div>
+                                ) : (
+                                  <div>
+                                    <p className="text-black">
+                                      {comment.commentContent}
+                                    </p>
+                                    <div className="flex mt-4 space-x-4 justify-end">
+                                      <button
+                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                        onClick={() => {
+                                          handleEditComment(comment.commentid);
+                                          setIsEditing(true);
+                                        }}
+                                      >
+                                        Edit
+                                      </button>
+                                      <button
+                                        className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                        onClick={() =>
+                                          handleDeleteComment(comment.commentid)
+                                        }
+                                      >
+                                        Delete
+                                      </button>
+                                    </div>
+                                  </div>
                                 )}
-                              </div>
-                            )}
                               </div>
                             ))}
                             {/* Comment form */}

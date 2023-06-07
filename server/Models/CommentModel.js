@@ -27,6 +27,17 @@ class CommentModel {
       });
     });
   }
+  static async getCommentById(id) {
+    return new Promise((resolve, reject) => {
+      database.query("SELECT * FROM Comments where commentid = ?", [id], (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  }
   static async getCommentsByJobId(id) {
     return new Promise((resolve, reject) => {
       database.query("SELECT * FROM Comments c inner join Users u on u.userid = c.userid WHERE c.jobId = ?", [id], (error, result) => {
@@ -54,6 +65,7 @@ class CommentModel {
   }
   static async updateComment(commentContent,id) {
     return new Promise((resolve) => {
+      
       database.query(
           "Update Comments set commentContent = ? where commentid = ?",
           [commentContent,id],

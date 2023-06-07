@@ -178,7 +178,6 @@ class ProductController {
       jobCategory,
       jobDescription,
       jobCity,
-      jobPrice,
     } = req.body;
 
     try {
@@ -189,7 +188,6 @@ class ProductController {
         jobCategory,
         jobDescription,
         jobCity,
-        jobPrice
       );
       res.status(200).json({ message: "Job Updated successfully" });
     } catch (error) {
@@ -197,8 +195,27 @@ class ProductController {
       res.status(500).send("Error Updating Job");
     }
   }
+  static async updateJobOffer(req, res) {
+    const { id } = req.params;
+    const { bidAmount, bidDescription } = req.body;
+
+    console.log(bidAmount);
+    console.log(bidDescription);
+
+    try {
+      const result = await ProductModel.updateJobOffers(
+        bidAmount,
+        bidDescription,
+        id,
+
+      );
+      res.status(200).json({ message: "Job Offer Updated successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error Updating Job");
+    }
+  }
   static async getJobsByUserId(req, res) {
-    console.log("ididid")
     const userId = req.session.userId;
     console.log(userId);
     if (!userId) {

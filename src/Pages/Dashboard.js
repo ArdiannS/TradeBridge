@@ -260,12 +260,7 @@ alt="My Image" />
                       >
                         Job City
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Job Price
-                      </th>
+                      
                       <th
                         scope="col"
                         className=" text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -307,11 +302,7 @@ alt="My Image" />
                             {job.jobCity}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            {job.jobPrice}
-                          </div>
-                        </td>
+                       
 
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div class="flex justify-center">
@@ -405,14 +396,14 @@ alt="My Image" />
                             <button
                               class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
                               onClick={() =>
-                                handleDeleteComment(comment.commentId)
+                                handleDeleteComment(comment.commentid)
                               }
                             >
                               Delete
                             </button>
                             <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
                               <Link
-                                to={`/editComment/${comment.commentId}`}
+                                to={`/editComment/${comment.commentid}`}
                                 class="text-white"
                               >
                                 Edit
