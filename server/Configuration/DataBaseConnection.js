@@ -5,7 +5,7 @@ var conn = mysql.createConnection({
 
   user: "root",
 
-  password: "root",
+  password: "Letovica1",
   database: "TradeBridgeDb",
   timezone: "c",
 });

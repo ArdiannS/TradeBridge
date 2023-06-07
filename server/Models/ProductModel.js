@@ -1,4 +1,5 @@
 const database = require("../Configuration/DataBaseConnection");
+const { deleteMyJob } = require("../Controllers/ProductController");
 
 class ProductModel {
   static async insertJobs(
@@ -240,6 +241,21 @@ class ProductModel {
             reject(error);
           }
           resolve(results);
+        }
+      );
+    });
+  }
+
+  static async deleteMyJob(id) {
+    return new Promise((resolve) => {
+      database.query(
+        "Delete From jobs where idusers = ?",
+        [id],
+        (err, result) => {
+          if (err) {
+            return console.error(err.message);
+          }
+          resolve(result);
         }
       );
     });
