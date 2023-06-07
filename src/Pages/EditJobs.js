@@ -34,7 +34,6 @@ function EditJobs() {
       })
       .catch((error) => console.error(error));
   }, [id]);
-  console.log(jobData);
 
   const handleFormSubmit = (event) => {
     event.preventDefault();
@@ -129,20 +128,6 @@ function EditJobs() {
               placeholder="Enter job City"
               name="jobCity"
               defaultValue={jobData.jobCity}
-              onChange={handleChange}
-            />
-          </div>
-          <div class="mb-4">
-            <label class="block text-gray-700 font-medium mb-2" for="job_price">
-              Job Price
-            </label>
-            <input
-              class="appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="job_price"
-              type="text"
-              placeholder="Enter job Price"
-              name="jobPrice"
-              defaultValue={jobData.jobPrice}
               onChange={handleChange}
             />
           </div>

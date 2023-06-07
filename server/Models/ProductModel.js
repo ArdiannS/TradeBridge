@@ -203,19 +203,41 @@ class ProductModel {
     jobCategory,
     jobDescription,
     jobCity,
-    jobPrice
   ) {
     return new Promise((resolve) => {
       database.query(
-        "Update Jobs set jobTitle=?, jobType=?, jobCategory=?, jobDescription=?, jobCity=?, jobPrice=?, idusers=null where jobId = ?",
+        "Update Jobs set jobTitle=?, jobType=?, jobCategory=?, jobDescription=?, jobCity=? where jobId = ?",
         [
           jobTitle,
           jobType,
           jobCategory,
           jobDescription,
           jobCity,
-          jobPrice,
           jobId,
+        ],
+        (err, result) => {
+          if (err) {
+            return console.error(err.message);
+          }
+          console.log(result);
+          resolve(result);
+        }
+      );
+    });
+  }
+  static async updateJobOffers(
+    jobOffer,
+    bidDescripition,
+    idoffer,
+
+  ) {
+    return new Promise((resolve) => {
+      database.query(
+        "Update joboffer set jobOffer=?,bidDescription = ?,bidTime = NOW()  where idoffer = ?",
+        [
+          jobOffer,
+          bidDescripition,
+          idoffer,
         ],
         (err, result) => {
           if (err) {

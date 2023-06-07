@@ -16,7 +16,7 @@ function EditComment(){
     const [commentData , setCommentData] = useState(null);
     const { id } = useParams();
     useEffect(() => {
-        fetch(`/comments/${id}`)
+        fetch(`/comment/${id}`)
             .then((response) => response.json())
             .then((data) => {
                 console.log(data);

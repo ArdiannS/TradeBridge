@@ -18,8 +18,10 @@ router.post(
 //   upload.single("jobPhoto"),
 //   ProductController.insertJobs
 // );
+router.get("/jobs/:id", ProductController.getJobById);
+router.put("/comments/:id", CommentController.updateComment);
+router.put("/offers/:id", ProductController.updateJobOffer);
 router.post("/jobsearch",ProductController.insertOffer);
-
 router.get("/users", isLoggedIn, UserController.getAllUser);
 router.get("/users", UserController.getAllUser);
 router.post("/signup", UserController.addUser);
@@ -31,7 +33,6 @@ router.post("/postjobs", ProductController.insertJobs);
 router.get("/jobs", ProductController.getJobs);
 router.post('/jobsearch', ProductController.getSimilarJobs);
 router.get('/jobs/:category', ProductController.getJobByCategory);
-router.get("/jobs/:id", ProductController.getJobById);
 router.put("/jobs/:id", ProductController.updateJob);
 router.delete("/jobs/:id", ProductController.deleteJob);
 router.get("/users/:id", UserController.getUsersById);
@@ -40,6 +41,7 @@ router.post("/editjobs/:id", ProductController.updateJob);
 router.delete("/users/:id", UserController.deleteUser);
 router.post("/commentForm", CommentController.insertComment);
 router.get("/comments", CommentController.getComments);
+router.get("/comment/:id", CommentController.getCommentsById);
 router.get("/comments/:id", CommentController.getCommentsByJobId);
 router.post("/editcomment/:id", CommentController.updateComment);
 router.delete("/comments/:id", CommentController.deleteComment);
@@ -52,6 +54,7 @@ router.get("/jobs", ProductController.searchJobs);
 router.get("/jobOffer/:id", ProductController.getJobOffers);
 router.get("/jobOffers", ProductController.getAllJobOffers);
 router.delete("/jobOffer/:id", ProductController.deleteJobOfferById);
+
 
 
 

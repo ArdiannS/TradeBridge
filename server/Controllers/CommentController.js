@@ -16,6 +16,14 @@ class CommentController {
       res.send(result);
     }
   }
+  static async getCommentsById(req, res) {
+    const id = req.params.id;
+    var result = await CommentModel.getCommentById(id);
+    if (result) {
+      res.send(result);
+    }
+  }
+
   static async getCommentsByJobId(req, res) {
     const jobId = req.params.id;
     console.log(jobId);
@@ -26,10 +34,12 @@ class CommentController {
   }
   static async updateComment(req, res) {
     const {commentContent} = req.body;
+    console.log(commentContent);
     const {id} = req.params;
+    console.log(id);
     var result = await CommentModel.updateComment(commentContent,id);
     if (result) {
-      return res.redirect("/jobsearch");
+      res.send(result);
     }
   }
   static async deleteComment(req, res) {
