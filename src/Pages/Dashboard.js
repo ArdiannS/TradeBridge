@@ -20,16 +20,6 @@ function Dashboard() {
       })
       .catch((error) => console.error(error));
   }, []);
-  const [totalJobs, setTotalJobs] = useState(0);
-  useEffect(() => {
-    fetch("/dashboard")
-      .then((response) => response.text())
-      .then((data) => {
-        console.log(data);
-        setTotalJobs(parseInt(data));
-      })
-      .catch((error) => console.error(error));
-  }, []);
 
   useEffect(() => {
     fetch("/comments")
@@ -71,17 +61,17 @@ function Dashboard() {
     }
   };
 
-  const handleEdit = async (id) => {
-    try {
-      const response = await fetch(`/users/${id}`, {
-        method: "PUT",
-      });
-      const data = await response.json();
-      console.log(data);
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  // const handleEdit = async (id) => {
+  //   try {
+  //     const response = await fetch(`/users/${id}`, {
+  //       method: "PUT",
+  //     });
+  //     const data = await response.json();
+  //     console.log(data);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
   const [jobs, setJobs] = useState([]);
 
   useEffect(() => {
@@ -94,6 +84,7 @@ function Dashboard() {
     try {
       const response = await axios.delete(`/jobs/${id}`);
 
+      // const deletedJob = await response.json();
       console.log("deletedJob", response);
 
       setJobs((jobs) => jobs.filter((job) => job._id !== response._id));
@@ -127,15 +118,14 @@ function Dashboard() {
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        User Profile Pic
+                        Username
                       </th>
                       <th
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                       Username
+                        Password
                       </th>
-                      
                       <th
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -170,18 +160,16 @@ function Dashboard() {
                             {user.userid}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap" >
-                          <div className="text-sm text-gray-900">
-                        <img src={`data:image/jpeg;base64,${user.userProfilePicture}`}  className="w-8 h-8 rounded-full"
-alt="My Image" />
-                          </div>
-                        </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
                             {user.username}
                           </div>
                         </td>
-                      
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {user.password}
+                          </div>
+                        </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
                             {user.email}
@@ -260,7 +248,12 @@ alt="My Image" />
                       >
                         Job City
                       </th>
-                      
+                      <th
+                        scope="col"
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        Job Price
+                      </th>
                       <th
                         scope="col"
                         className=" text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -302,7 +295,11 @@ alt="My Image" />
                             {job.jobCity}
                           </div>
                         </td>
-                       
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="text-sm text-gray-900">
+                            {job.jobPrice}
+                          </div>
+                        </td>
 
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div class="flex justify-center">
@@ -396,14 +393,14 @@ alt="My Image" />
                             <button
                               class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
                               onClick={() =>
-                                handleDeleteComment(comment.commentid)
+                                handleDeleteComment(comment.commentId)
                               }
                             >
                               Delete
                             </button>
                             <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
                               <Link
-                                to={`/editComment/${comment.commentid}`}
+                                to={`/editComment/${comment.commentId}`}
                                 class="text-white"
                               >
                                 Edit

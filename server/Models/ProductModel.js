@@ -1,7 +1,6 @@
 const database = require("../Configuration/DataBaseConnection");
 
 class ProductModel {
-  
   static async insertJobs(
     jobTitle,
     jobDescription,
@@ -21,7 +20,7 @@ class ProductModel {
           jobCategory,
           jobCity,
           jobPhoto,
-          idUser
+          idUser,
         ],
         (error, result) => {
           if (error) {
@@ -33,20 +32,11 @@ class ProductModel {
       );
     });
   }
-  static async insertJobOffer(
-          idUser,
-          jobId,
-          jobPrice,
-          bidDescription
-  ) {
+  static async insertJobOffer(idUser, jobId, jobPrice, bidDescription) {
     return new Promise((resolve, reject) => {
       database.query(
         "INSERT INTO jobOffer(idusers,jobid, jobOffer,bidDescription,bidTime) VALUES (?, ?, ?, ?, NOW())",
-        [idUser,
-          jobId,
-          jobPrice,
-          bidDescription,
-        ],
+        [idUser, jobId, jobPrice, bidDescription],
         (error, result) => {
           if (error) {
             reject(error);
@@ -59,19 +49,37 @@ class ProductModel {
   }
   static async getAllJobs() {
     return new Promise((resolve, reject) => {
-      database.query("SELECT * FROM Jobs j inner join Users u on u.userid = j.idusers", [], (error, result) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve(result);
+      database.query(
+        "SELECT * FROM Jobs j inner join Users u on u.userid = j.idusers",
+        [],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
         }
-      });
+      );
     });
   }
-  static async getJobOffersByJobId(id)
- {
+  static async getJobOffersByJobId(id) {
     return new Promise((resolve, reject) => {
-      database.query("Select * From jobOffer o inner join Users u on u.userid = o.idusers  where o.jobid = ? order by bidTime desc LIMIT 3", [id], (error, result) => {
+      database.query(
+        "Select * From jobOffer o inner join Users u on u.userid = o.idusers  where o.jobid = ? order by bidTime desc LIMIT 3",
+        [id],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  }
+  static async getAllJobOffers(id) {
+    return new Promise((resolve, reject) => {
+      database.query("Select * From jobOffer ", [], (error, result) => {
         if (error) {
           reject(error);
         } else {
@@ -80,18 +88,6 @@ class ProductModel {
       });
     });
   }
-  static async getAllJobOffers(id)
-  {
-     return new Promise((resolve, reject) => {
-       database.query("Select * From jobOffer ",[], (error, result) => {
-         if (error) {
-           reject(error);
-         } else {
-           resolve(result);
-         }
-       });
-     });
-   }
   static async getNumberOfAllJobs() {
     return new Promise((resolve, reject) => {
       database.query(
@@ -141,15 +137,15 @@ class ProductModel {
   static async getJobsByCategory(category) {
     return new Promise((resolve, reject) => {
       database.query(
-          "SELECT * FROM Jobs WHERE jobCategory = ? LIMIT 3",
-          [category],
-          (error, result) => {
-              if (error) {
-                  reject(error);
-              } else {
-                  resolve(result);
-              }
+        "SELECT * FROM Jobs WHERE jobCategory = ? LIMIT 3",
+        [category],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
           }
+        }
       );
     });
   }
@@ -202,19 +198,12 @@ class ProductModel {
     jobType,
     jobCategory,
     jobDescription,
-    jobCity,
+    jobCity
   ) {
     return new Promise((resolve) => {
       database.query(
         "Update Jobs set jobTitle=?, jobType=?, jobCategory=?, jobDescription=?, jobCity=? where jobId = ?",
-        [
-          jobTitle,
-          jobType,
-          jobCategory,
-          jobDescription,
-          jobCity,
-          jobId,
-        ],
+        [jobTitle, jobType, jobCategory, jobDescription, jobCity, jobId],
         (err, result) => {
           if (err) {
             return console.error(err.message);
@@ -225,20 +214,11 @@ class ProductModel {
       );
     });
   }
-  static async updateJobOffers(
-    jobOffer,
-    bidDescripition,
-    idoffer,
-
-  ) {
+  static async updateJobOffers(jobOffer, bidDescripition, idoffer) {
     return new Promise((resolve) => {
       database.query(
         "Update joboffer set jobOffer=?,bidDescription = ?,bidTime = NOW()  where idoffer = ?",
-        [
-          jobOffer,
-          bidDescripition,
-          idoffer,
-        ],
+        [jobOffer, bidDescripition, idoffer],
         (err, result) => {
           if (err) {
             return console.error(err.message);
@@ -250,20 +230,20 @@ class ProductModel {
     });
   }
 
-static async getJobsByUserId(userId) {
-  return new Promise((resolve, reject) => {
-    database.query(
-      "SELECT * FROM jobs WHERE idusers = ?",
-      [userId],
-      (error, results) => {
-        if (error) {
-          reject(error);
+  static async getJobsByUserId(userId) {
+    return new Promise((resolve, reject) => {
+      database.query(
+        "SELECT * FROM jobs WHERE idusers = ?",
+        [userId],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          }
+          resolve(results);
         }
-        resolve(results);
-      }
-    );
-  });
-}
+      );
+    });
+  }
 
   static async searchJobsByTitle(title) {
     const query = "SELECT * FROM jobs WHERE title LIKE ?";
