@@ -179,7 +179,7 @@ function Navbar() {
                       </a>
                     </li>
                   </Link>
-                  <Link to="/myjobs">
+                  <Link to={`/myjobs/${user.userid}`}>
                     <li>
                       <a
                         href="#"

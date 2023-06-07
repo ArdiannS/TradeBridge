@@ -21,7 +21,7 @@ router.post(
 router.get("/jobs/:id", ProductController.getJobById);
 router.put("/comments/:id", CommentController.updateComment);
 router.put("/offers/:id", ProductController.updateJobOffer);
-router.post("/jobsearch",ProductController.insertOffer);
+router.post("/jobsearch", ProductController.insertOffer);
 router.get("/users", isLoggedIn, UserController.getAllUser);
 router.get("/users", UserController.getAllUser);
 router.post("/signup", UserController.addUser);
@@ -31,8 +31,8 @@ router.delete("/users/:id", UserController.deleteUser);
 router.put("/users/:id", UserController.updateUser);
 router.post("/postjobs", ProductController.insertJobs);
 router.get("/jobs", ProductController.getJobs);
-router.post('/jobsearch', ProductController.getSimilarJobs);
-router.get('/jobs/:category', ProductController.getJobByCategory);
+router.post("/jobsearch", ProductController.getSimilarJobs);
+router.get("/jobs/:category", ProductController.getJobByCategory);
 router.put("/jobs/:id", ProductController.updateJob);
 router.delete("/jobs/:id", ProductController.deleteJob);
 router.get("/users/:id", UserController.getUsersById);
@@ -49,14 +49,11 @@ router.get("/dashboard/total-jobs", DashboardController.getNumberOfAllJobs);
 router.get("/dashboard/total-users", DashboardController.getNumberOfAllUsers);
 router.get("/user/profile", UserController.getUserProfile);
 router.get("/myjobs/:id", ProductController.getJobsByUserId);
+router.delete("/myjobs/:id", ProductController.deleteMyJob);
 router.put("/user/profile", UserController.updateUserProfile);
 router.get("/jobs", ProductController.searchJobs);
 router.get("/jobOffer/:id", ProductController.getJobOffers);
 router.get("/jobOffers", ProductController.getAllJobOffers);
 router.delete("/jobOffer/:id", ProductController.deleteJobOfferById);
-
-
-
-
 
 module.exports = router;

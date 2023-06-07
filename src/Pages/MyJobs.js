@@ -11,38 +11,31 @@ function MyJobs() {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        // Fetch the user's information
         const userResponse = await axios.get("/user/profile");
         const userData = userResponse.data.user[0];
         setUser(userData);
-        // Fetch the jobs associated with the user
-        fetch(`/myjobs/${id}`)
-          .then((response) => response.json())
-          .then((data) => {
-            console.log(data);
-            const jobs = data.jobs;
-            setJobs(jobs);
 
-            // Do something with the jobs data
-            console.log(jobs);
-          })
-          .catch((error) => {
-            console.error(error);
-          });
+        const jobsResponse = await axios.get(`/myjobs/${id}`);
+        const jobsData = jobsResponse.data.jobs;
+        setJobs(jobsData);
       } catch (error) {
-        console.error(error);
+        console.error("Error occurred while fetching data:", error);
       }
     };
 
     fetchJobs();
-  }, []);
+  }, [id]);
 
-  const handleDelete = async (id) => {
+  const handleDeleteMyJob = async (jobId) => {
     try {
-      await axios.delete(`/jobs/${id}`);
-      setJobs((prevJobs) => prevJobs.filter((job) => job.id !== id));
+      const response = await axios.delete(`/jobs/${jobId}`);
+      if (response.status === 200) {
+        setJobs(jobs.filter((job) => job.jobId !== jobId));
+      } else {
+        console.log("Unexpected response status:", response.status);
+      }
     } catch (error) {
-      console.error(error);
+      console.error("Error occurred during job deletion:", error);
     }
   };
 
@@ -69,7 +62,7 @@ function MyJobs() {
               <td className="py-2 px-4">{job.jobPrice}</td>
               <td className="py-2 px-4">
                 <button
-                  onClick={() => handleDelete(job.id)}
+                  onClick={() => handleDeleteMyJob(job.jobId)}
                   className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
                 >
                   Delete
