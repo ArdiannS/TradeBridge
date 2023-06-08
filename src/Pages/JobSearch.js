@@ -11,6 +11,7 @@ import { MdOutlineInfo } from "react-icons/md";
 import { BsSliders } from "react-icons/bs";
 import Footer from "../Components/Footer";
 import axios from "../api/axiosInstance";
+import {data} from "autoprefixer";
 const user = JSON.parse(localStorage.getItem("user"));
 console.log("user", user);
 function JobSearch() {
@@ -48,89 +49,6 @@ function JobSearch() {
       color: "#aaa",
     }),
   };
-
-  function jobCategory(jobCategoryData) {
-    console.log("jobCategory1", jobCategoryData);
-    fetch(`/jobs/${jobCategoryData}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("Kjo osht per similarjobs:", data);
-        const container = document.getElementById("jobsContainer");
-        container.innerHTML = "";
-
-        data.forEach((job) => {
-          const jobDiv = document.createElement("div");
-          jobDiv.setAttribute("key", job.jobId);
-          jobDiv.addEventListener("click", () => {
-            handleJobClick(job);
-          });
-
-          const key = jobDiv.getAttribute("key");
-
-          jobDiv.className = `
-          h-full rounded-lg w-1/3 ml-2 mt-10 my-5 bg-white border-2 cursor-pointer hover:border-indigo-500 mr-3
-        `;
-
-          jobDiv.innerHTML = `
-        <div class="rounded-lg mt-5" data-key="${job.jobId}">
-          <div class="mt-5 flex justify-between items-center">
-            <div class="">
-              <FaFacebook size={43} class="ml-4 mt-4" />
-            </div>
-            
-            <div class="ml-auto">
-              <h2 class="ml-4 mt-4 mr-4 text-3xl font-mono">
-                ${job.jobCategory}
-              </h2>
-              <div class="flex">
-                <MdOutlineInfo class="ml-4 mt-4 text-blue-500" />
-                <p class="pt-2 px-1">per hour</p>
-              </div>
-            </div>
-          </div>
-          <div class="mt-7">
-            <h2 class="font-bold text-2xl ml-2">
-              ${job.jobTitle}
-            </h2>
-            <span class="font-light text-xl ml-2">DoorDash</span>
-            <div class="mt-3 ml-2">
-              <button class="bg-white border border-black font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out">
-                Start Today
-              </button>
-            </div>
-            <div class="flex mt-5 bg-slate-600 justify-center">
-              <div class="mt-3 w-full-10">
-                <button class="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-                  <p>Apply</p>
-                </button>
-              </div>
-              <div class="mt-3 ml-2">
-              <button class="bg-indigo-500 text-white flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-white hover:text-indigo-500 transition duration-300 ease-in-out">
-              <FaHeart size={26} icon="fa-regular fa-heart" />
-              <p>Jep Oferten</p>
-
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      `;
-          container.appendChild(jobDiv);
-        });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-  useEffect(() => {
-    setSelectedJob();
-  }, []);
-
   console.log("userid", user?.userid);
 
   const images = [First, Second, Third, Fourth];
@@ -194,11 +112,19 @@ function JobSearch() {
     setIsDropdownOpen(false);
     filterJobsByCategory(categoryValue);
   };
+  const [noJobs,setNoJobs] = useState(false);
   const filterJobsByCategory = (category) => {
     if (category === "all") {
+      console.log(jobs);
       setFilteredJobs(jobs);
-    } else {
+    }
+    else {
       const filtered = jobs.filter((job) => job.jobCategory === category);
+      console.log("filtered " , filtered);
+      if(filtered.length == 0 ){
+        setNoJobs(true);
+        console.log(noJobs);
+      }
       setFilteredJobs(filtered);
     }
   };
@@ -223,6 +149,24 @@ function JobSearch() {
   }, []);
   const [comments, setComments] = useState([]);
   const [jobOfferData, setJobOfferData] = useState([]);
+  const [jobsByCategory, setJobsByCategory] = useState([]);
+
+  useEffect(() => {
+    let jobCategory = null;
+    if (selectedJob) {
+      jobCategory = selectedJob.jobCategory;
+    }
+    console.log(jobCategory);
+    if (jobCategory) {
+      fetch(`/jobs/${jobCategory}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setJobsByCategory(data);
+            console.log(data);
+          })
+          .catch((err) => console.error(err.message));
+    }
+  }, [selectedJob]);
 
   useEffect(() => {
     let jobid = null;
@@ -240,14 +184,15 @@ function JobSearch() {
 
     if (jobid) {
       fetch(`/comments/${jobid}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setComments(data);
-          console.log("comment per ni pune ", data);
-        })
-        .catch((err) => console.error(err.message));
+          .then((res) => res.json())
+          .then((data) => {
+            setComments(data);
+            console.log("comment per ni pune ", data);
+          })
+          .catch((err) => console.error(err.message));
     }
   }, [selectedJob, filteredJobs, jobs]);
+
   const [jobOffers, setJobOffers] = useState([]);
 
   useEffect(() => {
@@ -567,7 +512,7 @@ function JobSearch() {
                       className="w-44 h-44 mb-8"
                     />
                   </div>
-                  <div className="mt-3">
+                  <div className="mt-7">
                     <h3 className=" font-extralight text-2xl">
                       Posted by:
                       {selectedJob.username}
@@ -868,9 +813,6 @@ function JobSearch() {
                           <>
                             {useri === comment.username ? (
                               <div>
-                                <p className="text-black">
-                                  {comment.commentContent}
-                                </p>
                                 <div className="flex mt-4 space-x-4 justify-end">
                                   <button
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -942,15 +884,50 @@ function JobSearch() {
               </div>
               <div class="my-4 border-b border-gray-200 w-full"></div>
               <div className="ml-3">
-                <h3 className="font-bold text-xl">Similar Jobs</h3>
+                <h3 className="font-bold text-xl text-center">Similar Jobs</h3>
               </div>
-              <div id="jobsContainer" className="flex justify-between">
-                <div
-                  className={`flex justify-between ${jobCategory(
-                    selectedJob.jobCategory
-                  )}`}
-                ></div>
+              <div className="flex justify-between">
+                {jobsByCategory.map((job) => (
+                    <div
+                        key={job.jobId}
+                        className="rounded-lg bg-gray-100 p-6 shadow-md h-80 cursor-pointer transition duration-300 ease-in-out transform hover:scale-105 hover:shadow-lg"
+                        onClick={() => handleJobClick(job)}
+                    >
+                      <div className="flex items-center">
+                        <div>
+                          <img
+                              src={`data:image/jpeg;base64, ${job.userProfilePicture}`}
+                              className="w-16 h-16 rounded-full"
+                              alt="User Profile"
+                          />
+                        </div>
+                        <div className="ml-auto">
+                          <h2 className="text-2xl font-bold text-gray-800">{job.jobCategory}</h2>
+                          <div className="flex items-center mt-1">
+                            <MdOutlineInfo className="text-blue-500" />
+                            <p className="ml-1 text-gray-600">View More Info</p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <h2 className="text-xl font-bold text-gray-900">{job.jobTitle}</h2>
+                        <p className="text-gray-600 font-extrabold text-2xl">{job.username}</p>
+                      </div>
+                      <div className="flex justify-between mt-24">
+                        <button className="bg-indigo-500 text-white flex justify-center font-bold py-3 px-8 rounded-full hover:bg-indigo-600 hover:text-white border border-indigo-500 transition duration-300 ease-in-out">
+                          <FaHeart size={26} />
+                          <p className="ml-1">Jep Oferten</p>
+                        </button>
+                        <button className="bg-blue-500 text-white flex justify-center font-bold py-3 px-8 rounded-full hover:bg-blue-600 hover:text-white border border-blue-500 transition duration-300 ease-in-out">
+                          <p>Start Today</p>
+                        </button>
+                      </div>
+                    </div>
+                ))}
               </div>
+
+
+
             </div>
           ) : (
             <div className="w-full flex justify-center">
@@ -960,11 +937,11 @@ function JobSearch() {
                     <div className=" h-1/4 w-1/2 mx-9">
                       <div className="mt-10  h-20 flex items-center">
                         <img
-                          src={`data:image/jpeg;base64, ${user?.userProfilePicture}`}
+                          src={`data:image/jpeg;base64, ${filteredJobs[0].userProfilePicture}`}
                           className="w-44 h-44 mb-8"
                         />
                       </div>
-                      <div className="mt-3">
+                      <div className="mt-7">
                         <h3 className=" font-extralight text-2xl">
                           Posted by:
                           {filteredJobs[0]?.username}
@@ -1085,7 +1062,7 @@ function JobSearch() {
                     <div>
                       <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
                         <img
-                          src={`data:image/jpeg;base64,${selectedJob.jobPhoto}`}
+                          src={`data:image/jpeg;base64,${filteredJobs[0].jobPhoto}`}
                           alt="
                               
                               Job Photo"
@@ -1284,9 +1261,7 @@ function JobSearch() {
                               <>
                                 {useri === comment.username ? (
                                   <div>
-                                    <p className="text-black">
-                                      {comment.commentContent}
-                                    </p>
+
                                     <div className="flex mt-4 space-x-4 justify-end">
                                       <button
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -1363,18 +1338,27 @@ function JobSearch() {
                   </div>
                 </div>
               ) : (
+
                 <div className="rounded-lg h-full w-full">
+              {noJobs ? (
+                <div>
+                <p>There is no Job with this Category</p>
+                </div>
+                ) : (
+                <div className="rounded-lg h-full w-full">
+                {/* Add the rest of your code here */}
+
                   {jobs.length > 0 && (
                     <>
                       <div className="flex justify-between my-7 mx-6">
                         <div className=" h-1/4 w-1/2 mx-9">
                           <div className="mt-10  h-20 flex items-center">
                             <img
-                              src={`data:image/jpeg;base64, ${user?.userProfilePicture}`}
-                              className="w-44 h-44 mb-8"
+                              src={`data:image/jpeg;base64, ${jobs[0].userProfilePicture}`}
+                              className="w-44 h-44 rounded-full mb-8"
                             />
                           </div>
-                          <div className="mt-3">
+                          <div className="mt-6">
                             <h3 className=" font-extralight text-2xl">
                               Posted by k:
                               {jobs[0]?.username}
@@ -1695,9 +1679,6 @@ function JobSearch() {
                                   <>
                                     {useri === comment.username ? (
                                       <div>
-                                        <p className="text-black">
-                                          {comment.commentContent}
-                                        </p>
                                         <div className="flex mt-4 space-x-4 justify-end">
                                           <button
                                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -1778,6 +1759,8 @@ function JobSearch() {
                         </div>
                       </div>
                     </>
+                  )}
+                  </div>
                   )}
                 </div>
               )}

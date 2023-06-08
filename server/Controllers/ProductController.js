@@ -59,6 +59,7 @@ class ProductController {
   static async getJobByCategory(req, res) {
     try {
       const jobCategory = req.params.category;
+      console.log("job category " , jobCategory);
       const jobs = await ProductModel.getJobsByCategory(jobCategory);
       res.send(jobs);
     } catch (error) {
