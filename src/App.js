@@ -16,6 +16,7 @@ import PrivateRoute from "./utils/ProtectedRoute";
 import EditComment from "./Pages/EditComment";
 import EditMyInfo from "./Pages/EditUserProfile";
 import MyJobs from "./Pages/MyJobs";
+import EditMyJobs from "./Pages/EditMyJobs";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -44,12 +45,15 @@ function App() {
           <Navbar />
           <Routes>
             <Route path="/" exact element={<Home />} />
-          
-            <Route path="/signup"   element={
+
+            <Route
+              path="/signup"
+              element={
                 <PrivateRoute>
                   <SignUpForm />
                 </PrivateRoute>
-              } />
+              }
+            />
             <Route
               path="/dashboard"
               exact
@@ -59,16 +63,23 @@ function App() {
                 </PrivateRoute>
               }
             />
-              <Route path="/signin"exact element={<PrivateRoute>
+            <Route
+              path="/signin"
+              exact
+              element={
+                <PrivateRoute>
                   <LogInForm />
-                </PrivateRoute>} />
+                </PrivateRoute>
+              }
+            />
             <Route path="/postjobs" exact element={<PostJobs />} />
             <Route path="/jobsearch" exact element={<JobSearch />} />
             <Route path="/edituser/:id" exact element={<EditUser />} />
             <Route path="/editjobs/:id" exact element={<EditJobs />} />
             <Route path="/editComment/:id" exact element={<EditComment />} />
             <Route path="/user/profile" exact element={<EditMyInfo />} />
-            <Route path="/myjobs/:id" exact element={<MyJobs/>} />
+            <Route path="/myjobs/:id" exact element={<MyJobs />} />
+            <Route path="/editMyJobs/:id" exact element={<EditMyJobs />} />
           </Routes>
         </Router>
       )}
