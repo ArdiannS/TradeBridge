@@ -261,6 +261,31 @@ class ProductModel {
     });
   }
 
+  static async updateMyJob(
+    jobTitle,
+    jobType,
+    jobCategory,
+    jobDescription,
+    jobId
+  ) {
+    return new Promise((resolve, reject) => {
+       console.log(jobId);
+      database.query(
+        "UPDATE jobs SET jobTitle = ?, jobType = ?, jobCategory = ?, jobDescription = ?  WHERE jobId = ?",
+        [jobTitle, jobType, jobCategory, jobDescription, jobId],
+        (err, result) => {
+          if (err) {
+            console.error(err.message);
+            reject(err);
+          } else {
+            console.log(result);
+            resolve(result);
+          }
+        }
+      );
+    });
+  }
+
   static async searchJobsByTitle(title) {
     const query = "SELECT * FROM jobs WHERE title LIKE ?";
     const searchTitle = `%${title}%`;

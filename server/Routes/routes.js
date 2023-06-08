@@ -50,6 +50,7 @@ router.get("/dashboard/total-users", DashboardController.getNumberOfAllUsers);
 router.get("/user/profile", UserController.getUserProfile);
 router.get("/myjobs/:id", ProductController.getJobsByUserId);
 router.delete("/myjobs/:id", ProductController.deleteMyJob);
+router.post("/editMyJobs/:id", ProductController.updateMyJob);
 router.put("/user/profile", UserController.updateUserProfile);
 router.get("/jobs", ProductController.searchJobs);
 router.get("/jobOffer/:id", ProductController.getJobOffers);
