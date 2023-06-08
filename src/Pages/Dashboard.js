@@ -121,11 +121,12 @@ function Dashboard() {
                         Username
                       </th>
                       <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                          scope="col"
+                          className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
-                        Password
+                        User Profile Pic
                       </th>
+
                       <th
                         scope="col"
                         className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -145,8 +146,8 @@ function Dashboard() {
                         User Type
                       </th>
                       <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                          scope="col"
+                          className=" text-xs font-medium text-gray-500 uppercase tracking-wider"
                       >
                         Actions
                       </th>
@@ -160,6 +161,7 @@ function Dashboard() {
                             {user.userid}
                           </div>
                         </td>
+
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
                             {user.username}
@@ -167,7 +169,10 @@ function Dashboard() {
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {user.password}
+                            <img
+                                src={`data:image/jpeg;base64, ${user.userProfilePicture}`}
+                                className="w-8 h-8 rounded-full"
+                            />
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -175,6 +180,7 @@ function Dashboard() {
                             {user.email}
                           </div>
                         </td>
+
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
                             {user.birthday}
@@ -248,12 +254,7 @@ function Dashboard() {
                       >
                         Job City
                       </th>
-                      <th
-                        scope="col"
-                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                      >
-                        Job Price
-                      </th>
+
                       <th
                         scope="col"
                         className=" text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -295,11 +296,7 @@ function Dashboard() {
                             {job.jobCity}
                           </div>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          <div className="text-sm text-gray-900">
-                            {job.jobPrice}
-                          </div>
-                        </td>
+
 
                         <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                           <div class="flex justify-center">
@@ -369,7 +366,7 @@ function Dashboard() {
                       <tr>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <div className="text-sm text-gray-900">
-                            {comment.commentId}
+                            {comment.commentid}
                           </div>
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -400,7 +397,7 @@ function Dashboard() {
                             </button>
                             <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
                               <Link
-                                to={`/editComment/${comment.commentId}`}
+                                to={`/editComment/${comment.commentid}`}
                                 class="text-white"
                               >
                                 Edit

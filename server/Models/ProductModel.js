@@ -136,9 +136,10 @@ class ProductModel {
     });
   }
   static async getJobsByCategory(category) {
+      console.log(category)
     return new Promise((resolve, reject) => {
       database.query(
-        "SELECT * FROM Jobs WHERE jobCategory = ? LIMIT 3",
+        "SELECT * FROM Jobs j inner join Users u on u.userid = j.idusers WHERE jobCategory = ? LIMIT 3",
         [category],
         (error, result) => {
           if (error) {
