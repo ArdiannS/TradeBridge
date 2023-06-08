@@ -8,8 +8,11 @@ const router = express.Router();
 
 const { isLoggedIn, isGuest } = require("../middelware/auth");
 const DashboardController = require("../Controllers/DashboardController");
-router.post("/editMyJobs/:id", ProductController.updateMyJob);
 router.get("/jobs/:category", ProductController.getJobByCategory);
+
+router.get("/jobs/:id", ProductController.getJobById);
+
+router.post("/editMyJobs/:id", ProductController.updateMyJob);
 
 router.post(
   "/postjobs",
@@ -21,7 +24,6 @@ router.post(
 //   upload.single("jobPhoto"),
 //   ProductController.insertJobs
 // );
-router.get("/jobs/:id", ProductController.getJobById);
 
 router.put("/comments/:id", CommentController.updateComment);
 router.put("/offers/:id", ProductController.updateJobOffer);
