@@ -99,7 +99,7 @@ class UserController {
         birthday,
         res
       );
-      res.status(200).json({ message: "User updated successfully" });
+      res.redirect("/dashboard");
     } catch (error) {
       console.error(error);
       res.status(500).send("Error updating user");

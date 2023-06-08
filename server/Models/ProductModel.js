@@ -1,4 +1,5 @@
 const database = require("../Configuration/DataBaseConnection");
+const { deleteMyJob } = require("../Controllers/ProductController");
 
 class ProductModel {
   static async insertJobs(
@@ -135,9 +136,10 @@ class ProductModel {
     });
   }
   static async getJobsByCategory(category) {
+      console.log(category)
     return new Promise((resolve, reject) => {
       database.query(
-        "SELECT * FROM Jobs WHERE jobCategory = ? LIMIT 3",
+        "SELECT * FROM Jobs j inner join Users u on u.userid = j.idusers WHERE jobCategory = ? LIMIT 3",
         [category],
         (error, result) => {
           if (error) {
@@ -240,6 +242,21 @@ class ProductModel {
             reject(error);
           }
           resolve(results);
+        }
+      );
+    });
+  }
+
+  static async deleteMyJob(id) {
+    return new Promise((resolve) => {
+      database.query(
+        "Delete From jobs where idusers = ?",
+        [id],
+        (err, result) => {
+          if (err) {
+            return console.error(err.message);
+          }
+          resolve(result);
         }
       );
     });
