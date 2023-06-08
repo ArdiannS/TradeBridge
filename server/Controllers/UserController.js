@@ -125,13 +125,15 @@ class UserController {
 
   static async updateUserProfile(req, res) {
     const userId = req.session.userId;
-    const { username, email, birthday } = req.body;
+    const {  buffer } = req.file;
+    const picture = buffer.toString("base64");
+    const { username, email, birthday } = req.body;    
 
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
     try {
-      await UserModel.updateUserProfile(userId, username, email, birthday);
+      await UserModel.updateUserProfile(userId, username, email, birthday,picture);
       res.json({ message: "User profile updated successfully" });
     } catch (error) {
       console.error(error);

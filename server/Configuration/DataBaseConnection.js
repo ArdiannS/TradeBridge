@@ -2,9 +2,7 @@ var mysql = require("mysql");
 
 var conn = mysql.createConnection({
   host: "localhost",
-
-  user: "root",
-
+  user: "Arbs",
   password: "root",
   database: "TradeBridgeDb",
   timezone: "c",

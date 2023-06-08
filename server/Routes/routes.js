@@ -49,7 +49,7 @@ router.get("/dashboard/total-jobs", DashboardController.getNumberOfAllJobs);
 router.get("/dashboard/total-users", DashboardController.getNumberOfAllUsers);
 router.get("/user/profile", UserController.getUserProfile);
 router.get("/myjobs/:id", ProductController.getJobsByUserId);
-router.put("/user/profile", UserController.updateUserProfile);
+router.put("/user/profile", upload.single("profilePic"), UserController.updateUserProfile);
 router.get("/jobs", ProductController.searchJobs);
 router.get("/jobOffer/:id", ProductController.getJobOffers);
 router.get("/jobOffers", ProductController.getAllJobOffers);

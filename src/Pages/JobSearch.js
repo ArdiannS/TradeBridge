@@ -1085,7 +1085,7 @@ function JobSearch() {
                     <div>
                       <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
                         <img
-                          src={`data:image/jpeg;base64,${selectedJob.jobPhoto}`}
+                          src={`data:image/jpeg;base64,${filteredJobs[0].jobPhoto}`}
                           alt="
                               
                               Job Photo"
