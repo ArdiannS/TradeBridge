@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "../api/axiosInstance";
 import { useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 const user = JSON.parse(localStorage.getItem("user"));
 console.log("user", user);
 function MyJobs() {
@@ -66,6 +68,11 @@ function MyJobs() {
                   className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded"
                 >
                   Delete
+                </button>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
+                  <Link to={`/editMyJobs/${job.jobId}`} class="text-white">
+                    Edit
+                  </Link>
                 </button>
               </td>
             </tr>

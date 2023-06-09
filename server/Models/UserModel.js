@@ -198,11 +198,12 @@ class UserModel {
       );
     });
   }
-  static async updateUserProfile(id, username, password, email, birthday) {
+  static async updateUserProfile(id, username, email, birthday,userProfilePicture) {
     return new Promise((resolve) => {
+      console.log(username,id,email,birthday,userProfilePicture);
       database.query(
-        "Update Users set username = ?,password=?,email=?,birthday=? where userid = ?",
-        [username, password, email, birthday, id],
+        "Update Users set username = ?,email=?,birthday=?,userProfilePicture = ? where userid = ?",
+        [username,  email, birthday,userProfilePicture, id],
         (err, result) => {
           if (err) {
             return console.error(err.message);

@@ -136,9 +136,10 @@ class ProductModel {
     });
   }
   static async getJobsByCategory(category) {
+      console.log(category)
     return new Promise((resolve, reject) => {
       database.query(
-        "SELECT * FROM Jobs WHERE jobCategory = ? LIMIT 3",
+        "SELECT * FROM Jobs j inner join Users u on u.userid = j.idusers WHERE jobCategory = ? LIMIT 3",
         [category],
         (error, result) => {
           if (error) {
@@ -256,6 +257,31 @@ class ProductModel {
             return console.error(err.message);
           }
           resolve(result);
+        }
+      );
+    });
+  }
+
+  static async updateMyJob(
+    jobTitle,
+    jobType,
+    jobCategory,
+    jobDescription,
+    jobId
+  ) {
+    return new Promise((resolve, reject) => {
+       console.log(jobId);
+      database.query(
+        "UPDATE jobs SET jobTitle = ?, jobType = ?, jobCategory = ?, jobDescription = ?  WHERE jobId = ?",
+        [jobTitle, jobType, jobCategory, jobDescription, jobId],
+        (err, result) => {
+          if (err) {
+            console.error(err.message);
+            reject(err);
+          } else {
+            console.log(result);
+            resolve(result);
+          }
         }
       );
     });

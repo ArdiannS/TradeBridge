@@ -19,6 +19,7 @@ import MyJobs from "./Pages/MyJobs";
 import AllUsersPage from "./Pages/AllUsersPage";
 import AllJobsPage from "./Pages/AllJobsPage";
 import AllCommentsPage from "./Pages/AllCommentsPage";
+import EditMyJobs from "./Pages/EditMyJobs";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -84,6 +85,7 @@ function App() {
             <Route path="/allusers" exact element={<AllUsersPage />} />
             <Route path="/alljobs" exact element={<AllJobsPage />} />
             <Route path="/allcomments" exact element={<AllCommentsPage />} />
+            <Route path="/editMyJobs/:id" exact element={<EditMyJobs />} />
           </Routes>
         </Router>
       )}
