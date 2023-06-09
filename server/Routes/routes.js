@@ -13,13 +13,8 @@ router.post(
   upload.single("jobPhoto"),
   ProductController.insertJobs
 );
-// router.post(
-//   "/editjobs",
-//   upload.single("jobPhoto"),
-//   ProductController.insertJobs
-// );
-router.get('/jobs/:category', ProductController.getJobByCategory);
 router.get("/jobs/:id", ProductController.getJobById);
+router.get('/jobs/:category', ProductController.getJobByCategory);
 router.put("/comments/:id", CommentController.updateComment);
 router.put("/offers/:id", ProductController.updateJobOffer);
 router.post("/jobsearch",ProductController.insertOffer);
