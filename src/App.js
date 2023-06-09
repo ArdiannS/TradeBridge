@@ -16,6 +16,9 @@ import PrivateRoute from "./utils/ProtectedRoute";
 import EditComment from "./Pages/EditComment";
 import EditMyInfo from "./Pages/EditUserProfile";
 import MyJobs from "./Pages/MyJobs";
+import AllUsersPage from "./Pages/AllUsersPage";
+import AllJobsPage from "./Pages/AllJobsPage";
+import AllCommentsPage from "./Pages/AllCommentsPage";
 import EditMyJobs from "./Pages/EditMyJobs";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -79,6 +82,9 @@ function App() {
             <Route path="/editComment/:id" exact element={<EditComment />} />
             <Route path="/user/profile" exact element={<EditMyInfo />} />
             <Route path="/myjobs/:id" exact element={<MyJobs />} />
+            <Route path="/allusers" exact element={<AllUsersPage />} />
+            <Route path="/alljobs" exact element={<AllJobsPage />} />
+            <Route path="/allcomments" exact element={<AllCommentsPage />} />
             <Route path="/editMyJobs/:id" exact element={<EditMyJobs />} />
           </Routes>
         </Router>

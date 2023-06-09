@@ -96,6 +96,15 @@ function Dashboard() {
   };
 
   return (
+    <div class="box-border overflow-x-hidden h-screen bg-gray-100">
+      <div class="flex h-full">
+        <div class="w-1/4  bg-gray-100 flex-shrink-0 h-full">
+          <Sidebar />
+        </div>
+        <div class="w-3/4 flex flex-col items-center justify-center">
+          <div class="mt-8 w-3/4">
+            <div class="text-center">
+              <Stats />
     <div class="box-border overflow-x-hidden">
       <div class="flex flex-row h-screen w-screen bg-gray-100 m-0">
         <Sidebar />
