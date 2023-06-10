@@ -47,11 +47,11 @@ const EditUserProfile = () => {
   };
   
   const [profilePic, setProfilePic] = useState(user.userProfilePicture || "");
-  console.log(user.userProfilePicture);
+  // console.log(user.userProfilePicture);
   
     const handleChange = (event) => {
       const { name, value, files } = event.target;
-      console.log(files);
+      // console.log(files);
 
       if (files && files.length > 0) {
         const file = files[0];

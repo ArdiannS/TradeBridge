@@ -16,24 +16,28 @@ function EditMyJobs() {
     setMessage(event.target.value);
 
     // 👇️ this is the input field itself
-    console.log(event.target);
+    // console.log(event.target);
 
     // 👇️ this is the new value of the input
-    console.log(event.target.value);
+    // console.log(event.target.value);
   };
   const [jobData, setJobData] = useState(null);
 
   const { id } = useParams();
 
   useEffect(() => {
-    console.log(id);
+
     fetch(`/jobs/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
+      
+        console.log('this is data', data)
         setJobData(data[0]);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => {
+        console.error(error);
+      });
   }, [id]);
 
   const handleFormSubmit = (event) => {

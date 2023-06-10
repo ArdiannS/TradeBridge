@@ -97,7 +97,7 @@ class UserModel {
                         [username, email],
                         (error, result3) => {
                           if (error) {
-                            console.log(error.message);
+                            // console.log(error.message);
                             resolve({ status: 500, message: "error" });
                           } else {
                             let data = { ...result3[0] };
@@ -200,7 +200,7 @@ class UserModel {
   }
   static async updateUserProfile(id, username, email, birthday,userProfilePicture) {
     return new Promise((resolve) => {
-      console.log(username,id,email,birthday,userProfilePicture);
+      // console.log(username,id,email,birthday,userProfilePicture);
       database.query(
         "Update Users set username = ?,email=?,birthday=?,userProfilePicture = ? where userid = ?",
         [username,  email, birthday,userProfilePicture, id],

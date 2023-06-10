@@ -25,19 +25,19 @@ class UserController {
         userType,
         defaultPicture
       );
-      console.log("++++++++++++++++++++");
+      // console.log("++++++++++++++++++++");
       if (result) {
-        console.log(result);
+        // console.log(result);
 
-        console.log("+++++++++++++++++result+++");
+        // console.log("+++++++++++++++++result+++");
       }
-      console.log(result.result);
+      // console.log(result.result);
       req.session.userid = result.result.userid || 30;
       res
         .status(result.status)
         .json({ result: result.result, message: result.message });
 
-      console.log(req.session);
+      // console.log(req.session);
       // console.log(req.session)
     } catch (error) {
       console.error(error.message);
@@ -60,10 +60,11 @@ class UserController {
         res.sendStatus(200);
       });
     } catch (exception) {
-      console.log("An error happened!" + exception);
+      // console.log("An error happened!" + exception);
     }
   }
   static async getUsersById(req, res) {
+   
     const { id } = req.params;
     try {
       const result = await UserModel.getUserById(id);

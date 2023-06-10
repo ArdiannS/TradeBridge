@@ -29,8 +29,8 @@ function SignUpForm() {
       .post("/signup", formData)
       .then((res) => {
         // console.log(res.data.result);
-        console.log("ress");
-        console.log(res.data);
+        // console.log("ress");
+        // console.log(res.data);
         localStorage.setItem("user", JSON.stringify(res.data.result) || "");
         navigate("/dashboard");
       })

@@ -11,7 +11,7 @@ function Navbar() {
   const handleLogout = async () => {
     try {
       await axios.post("/logout", {});
-      console.log("Logged out successfully");
+      // console.log("Logged out successfully");
       localStorage.setItem("user", "{}");
       setUser({}); // Clear the user data
       navigate("/signin");

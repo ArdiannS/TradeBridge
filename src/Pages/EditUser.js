@@ -7,10 +7,10 @@ function EditUser() {
         setMessage(event.target.value);
     
         // 👇️ this is the input field itself
-        console.log(event.target);
+        // console.log(event.target);
     
         // 👇️ this is the new value of the input
-        console.log(event.target.value);
+        // console.log(event.target.value);
       };
 
     const [userData, setUserData] = useState(null);
@@ -19,12 +19,11 @@ function EditUser() {
         fetch(`/users/${id}`)
           .then((response) => response.json())
           .then((data) => {
-            console.log(data);
+            // console.log(data);
             setUserData(data[0]);
           })
           .catch((error) => console.error(error));
       }, [id]);
-
   return (
 
 <div>

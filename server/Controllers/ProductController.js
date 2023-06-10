@@ -4,12 +4,12 @@ class ProductController {
   static async insertJobs(req, res) {
     const { jobTitle, jobDescription, jobType, jobCategory, jobCity } =
       req.body;
-    console.log(req.file);
+    //console.log(req.file);
     const buffer = req.file.buffer;
     const jobPhoto = buffer.toString("base64");
-    console.log("ididid");
+    //console.log("ididid");
     const userid = req.session.userId;
-    console.log(userid);
+    //console.log(userid);
 
     try {
       const result = await ProductModel.insertJobs(
@@ -30,8 +30,8 @@ class ProductController {
   }
   static async insertOffer(req, res) {
     const { jobPrice, userId, jobId, bidDescription } = req.body;
-    console.log(jobId);
-    console.log("userid", userId);
+    // console.log(jobId);
+    // console.log("userid", userId);
     try {
       const result = await ProductModel.insertJobOffer(
         userId,
@@ -59,11 +59,11 @@ class ProductController {
   static async getJobByCategory(req, res) {
     try {
       const jobCategory = req.params.category;
-      console.log("job category " , jobCategory);
+      // console.log("job category ", jobCategory);
       const jobs = await ProductModel.getJobsByCategory(jobCategory);
       res.send(jobs);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       res.status(500).send("Error retrieving jobs by category");
     }
   }
@@ -71,11 +71,11 @@ class ProductController {
   static async getSimilarJobs(req, res) {
     try {
       const jobCategory = req.body.jobCategory;
-      console.log(jobCategory);
+      // console.log(jobCategory);
       const jobs = await ProductModel.getSimilarJobs(jobCategory);
       res.send(jobs);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       res.status(500).send("Error retrieving jobs by category");
     }
   }
@@ -90,6 +90,19 @@ class ProductController {
       res.status(500).send("Error retrieving products");
     }
   }
+
+  static async getFavoriteJobs(req, res) {
+    try {
+      const favoriteJobs = await ProductModel.getFavoriteJobs();
+      if (favoriteJobs) {
+        res.send(favoriteJobs);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving favorite jobs");
+    }
+  }
+
   static async getAllJobOffers(req, res) {
     try {
       const result = await ProductModel.getAllJobOffers();
@@ -103,7 +116,7 @@ class ProductController {
   }
   static async getJobOffers(req, res) {
     const id = req.params.id;
-    console.log("job offer", id);
+    // console.log("job offer", id);
     try {
       const result = await ProductModel.getJobOffersByJobId(id);
       if (result) {
@@ -115,7 +128,9 @@ class ProductController {
     }
   }
   static async getJobById(req, res) {
+    debugger;
     const { id } = req.params;
+    debugger;
     try {
       const result = await ProductModel.getJobsById(id);
       if (result) {
@@ -151,7 +166,7 @@ class ProductController {
   }
   static async deleteJobOfferById(req, res) {
     const { id } = req.params;
-    console.log("id e ofertes", id);
+    // console.log("id e ofertes", id);
     try {
       const result = await ProductModel.deleteJobOffer(id);
       res.status(200).json({ message: "Job Offer deleted successfully" });
@@ -161,6 +176,7 @@ class ProductController {
     }
   }
   static async updateJob(req, res) {
+    debugger;
     const { id } = req.params;
     const { jobTitle, jobType, jobCategory, jobDescription, jobCity } =
       req.body;
@@ -184,8 +200,8 @@ class ProductController {
     const { id } = req.params;
     const { bidAmount, bidDescription } = req.body;
 
-    console.log(bidAmount);
-    console.log(bidDescription);
+    // console.log(bidAmount);
+    // console.log(bidDescription);
 
     try {
       const result = await ProductModel.updateJobOffers(
@@ -201,14 +217,14 @@ class ProductController {
   }
   static async getJobsByUserId(req, res) {
     const userId = req.session.userId;
-    console.log(userId);
+    // console.log(userId);
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
     try {
       const jobs = await ProductModel.getJobsByUserId(userId);
       res.json({ jobs });
-      console.log(jobs);
+      // console.log(jobs);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Server error" });
@@ -217,7 +233,7 @@ class ProductController {
 
   static async deleteMyJob(req, res) {
     const { id } = req.params;
-    console.log("id e userit", id);
+    // console.log("id e userit", id);
     try {
       const result = await ProductModel.deleteMyJob(id);
       res.status(200).json({ message: "My Job deleted successfully" });
@@ -229,9 +245,8 @@ class ProductController {
 
   static async updateMyJob(req, res) {
     const jobId = req.params.id;
-    const { jobTitle, jobType, jobCategory, jobDescription } =
-      req.body;
-      console.log(jobTitle,jobType,jobId);
+    const { jobTitle, jobType, jobCategory, jobDescription } = req.body;
+    // console.log(jobTitle, jobType, jobId);
 
     try {
       const result = await ProductModel.updateMyJob(
@@ -241,7 +256,7 @@ class ProductController {
         jobDescription,
         jobId
       );
-        res.redirect("/myjobs/:id");
+      res.redirect("/myjobs/:id");
     } catch (error) {
       console.error(error);
       res.status(500).send("Error updating job");

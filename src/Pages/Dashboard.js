@@ -15,7 +15,7 @@ function Dashboard() {
     fetch("/users")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setUserData(data);
       })
       .catch((error) => console.error(error));
@@ -25,7 +25,7 @@ function Dashboard() {
     fetch("/comments")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setCommentData(data);
       })
       .catch((error) => console.error(error));
@@ -39,7 +39,7 @@ function Dashboard() {
           setUserData(userData.filter((x) => x.userid != id));
         })
         .catch((err) => {
-          console.log("err", err.message);
+          // console.log("err", err.message);
         });
     } catch (error) {
       console.error(error);
@@ -54,7 +54,7 @@ function Dashboard() {
           setCommentData(commentData.filter((x) => x.commentId != id));
         })
         .catch((err) => {
-          console.log("err", err.message);
+          // console.log("err", err.message);
         });
     } catch (error) {
       console.error(error);
@@ -85,7 +85,7 @@ function Dashboard() {
       const response = await axios.delete(`/jobs/${id}`);
 
       // const deletedJob = await response.json();
-      console.log("deletedJob", response);
+      // console.log("deletedJob", response);
 
       setJobs((jobs) => jobs.filter((job) => job._id !== response._id));
 

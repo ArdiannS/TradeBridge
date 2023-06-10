@@ -63,6 +63,23 @@ class ProductModel {
       );
     });
   }
+
+  static async getFavoriteJobs() {
+    return new Promise((resolve, reject) => {
+      database.query(
+        "SELECT * FROM Jobs j INNER JOIN Users u ON u.userid = j.idusers WHERE j.favoriteJobs = true",
+        [],
+        (error, result) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(result);
+          }
+        }
+      );
+    });
+  }
+
   static async getJobOffersByJobId(id) {
     return new Promise((resolve, reject) => {
       database.query(
@@ -106,6 +123,7 @@ class ProductModel {
     });
   }
   static async getJobsById(id) {
+    debugger;
     return new Promise((resolve, reject) => {
       database.query(
         "SELECT * FROM Jobs WHERE jobId = ?",
@@ -136,7 +154,7 @@ class ProductModel {
     });
   }
   static async getJobsByCategory(category) {
-      console.log(category)
+    // console.log(category);
     return new Promise((resolve, reject) => {
       database.query(
         "SELECT * FROM Jobs j inner join Users u on u.userid = j.idusers WHERE jobCategory = ? LIMIT 3",
@@ -210,7 +228,7 @@ class ProductModel {
           if (err) {
             return console.error(err.message);
           }
-          console.log(result);
+          // console.log(result);
           resolve(result);
         }
       );
@@ -225,7 +243,7 @@ class ProductModel {
           if (err) {
             return console.error(err.message);
           }
-          console.log(result);
+          // console.log(result);
           resolve(result);
         }
       );
@@ -270,7 +288,7 @@ class ProductModel {
     jobId
   ) {
     return new Promise((resolve, reject) => {
-       console.log(jobId);
+      // console.log(jobId);
       database.query(
         "UPDATE jobs SET jobTitle = ?, jobType = ?, jobCategory = ?, jobDescription = ?  WHERE jobId = ?",
         [jobTitle, jobType, jobCategory, jobDescription, jobId],
@@ -279,7 +297,7 @@ class ProductModel {
             console.error(err.message);
             reject(err);
           } else {
-            console.log(result);
+            // console.log(result);
             resolve(result);
           }
         }

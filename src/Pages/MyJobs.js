@@ -4,12 +4,12 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 const user = JSON.parse(localStorage.getItem("user"));
-console.log("user", user);
+// console.log("user", user);
 function MyJobs() {
   const id = useParams();
   const [jobs, setJobs] = useState([]);
   const [user, setUser] = useState(null);
-  console.log(id);
+  // console.log(id);
   useEffect(() => {
     const fetchJobs = async () => {
       try {
@@ -34,7 +34,7 @@ function MyJobs() {
       if (response.status === 200) {
         setJobs(jobs.filter((job) => job.jobId !== jobId));
       } else {
-        console.log("Unexpected response status:", response.status);
+        // console.log("Unexpected response status:", response.status);
       }
     } catch (error) {
       console.error("Error occurred during job deletion:", error);

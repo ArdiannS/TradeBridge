@@ -8,11 +8,9 @@ const router = express.Router();
 
 const { isLoggedIn, isGuest } = require("../middelware/auth");
 const DashboardController = require("../Controllers/DashboardController");
-router.get("/jobs/:category", ProductController.getJobByCategory);
 
+debugger;
 router.get("/jobs/:id", ProductController.getJobById);
-
-router.post("/editMyJobs/:id", ProductController.updateMyJob);
 
 router.post(
   "/postjobs",
@@ -24,7 +22,8 @@ router.post(
 //   upload.single("jobPhoto"),
 //   ProductController.insertJobs
 // );
-
+router.post("/editjobs/:id", ProductController.updateJob);
+router.get("/jobs/:category", ProductController.getJobByCategory);
 router.put("/comments/:id", CommentController.updateComment);
 router.put("/offers/:id", ProductController.updateJobOffer);
 router.post("/jobsearch", ProductController.insertOffer);
@@ -39,10 +38,11 @@ router.post("/postjobs", ProductController.insertJobs);
 router.get("/jobs", ProductController.getJobs);
 router.post("/jobsearch", ProductController.getSimilarJobs);
 router.put("/jobs/:id", ProductController.updateJob);
+router.get("favoriteJobs", ProductController.getFavoriteJobs);
 router.delete("/jobs/:id", ProductController.deleteJob);
 router.get("/users/:id", UserController.getUsersById);
 router.post("/edituser/:id", UserController.updateUser);
-router.post("/editjobs/:id", ProductController.updateJob);
+router.post("/editMyJobs/:id", ProductController.updateMyJob);
 router.delete("/users/:id", UserController.deleteUser);
 router.post("/commentForm", CommentController.insertComment);
 router.get("/comments", CommentController.getComments);
@@ -56,6 +56,7 @@ router.get("/user/profile", UserController.getUserProfile);
 router.get("/myjobs/:id", ProductController.getJobsByUserId);
 router.delete("/myjobs/:id", ProductController.deleteMyJob);
 router.put("/user/profile", UserController.updateUserProfile);
+
 router.put(
   "/user/profile",
   upload.single("profilePic"),

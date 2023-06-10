@@ -17,6 +17,7 @@ import EditComment from "./Pages/EditComment";
 import EditMyInfo from "./Pages/EditUserProfile";
 import MyJobs from "./Pages/MyJobs";
 import EditMyJobs from "./Pages/EditMyJobs";
+import FavoriteJobs from "./Pages/FavoriteJobs";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -80,6 +81,7 @@ function App() {
             <Route path="/user/profile" exact element={<EditMyInfo />} />
             <Route path="/myjobs/:id" exact element={<MyJobs />} />
             <Route path="/editMyJobs/:id" exact element={<EditMyJobs />} />
+            <Route path="/favoriteJobs/" exact element={<FavoriteJobs />} />
           </Routes>
         </Router>
       )}

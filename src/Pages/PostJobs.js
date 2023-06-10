@@ -2,7 +2,7 @@ import mainIMG from "../images/photo.jpg";
 import { useRef, useEffect } from "react";
 import Footer from "../Components/Footer";
 const user = JSON.parse(localStorage.getItem("user"));
-console.log("user", user);
+// console.log("user", user);
   function PostJobs() {
 
   const sectionRef1 = useRef(null);
