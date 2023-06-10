@@ -174,7 +174,7 @@ class ProductController {
         jobDescription,
         jobCity
       );
-      res.status(200).json({ message: "Job Updated successfully" });
+      res.redirect("/alljobs");
     } catch (error) {
       console.error(error);
       res.status(500).send("Error Updating Job");
@@ -193,7 +193,7 @@ class ProductController {
         bidDescription,
         id
       );
-      res.status(200).json({ message: "Job Offer Updated successfully" });
+      res.redirect("/jobsearch");
     } catch (error) {
       console.error(error);
       res.status(500).send("Error Updating Job");

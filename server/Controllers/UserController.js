@@ -124,10 +124,17 @@ class UserController {
   }
 
   static async updateUserProfile(req, res) {
+    const { username, email, birthday } = req.body;
     const userId = req.session.userId;
-    const {  buffer } = req.file;
-    const picture = buffer.toString("base64");
-    const { username, email, birthday } = req.body;    
+    const  file  = req.file;
+    let picture = null;
+    if(file){
+      const fileContent = file.buffer.toString("base64");
+      picture = fileContent;
+    }else{
+      picture = req.body.defaultProfilePic;
+      console.log(picture);
+    }
 
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized" });
