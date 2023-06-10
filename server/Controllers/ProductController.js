@@ -227,6 +227,26 @@ class ProductController {
     }
   }
 
+  static async updateMyJob(req, res) {
+    const jobId = req.params.id;
+    const { jobTitle, jobType, jobCategory, jobDescription } =
+      req.body;
+      console.log(jobTitle,jobType,jobId);
+
+    try {
+      const result = await ProductModel.updateMyJob(
+        jobTitle,
+        jobType,
+        jobCategory,
+        jobDescription,
+        jobId
+      );
+        res.redirect("/myjobs/:id");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error updating job");
+    }
+  }
 
   static async searchJobs(req, res) {
     const { title } = req.query;
