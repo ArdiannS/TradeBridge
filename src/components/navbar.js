@@ -19,7 +19,12 @@ function Navbar() {
       console.error("Logout failed", error);
     }
   };
-
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
   const fetchUserProfile = async () => {
     try {
       const userResponse = await axios.get("/user/profile");

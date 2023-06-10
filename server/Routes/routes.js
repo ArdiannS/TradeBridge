@@ -2,6 +2,7 @@ const express = require("express");
 const UserController = require("../Controllers/UserController");
 const ProductController = require("../Controllers/ProductController");
 const CommentController = require("../Controllers/CommentController");
+const RequestsController = require("../Controllers/RequestsController");
 const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 const router = express.Router();
@@ -21,7 +22,7 @@ router.post(
 //   upload.single("jobPhoto"),
 //   ProductController.insertJobs
 // );
-// router.put("/user/profile", UserController.updateUserProfile);
+
 router.put("/comments/:id", CommentController.updateComment);
 router.put("/offers/:id", ProductController.updateJobOffer);
 router.post("/jobsearch", ProductController.insertOffer);
@@ -61,5 +62,8 @@ router.get("/jobs", ProductController.searchJobs);
 router.get("/jobOffer/:id", ProductController.getJobOffers);
 router.get("/jobOffers", ProductController.getAllJobOffers);
 router.delete("/jobOffer/:id", ProductController.deleteJobOfferById);
-
+router.post("/request", RequestsController.insertRequest);
+router.get("/request/:id", RequestsController.getRequestsById);
+router.get("/request", RequestsController.getRequests);
+router.delete("/request/:id", RequestsController.deleteRequest);
 module.exports = router;
