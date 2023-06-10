@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../api/axiosInstance";
+import Sidebar from "../Components/Sidebar";
 
 function AllJobsPage() {
   const [jobs, setJobs] = useState([]);
@@ -27,7 +28,11 @@ function AllJobsPage() {
     }
   };
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="flex justify-between">
+        <div className="bg-black max-w-[330px]">
+          <Sidebar/>
+        </div>
+    <div className="flex justify-center items-center h-screen bg-gray-100 w-full">
       <div className="bg-blue-600 shadow-lg rounded-lg p-6">
         <table className="w-full text-white">
           <thead className="bg-blue-700">
@@ -50,9 +55,7 @@ function AllJobsPage() {
               <th className="px-6 py-3 text-left text-sm font-semibold uppercase">
                 Job City
               </th>
-              <th className="px-6 py-3 text-left text-sm font-semibold uppercase">
-                Job Price
-              </th>
+
               <th className="text-sm font-semibold uppercase">Actions</th>
             </tr>
           </thead>
@@ -94,6 +97,8 @@ function AllJobsPage() {
         </table>
       </div>
     </div>
+
+      </div>
   );
 }
 

@@ -5,6 +5,8 @@ import First from "../images/bgImg.jpeg";
 import Second from "../images/foto1.jpg";
 import Third from "../images/login.jpg";
 import Fourth from "../images/logoo2.png";
+import '../CSS/Scrollbar.css';
+
 
 // import { HiOutlineArrowsExpand  } from 'react-icons/hi';
 import { MdOutlineInfo } from "react-icons/md";
@@ -320,10 +322,7 @@ function JobSearch() {
     <>
       <header>{/* <Navbar /> */}</header>
       <div className="flex h-full">
-        <div
-          className="h-900 w-1/3 bg-slate-400"
-          style={{ overflowY: "scroll", height: "900px" }}
-        >
+        <div className="h-900 w-1/5 bg-gray-200 overflow-y-scroll scrollbar-rounded" style={{ height: "900px" }}>
           <div className="flex flex-col justify-center items-center rounded-lg shadow-md w-full mx-auto">
             <h2 className="font-light text-3xl ml-2 mt-4">Jobs</h2>
             <div className="mt-4 ml-2 flex justify-between gap-4">
@@ -331,107 +330,81 @@ function JobSearch() {
 
               <div className="relative inline-block">
                 <button
-                  type="button"
-                  className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  onClick={handleDropdownToggle}
+                    type="button"
+                    className="flex items-center space-x-2 px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    onClick={handleDropdownToggle}
                 >
                   <span>Sort</span>
                   <BsSliders size={18} />
                 </button>
                 {isDropdownOpen && (
-                  <div
-                    className="absolute z-10 mt-2 w-52 bg-white border border-gray-300 rounded shadow-lg"
-                    onClick={() => setSelectedJob(null)}
-                  >
-                    <ul className="py-2">
-                      {categories.map((category) => (
-                        <li
-                          key={category.value}
-                          className={`px-4 py-2 cursor-pointer ${
-                            selectedCategory === category.value
-                              ? "bg-blue-200"
-                              : ""
-                          }`}
-                          onClick={() =>
-                            handleCategoryChange({
-                              target: { value: category.value },
-                            })
-                          }
-                        >
-                          {category.label}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                    <div className="absolute z-10 mt-2 w-52 bg-white border border-gray-300 rounded shadow-lg" onClick={() => setSelectedJob(null)}>
+                      <ul className="py-2">
+                        {categories.map((category) => (
+                            <li
+                                key={category.value}
+                                className={`px-4 py-2 cursor-pointer ${selectedCategory === category.value ? "bg-blue-200" : ""}`}
+                                onClick={() => handleCategoryChange({ target: { value: category.value } })}
+                            >
+                              {category.label}
+                            </li>
+                        ))}
+                      </ul>
+                    </div>
                 )}
               </div>
             </div>
             <input
-              type="search"
-              id="default-search"
-              className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="Search jobs by title"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              required
+                type="search"
+                id="default-search"
+                className="block w-full p-4 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Search jobs by title"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                required
             />
             <button
-              onClick={handleSearch}
-              className="bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-opacity-80 transition duration-300 ease-in-out"
+                onClick={handleSearch}
+                className="bg-indigo-500 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-opacity-80 transition duration-300 ease-in-out"
             >
               Search
             </button>
-            {(isFiltering ? filteredJobs : jobs).map((job) => {
+
+        {(isFiltering ? filteredJobs : jobs).map((job) => {
               const title = job.jobTitle || ""; // Handle undefined job.title
               if (
                 !searchTerm ||
                 title.toLowerCase().includes(searchTerm.toLowerCase())
               ) {
                 return (
-                  <div
-                    key={job.jobId}
-                    className="flex flex-col justify-center items-center bg-white rounded-lg shadow-md cursor-pointer w-4/8 mx-auto my-5"
-                    onClick={() => handleJobClick(job)}
-                  >
-                    <div className="w-full rounded-t-lg bg-indigo-500 py-3 px-6">
-                      <FaFacebook size={36} className="text-white" />
-                    </div>
-                    <div className="flex flex-col justify-center items-center p-6">
-                      <h2 className="text-3xl font-bold mb-2">
-                        {job.jobTitle}
-                      </h2>
-                      <div className="flex items-center">
-                        <MdOutlineInfo
-                          size={24}
-                          className="text-indigo-500 mr-2"
-                        />
-                        <p className="text-lg text-gray-600 font-medium">
-                          {job.jobCategory}
-                        </p>
+                    <div key={job.jobId} className="flex flex-col justify-center items-center bg-white rounded-lg shadow-md cursor-pointer w-4/8 mx-auto my-5 transform hover:scale-105" onClick={() => handleJobClick(job)}>
+                      <div className="w-full rounded-t-lg bg-indigo-500 flex justify-between items-center px-6 py-3">
+                        <img src={`data:image/jpeg;base64, ${job.userProfilePicture}`} className="h-12 w-12 rounded-full" alt="User Profile" />
+                        <h4 className="mt-2 text-xl font-bold text-white">{job.username}</h4>
                       </div>
-                      <div className="mt-8 w-full">
-                        <h2 className="text-2xl font-bold mb-4">
-                          {job.jobCity}
-                        </h2>
-                        <span className="text-xl text-gray-600 font-medium mb-6">
-                          {job.jobPrice}
-                        </span>
-                        <div className="flex items-center justify-between w-full">
-                          <button className="bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-opacity-80 transition duration-300 ease-in-out">
-                            Start Today
-                          </button>
-                          <div className="flex items-center">
-                            <button className="bg-white text-indigo-500 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out mr-4">
-                              Jep Oferten
-                            </button>
-                            <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                              <FaHeart size={26} />
-                            </button>
+                      <div className="flex flex-col h-72 p-6">
+                        <h2 className="text-3xl font-bold text-gray-800 mb-4">{job.jobTitle}</h2>
+                        <div className="flex items-center mb-4">
+                          <MdOutlineInfo size={24} className="text-indigo-500 mr-2" />
+                          <p className="text-lg text-indigo-500 font-medium">{job.jobCategory}</p>
+                        </div>
+                        <div className="w-full">
+                          <h2 className="text-2xl font-bold text-gray-800 mb-2">{job.jobCity}</h2>
+                          <span className="text-xl text-indigo-500 font-medium mb-6">{job.jobPrice}</span>
+                          <div className="flex items-center justify-between w-full">
+                            <div className="flex items-center mt-7">
+                              <button className="bg-indigo-500 text-white w-72 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-700 hover:text-gray-200 transition duration-300 ease-in-out mr-4">
+                                Jep Oferten
+                              </button>
+                              <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
+                                <FaHeart size={26} />
+                              </button>
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>
+
                 );
               }
               return null;
@@ -503,8 +476,8 @@ function JobSearch() {
         <div className="w-3/4 flex justify-center">
           {/* Content for the right div */}
           {selectedJob ? (
-            <div className="rounded-lg h-full w-full ">
-              <div className="flex justify-between my-7 mx-6">
+            <div className="rounded-lg h-full w-full  ">
+              <div className="flex justify-between my-7 mx-6 ">
                 <div className=" h-1/4 w-1/2 mx-9">
                   <div className="mt-10  h-20 flex items-center">
                     <img
@@ -626,12 +599,16 @@ function JobSearch() {
                 </div>
 
                 <div>
-                  <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
+                  <div className="flex  flex-col mr-10">
                     <img
-                      src={`data:image/jpeg;base64,${selectedJob.jobPhoto}`}
-                      alt="Job Photo"
+                        className=""     style={{ height: "850px" }}
+
+                        src={`data:image/jpeg;base64,${selectedJob.jobPhoto}`}
+                        alt="Job Photo"
                     />
                   </div>
+
+
                   <div class="flex justify-center mt-2">
                     {/* <button onClick={nextImage} class="mx-2">
                       Prev
@@ -1060,12 +1037,12 @@ function JobSearch() {
                     </div>
 
                     <div>
-                      <div class="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
+                      <div className="flex  flex-col mr-10">
                         <img
-                          src={`data:image/jpeg;base64,${filteredJobs[0].jobPhoto}`}
-                          alt="
-                              
-                              Job Photo"
+                            className=""     style={{ height: "850px" }}
+
+                            src={`data:image/jpeg;base64,${filteredJobs[0].jobPhoto}`}
+                            alt="Job Photo"
                         />
                       </div>
                       <div class="flex justify-center mt-2">
@@ -1473,14 +1450,19 @@ function JobSearch() {
                         </div>
 
                         <div>
-                          <div className="flex flex-col mr-10 max-w-2xl max-h-2xl h-80 w-80 bg-gray-500">
+                          <div className="flex  flex-col mr-10">
                             {jobs.length > 0 && (
-                              <img
-                                src={`data:image/jpeg;base64,${jobs[0].jobPhoto}`}
-                                alt="Job Photo"
-                              />
+                                <img
+                                    className=""     style={{ height: "850px" }}
+
+                                    src={`data:image/jpeg;base64,${jobs[0].jobPhoto}`}
+                                    alt="Job Photo"
+                                />
+
                             )}
+
                           </div>
+
                           <div class="flex justify-center mt-2">
                             {/* <button onClick={nextImage} class="mx-2">
                               Prev

@@ -12,7 +12,6 @@ const DashboardController = require("../Controllers/DashboardController");
 router.get("/jobs/:id", ProductController.getJobById);
 router.get("/jobs/:category", ProductController.getJobByCategory);
 router.post("/editMyJobs/:id", ProductController.updateMyJob);
-
 router.post(
   "/postjobs",
   upload.single("jobPhoto"),
@@ -23,7 +22,6 @@ router.post(
 //   upload.single("jobPhoto"),
 //   ProductController.insertJobs
 // );
-// router.put("/user/profile", UserController.updateUserProfile);
 
 router.put("/comments/:id", CommentController.updateComment);
 router.put("/offers/:id", ProductController.updateJobOffer);
