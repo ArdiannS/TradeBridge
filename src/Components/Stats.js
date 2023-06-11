@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useRef } from "react";
 import Chart from "chart.js/auto";
+import {Pie} from "react-chartjs-2";
+
 
 function Stats() {
+
   const [totalJobs, setTotalJobs] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
   const chartRef = useRef(null);
@@ -25,6 +28,7 @@ function Stats() {
       })
       .catch((error) => console.error(error));
   }, []);
+
 
   useEffect(() => {
     if (chartRef.current) {
@@ -65,6 +69,76 @@ function Stats() {
       }
     };
   }, [totalUsers, totalJobs]);
+  const [jobCategories, setJobCategories] = useState([]);
+  let jobcategory = 0;
+  const fetchJobCategories = async () => {
+    try {
+      // Fetch job categories from your database or API
+      const response = await fetch('/jobs'); // Replace with your actual API endpoint for fetching jobs
+      if (response.ok) {
+        const jobs = await response.json();
+        const categories = Array.from(new Set(jobs.map((job) => job.jobCategory)));
+        const categoryCounts = categories.map((category) => ({
+          name: category,
+          count: jobs.filter((job) => job.jobCategory === category).length,
+        }));
+        setJobCategories(categoryCounts);
+      } else {
+        console.error('Error fetching job categories:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching job categories:', error);
+    }
+  };
+
+  console.log("start");
+  let totalCount = 0;
+  for (let i = 0; i < jobCategories.length; i++) {
+    totalCount += jobCategories[i]?.count;
+  }
+  useEffect(() => {
+    fetchJobCategories();
+  }, []);
+  let percentArray = [];
+  console.log(jobCategories);
+
+  for (let i = 0; i < jobCategories.length; i++) {
+    let counter = jobCategories[i]?.count;
+    console.log("Category:", counter, i);
+    let percentage = (counter / totalCount) * 100;
+    percentArray[i] = [];
+    percentArray[i].push(percentage);
+    console.log("Category:", counter, "Percentage:", percentage.toFixed(2) + "%");
+  }
+  const labels = jobCategories.map((category) => category.name);
+  const percents = jobCategories.map((category, i) => {
+    const percent = percentArray[i][0];
+    return {
+      name: category.name,
+      percent: percent.toFixed(2),
+    };
+  });
+  const data = jobCategories.map((category) => category.count);
+  const chartData = {
+    labels: labels.map((label, index) => `${label} (${percents[index].percent}%)`),
+    datasets: [
+      {
+        data: data,
+        backgroundColor: [
+          'rgba(255, 99, 132, 0.6)',
+          'rgba(54, 162, 235, 0.6)',
+          'rgba(255, 206, 86, 0.6)',
+          'rgba(20, 80, 86, 0.6)',
+          'rgba(300, 10, 450, 90)',
+        ],
+      },
+    ],
+  };
+
+
+  console.log(chartData);
+
+
 
   return (
     <div class="py-24 sm:py-32 w-full">
@@ -146,8 +220,9 @@ function Stats() {
           </div>
         </div>
       </div>
-      <div class="mt-8 w-full max-w-3xl mx-auto">
-        <canvas id="chart" class="w-full h-fit"></canvas>
+      <div class="mt-8 flex justify-between w-full  mx-auto">
+        <canvas id="chart" class="w-1/2 h-fit"></canvas>
+        <Pie data={chartData} className="w-1/2 h-1/2"/>
       </div>
     </div>
   );
