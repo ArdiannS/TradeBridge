@@ -6,9 +6,6 @@ import Second from "../images/foto1.jpg";
 import Third from "../images/login.jpg";
 import Fourth from "../images/logoo2.png";
 import '../CSS/Scrollbar.css';
-
-
-// import { HiOutlineArrowsExpand  } from 'react-icons/hi';
 import { MdOutlineInfo } from "react-icons/md";
 import { BsSliders } from "react-icons/bs";
 import Footer from "../Components/Footer";
@@ -377,12 +374,12 @@ function JobSearch() {
                 title.toLowerCase().includes(searchTerm.toLowerCase())
               ) {
                 return (
-                    <div key={job.jobId} className="flex flex-col justify-center items-center bg-white rounded-lg shadow-md cursor-pointer w-4/8 mx-auto my-5 transform hover:scale-105" onClick={() => handleJobClick(job)}>
+                    <div key={job.jobId} className="flex flex-col justify-center items-center bg-white rounded-lg shadow-md cursor-pointer w-11/12 mx-auto my-5 transform hover:scale-105" onClick={() => handleJobClick(job)}>
                       <div className="w-full rounded-t-lg bg-indigo-500 flex justify-between items-center px-6 py-3">
                         <img src={`data:image/jpeg;base64, ${job.userProfilePicture}`} className="h-12 w-12 rounded-full" alt="User Profile" />
                         <h4 className="mt-2 text-xl font-bold text-white">{job.username}</h4>
                       </div>
-                      <div className="flex flex-col h-72 p-6">
+                      <div className="flex flex-col w-3/4 mr-24 p-6">
                         <h2 className="text-3xl font-bold text-gray-800 mb-4">{job.jobTitle}</h2>
                         <div className="flex items-center mb-4">
                           <MdOutlineInfo size={24} className="text-indigo-500 mr-2" />
@@ -393,7 +390,7 @@ function JobSearch() {
                           <span className="text-xl text-indigo-500 font-medium mb-6">{job.jobPrice}</span>
                           <div className="flex items-center justify-between w-full">
                             <div className="flex items-center mt-7">
-                              <button className="bg-indigo-500 text-white w-72 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-700 hover:text-gray-200 transition duration-300 ease-in-out mr-4">
+                              <button className="bg-indigo-500 text-white w-56 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-700 hover:text-gray-200 transition duration-300 ease-in-out mr-4">
                                 Jep Oferten
                               </button>
                               <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
