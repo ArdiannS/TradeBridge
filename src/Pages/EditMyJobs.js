@@ -44,7 +44,6 @@ function EditMyJobs() {
     event.preventDefault();
     // handle form submission logic
   };
-
   return (
     <div>
       {jobData && (

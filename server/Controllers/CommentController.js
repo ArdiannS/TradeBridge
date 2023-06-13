@@ -2,7 +2,7 @@ const CommentModel = require("../Models/CommentModel");
 
 class CommentController {
   static async insertComment(req, res) {
-    const { commentContent, jobId,userId  } = req.body;
+    const { commentContent, jobId, userId } = req.body;
 
     const result = await CommentModel.addComent(commentContent, jobId, userId);
     if (result) {
@@ -33,13 +33,13 @@ class CommentController {
     }
   }
   static async updateComment(req, res) {
-    const {commentContent} = req.body;
+    const { commentContent } = req.body;
     //console.log(commentContent);
-    const {id} = req.params;
+    const { id } = req.params;
     //console.log(id);
-    var result = await CommentModel.updateComment(commentContent,id);
+    var result = await CommentModel.updateComment(commentContent, id);
     if (result) {
-      res.send(result);
+      res.redirect("/allcomments");
     }
   }
   static async deleteComment(req, res) {

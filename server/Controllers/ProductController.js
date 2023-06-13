@@ -243,10 +243,28 @@ class ProductController {
     }
   }
 
+  static async updateFavoriteJobs(req, res) {
+    // const jobId = req.params.id;
+    const { jobId, favoriteJobs } = req.body.body;
+    // console.log('this is edi tjob', jobTitle, jobType, jobId, favoriteJobs);
+    console.log('this req.body in favoritesjobs', req.body);
+    // console.log('this req in favoritesjobs', req);
+console.log('this is jobId', jobId)
+console.log('this is favoriteJobs', favoriteJobs)
+    try {
+      const result = await ProductModel.updateFavoriteJobs(jobId, favoriteJobs);
+      // res.redirect("/myjobs/:id");
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error updating job");
+    }
+  }
+
   static async updateMyJob(req, res) {
     const jobId = req.params.id;
-    const { jobTitle, jobType, jobCategory, jobDescription } = req.body;
-    // console.log(jobTitle, jobType, jobId);
+    const { jobTitle, jobType, jobCategory, jobDescription, favoriteJobs } = req.body;
+    console.log('this is edi tjob', jobTitle, jobType, jobId, favoriteJobs);
+    console.log('this req.body', req.body);
 
     try {
       const result = await ProductModel.updateMyJob(

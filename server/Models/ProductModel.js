@@ -280,6 +280,25 @@ class ProductModel {
     });
   }
 
+  static async updateFavoriteJobs(jobId, favoriteJobs) {
+    return new Promise((resolve, reject) => {
+      console.log("inside promise", favoriteJobs, jobId);
+      database.query(
+        "UPDATE jobs SET favoriteJobs = ?  WHERE jobId = ?",
+        [favoriteJobs, jobId],
+        (err, result) => {
+          if (err) {
+            console.error(err.message);
+            reject(err);
+          } else {
+            // console.log(result);
+            resolve(result);
+          }
+        }
+      );
+    });
+  }
+
   static async updateMyJob(
     jobTitle,
     jobType,

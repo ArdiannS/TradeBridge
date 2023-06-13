@@ -84,6 +84,7 @@ function JobSearch() {
           ...job,
           favoriteJobs: false,
         }));
+        console.log('this is data in jobs', data)
         setJobs(jobsWithFavorites);
         setJobs(data);
         // console.log(data);
@@ -321,12 +322,31 @@ function JobSearch() {
   };
 
   const [favoriteJobs, setFavoriteJobs] = useState([]);
-  const handleAddToFavorites = (jobId) => {
+  const handleAddToFavorites = async (jobId) => {
     // Check if the job is already in favorites
 
-    const isAlreadyFavorite = favoriteJobs.some((job) => job.jobId === jobId);
+    const isAlreadyFavorite = jobs.some((job) => job.jobId === jobId && job.favoriteJobs === 1);
 
-    debugger
+    const jobToAdd = jobs.find((job) => job.jobId === jobId);
+   
+    
+
+    const formData = new FormData();
+    formData.append('jobId', jobId);
+    formData.append('favoriteJobs', !jobToAdd.favoriteJobs);
+    console.log('this is form data', formData)
+  let body = {
+  'jobId': jobId,
+  'favoriteJobs': !jobToAdd.favoriteJobs
+}
+    await axios.put("/editFavoriteJob", {
+      body,
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
+
+ 
 
     if (isAlreadyFavorite) {
       const updatedFavorites = favoriteJobs.filter((job) => job.jobId !== jobId);
@@ -449,18 +469,15 @@ function JobSearch() {
                               Jep Oferten
                             </button>
                             <button
-                              className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out"
-                              onClick={() => {
-                                // console.log("this is job", job);
-                                handleAddToFavorites(job.jobId);
-                              }}
-                            >
-                              {job.favoriteJobs ? (
-                                <FaHeart size={26} />
-                              ) : (
-                                <FaRegHeart size={26} />
-                              )}
-                            </button>
+                className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out"
+                onClick={() => handleAddToFavorites(job.jobId)}
+              >
+                {job.favoriteJobs ? (
+                  <FaHeart size={26} />
+                ) : (
+                  <FaRegHeart size={26} />
+                )}
+              </button>
                           </div>
                         </div>
                       </div>

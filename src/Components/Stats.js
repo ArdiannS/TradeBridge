@@ -1,9 +1,11 @@
-import React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
 
 function Stats() {
   const [totalJobs, setTotalJobs] = useState(0);
   const [totalUsers, setTotalUsers] = useState(0);
+  const chartRef = useRef(null);
+
   useEffect(() => {
     fetch("/dashboard/total-jobs")
       .then((response) => response.text())
@@ -23,12 +25,53 @@ function Stats() {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  useEffect(() => {
+    if (chartRef.current) {
+      // Destroy the previous chart instance if it exists
+      chartRef.current.destroy();
+    }
+
+    const ctx = document.getElementById("chart").getContext("2d");
+    chartRef.current = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: ["Users", "Jobs"],
+        datasets: [
+          {
+            label: "Statistics",
+            data: [totalUsers, totalJobs],
+            backgroundColor: [
+              "rgba(54, 162, 235, 0.5)",
+              "rgba(75, 192, 192, 0.5)",
+            ],
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+          },
+        },
+      },
+    });
+
+    return () => {
+      // Cleanup function to destroy the chart instance when the component unmounts
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
+    };
+  }, [totalUsers, totalJobs]);
+
   return (
-    <div class=" py-24 sm:py-32 w-full ">
-      <div class="  ">
-        <div class="mx-auto max-w-7xl  ">
+    <div class="py-24 sm:py-32 w-full">
+      <div class="">
+        <div class="mx-auto max-w-screen-2xl">
           <div class="grid grid-cols-1 gap-8 sm:gap-16 lg:grid-cols-3">
-            <div class="bg-gray-50 shadow-md rounded-lg overflow-hidden">
+            <div class="bg-gray-50 shadow-md rounded-lg overflow-hidden w-auto">
               <div class="px-6 py-8">
                 <div class="flex items-center justify-center w-12 h-12 rounded-md bg-blue-500 text-white mb-4">
                   <svg
@@ -102,6 +145,9 @@ function Stats() {
             </div>
           </div>
         </div>
+      </div>
+      <div class="mt-8 w-full max-w-3xl mx-auto">
+        <canvas id="chart" class="w-full h-fit"></canvas>
       </div>
     </div>
   );
