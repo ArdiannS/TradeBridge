@@ -186,14 +186,15 @@ class ProductController {
 
     console.log(bidAmount);
     console.log(bidDescription);
-
     try {
       const result = await ProductModel.updateJobOffers(
         bidAmount,
         bidDescription,
         id
       );
-      res.redirect("/jobsearch");
+      if(result){
+        res.redirect("/jobsearch");
+      }
     } catch (error) {
       console.error(error);
       res.status(500).send("Error Updating Job");

@@ -7,6 +7,7 @@ import {
   faBriefcase,
   faComments,
   faBell,
+  faChartLine,
 } from "@fortawesome/free-solid-svg-icons";
 
 const user = JSON.parse(localStorage.getItem("user"));
@@ -20,6 +21,15 @@ function Sidebar() {
         <span>Dashboard</span>
       </div>
       <ul className="flex flex-col py-6 space-y-4">
+        <li>
+          <Link
+            to="/dashboard"
+            className="flex items-center px-6 py-3 text-lg text-gray-600 hover:text-indigo-500 hover:bg-gray-200"
+          >
+            <FontAwesomeIcon icon={faChartLine} className="text-lg mr-3" />
+            <span>Statistics</span>
+          </Link>
+        </li>
         <li>
           <Link
             to="/allusers"
