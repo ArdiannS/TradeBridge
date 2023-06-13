@@ -4,7 +4,6 @@ import Footer from "../Components/Footer";
 const user = JSON.parse(localStorage.getItem("user"));
 console.log("user", user);
   function PostJobs() {
-
   const sectionRef1 = useRef(null);
   const sectionRef2 = useRef(null);
   const sectionRef3 = useRef(null);

@@ -23,7 +23,7 @@ class UserController {
         email,
         date,
         userType,
-        defaultPicture
+        defaultPicture,req,res
       );
       console.log("++++++++++++++++++++");
       if (result) {
@@ -38,7 +38,6 @@ class UserController {
         .json({ result: result.result, message: result.message });
 
       console.log(req.session);
-      // console.log(req.session)
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Something went wrong." });

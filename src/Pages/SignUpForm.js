@@ -12,22 +12,23 @@ import {faLock,faUser} from "@fortawesome/free-solid-svg-icons";
 function SignUpForm() {
   const navigate = useNavigate();
 
-//  const handleSignUp = (e) => {
-//     e.preventDefault();
-//     axios
-//       .post("/signup", formData)
-//       .then((res) => {
-//         localStorage.setItem(
-//           "user",
-//           JSON.stringify(res.data.userData?.[0]) || ""
-//         );
-
-//         navigate("/dashboard");
-//       })
-//       .catch(({ response }) => {
-//         // TODO: set error
-//       });  
-//    };
+ // const handleSignUp = (e) => {
+ //    e.preventDefault();
+ //    axios
+ //      .post("/signup", formData)
+ //      .then((res) => {
+ //        console.log(res.data);
+ //        localStorage.setItem(
+ //          "user",
+ //          JSON.stringify(res.data.userData?.[0]) || ""
+ //        );
+ //
+ //        navigate("/dashboard");
+ //      })
+ //      .catch(({ response }) => {
+ //        // TODO: set error
+ //      });
+ //   };
   const handleSignUp = (e) => {
     e.preventDefault();
     axios

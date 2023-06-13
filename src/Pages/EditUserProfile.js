@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "../api/axiosInstance";
-
+const user = JSON.parse(localStorage.getItem("user"));
+console.log(user);
 const EditUserProfile = () => {
   const [user, setUser] = useState({});
 
@@ -9,7 +10,6 @@ const EditUserProfile = () => {
       try {
         const userResponse = await axios.get("/user/profile");
         const userData = userResponse.data.user[0];
-
         setUser({
           username: userData.username,
           email: userData.email,

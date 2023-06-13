@@ -107,6 +107,8 @@ class UserModel {
                               result: data,
                               message: "All good",
                             });
+                              req.session.userId = data.userid;
+
                           }
                         }
                       );

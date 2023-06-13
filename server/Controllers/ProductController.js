@@ -115,7 +115,6 @@ class ProductController {
   }
   static async getJobOffers(req, res) {
     const id = req.params.id;
-    console.log("job offer", id);
     try {
       const result = await ProductModel.getJobOffersByJobId(id);
       if (result) {
