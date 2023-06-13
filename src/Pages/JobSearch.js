@@ -209,6 +209,7 @@ function JobSearch() {
   const [isEditingBid, setIsEditingBid] = useState(false);
   const [editedBidAmount, setEditedBidAmount] = useState("");
   const [editedBidDescripition, setEditedBidDescripition] = useState("");
+  const [editingBidId,setEditingBidId] = useState(null);
   const handleSaveBid = async (offerId) => {
     try {
       const response = await fetch(`/offers/${offerId}`, {
@@ -222,6 +223,7 @@ function JobSearch() {
         }),
       });
       window.location.reload();
+      setEditingBidId(null);
 
       if (response.ok) {
         console.log("ok");
@@ -235,7 +237,7 @@ function JobSearch() {
       console.error("Error:", error.message);
     }
   };
-
+  const [editingCommentId, setEditingCommentId] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState("");
   const handleEditComment = (commentId) => {
@@ -257,6 +259,8 @@ function JobSearch() {
         setEditedComment("");
         window.location.reload();
         setIsEditing(false);
+        setEditingCommentId(null);
+
       }
     } catch (error) {
       console.error("Error:", error.message);
@@ -623,13 +627,13 @@ function JobSearch() {
                         <p className="text-xl font-light">
                           Bid Description:
                           <br />
-                          {isEditingBid ? <>  </> : <>{offer.bidDescription}</>}
+                          {isEditingBid && offer.idoffer === editingBidId ? ( <>  </>) : (<>{offer.bidDescription}</>)}
                         </p>
 
                         {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
                         {useri === offer.username ? (
                           <div className="flex mt-4 space-x-4">
-                            {isEditingBid ? (
+                            {isEditingBid && offer.idoffer === editingBidId ?  (
                               <>
                                 <div>
                                   <label htmlFor="editedBidDescription">
@@ -677,6 +681,7 @@ function JobSearch() {
                                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                   onClick={() => {
                                     handleEdit(offer.idoffer);
+                                    setEditingBidId(offer.idoffer);
                                     setIsEditingBid(true);
                                   }}
                                 >
@@ -745,19 +750,23 @@ function JobSearch() {
                             alt="My Image"
                           />
                         </div>
-                        {isEditing ? <>  </> :  <p className="text-black">{comment.commentContent}</p>}
-                        {isEditing ? (
+                        {isEditing && editingCommentId === comment.commentid ?
+                            (<></>): (<><p className="text-black">{comment.commentContent}</p></>)
+                        }
+                        {isEditing && comment.commentid === editingCommentId ? (
                           <div className="flex gap-2">
                             <input
                               type="text"
                               className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
                               value={editedComment}
                               onChange={(e) => setEditedComment(e.target.value)}
+
                             />
                             <button
                               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                              onClick={() =>
+                              onClick={() =>{
                                 handleSaveComment(comment.commentid)
+                                }
                               }
                             >
                               Save
@@ -772,6 +781,7 @@ function JobSearch() {
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                     onClick={() => {
                                       handleEditComment(comment.commentid);
+                                      setEditingCommentId(comment.commentid)
                                       setIsEditing(true);
                                     }}
                                   >
@@ -1054,7 +1064,7 @@ function JobSearch() {
                             <p className="text-xl font-light">
                               Bid Description:
                               <br />
-                              {isEditingBid ? (
+                              {isEditingBid && editingBidId === offer.offerid ? (
                                 <></>
                               ) : (
                                 <>{offer.bidDescription}</>
@@ -1064,7 +1074,7 @@ function JobSearch() {
                             {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
                             {useri === offer.username ? (
                               <div className="flex mt-4 space-x-4">
-                                {isEditingBid ? (
+                                {isEditingBid  && editingBidId === offer.offerid ? (
                                   <>
                                     <div>
                                       <label htmlFor="editedBidDescription">
@@ -1115,6 +1125,7 @@ function JobSearch() {
                                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                       onClick={() => {
                                         handleEdit(offer.idoffer);
+                                        setIsEditingBid(offer.idoffer);
                                         setIsEditingBid(true);
                                       }}
                                     >
@@ -1191,10 +1202,10 @@ function JobSearch() {
                                 alt="My Image"
                               />
                             </div>
-                            {isEditing ? <>  </> :  <p className="text-black">{comment.commentContent}</p>}
+                            {isEditing && editingCommentId === comment.commentid ? ( <>  </>) :  (<p className="text-black">{comment.commentContent}</p>)}
 
 
-                            {isEditing ? (
+                            {isEditing&& editingCommentId === comment.commentid ? (
                               <div className="flex gap-2">
                                 <input
                                   type="text"
@@ -1222,6 +1233,7 @@ function JobSearch() {
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                         onClick={() => {
                                           handleEditComment(comment.commentid);
+                                          setEditingCommentId(comment.commentid);
                                           setIsEditing(true);
                                         }}
                                       >
@@ -1620,9 +1632,9 @@ function JobSearch() {
                                   />
                                 </div>
 
-                                {isEditing ? <>  </> :  <p className="text-black">{comment.commentContent}</p>}
+                                {isEditing && editingCommentId === comment.commentid ? <>  </> :  <p className="text-black">{comment.commentContent}</p>}
 
-                                {isEditing ? (
+                                {isEditing && editingCommentId === comment.commentid ? (
                                 <div className="flex gap-2">
                                   <input
                                       type="text"
@@ -1652,6 +1664,7 @@ function JobSearch() {
                                               handleEditComment(
                                                 comment.commentid
                                               );
+                                              setEditingCommentId(comment.commentid);
                                               setIsEditing(true);
                                             }}
                                           >

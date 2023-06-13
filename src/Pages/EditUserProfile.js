@@ -86,6 +86,12 @@ const EditUserProfile = () => {
           <h2 className="text-2xl mb-6 text-center font-semibold text-gray-800">
             Edit My Info
           </h2>
+          <div className=" flex justify-center" >
+              <img
+                  src={`data:image/jpeg;base64, ${user.userProfilePicture}`}
+                  className="w-16 h-16 rounded-full"
+              />
+          </div>
 
 
           <label className="block mb-4">
