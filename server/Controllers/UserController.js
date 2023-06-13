@@ -23,7 +23,9 @@ class UserController {
         email,
         date,
         userType,
-        defaultPicture
+        defaultPicture,
+        req,
+        res
       );
       console.log("++++++++++++++++++++");
       if (result) {
@@ -126,12 +128,12 @@ class UserController {
   static async updateUserProfile(req, res) {
     const { username, email, birthday } = req.body;
     const userId = req.session.userId;
-    const  file  = req.file;
+    const file = req.file;
     let picture = null;
-    if(file){
+    if (file) {
       const fileContent = file.buffer.toString("base64");
       picture = fileContent;
-    }else{
+    } else {
       picture = req.body.defaultProfilePic;
       console.log(picture);
     }
@@ -140,7 +142,13 @@ class UserController {
       return res.status(401).json({ error: "Unauthorized" });
     }
     try {
-      await UserModel.updateUserProfile(userId, username, email, birthday,picture);
+      await UserModel.updateUserProfile(
+        userId,
+        username,
+        email,
+        birthday,
+        picture
+      );
       res.json({ message: "User profile updated successfully" });
     } catch (error) {
       console.error(error);
