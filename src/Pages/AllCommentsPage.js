@@ -31,14 +31,14 @@ function AllCommentsPage() {
   };
 
   return (
-      <div className="flex justify-between">
-        <div className="bg-black max-w-[330px]">
-          <Sidebar/>
-        </div>
-        <div className="flex justify-center items-center h-screen w-full bg-gray-100">
-          <div className="bg-blue-600 shadow-lg rounded-lg p-6">
-            <table className="w-full">
-              <thead className="bg-blue-700 text-white">
+    <div className="flex justify-between">
+      <div className="bg-black max-w-[330px]">
+        <Sidebar />
+      </div>
+      <div className="flex justify-center items-center h-screen w-full bg-gray-100">
+        <div className="bg-blue-600 shadow-lg rounded-lg p-6">
+          <table className="w-full">
+            <thead className="bg-blue-700 text-white">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   Comment ID
@@ -56,45 +56,47 @@ function AllCommentsPage() {
                   Actions
                 </th>
               </tr>
-              </thead>
-              <tbody className="bg-blue-600 text-white divide-y divide-blue-700">
+            </thead>
+            <tbody className="bg-blue-600 text-white divide-y divide-blue-700">
               {commentData.map((comment) => (
-                  <tr key={comment.commentId}>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {comment.commentid}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
+                <tr key={comment.commentId}>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {comment.commentId}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
                     {comment.userid}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      {comment.jobid}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                        {comment.commentContent}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <div className="flex justify-center">
-                        <button
-                            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
-                            onClick={() => handleDeleteComment(comment.commentid)}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {comment.jobid}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap">
+                    {comment.commentContent}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div className="flex justify-center">
+                      <button
+                        className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
+                        onClick={() => handleDeleteComment(comment.commentId)}
+                      >
+                        Delete
+                      </button>
+                      <button className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
+                        <Link
+                          to={`/editComment/${comment.commentId}`}
+                          className="text-white"
                         >
-                          Delete
-                        </button>
-                        <button className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
-                          <Link to={`/editComment/${comment.commentid}`} className="text-white">
-                            Edit
-                          </Link>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+                          Edit
+                        </Link>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
               ))}
-              </tbody>
-            </table>
-          </div>
+            </tbody>
+          </table>
         </div>
       </div>
-
+    </div>
   );
 }
 

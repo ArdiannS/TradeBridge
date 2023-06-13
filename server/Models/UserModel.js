@@ -56,7 +56,9 @@ class UserModel {
     email,
     birthday,
     usertype,
-    userProfilePicture
+    userProfilePicture,
+    req,
+    res
   ) {
     return new Promise((resolve) => {
       database.query(
@@ -101,6 +103,9 @@ class UserModel {
                             resolve({ status: 500, message: "error" });
                           } else {
                             let data = { ...result3[0] };
+                            console.log("daataa ", data);
+                            req.session.userId = data.userid;
+                            console.log("passed");
                             delete data.password;
                             resolve({
                               status: 200,
@@ -198,12 +203,18 @@ class UserModel {
       );
     });
   }
-  static async updateUserProfile(id, username, email, birthday,userProfilePicture) {
+  static async updateUserProfile(
+    id,
+    username,
+    email,
+    birthday,
+    userProfilePicture
+  ) {
     return new Promise((resolve) => {
-      console.log(username,id,email,birthday,userProfilePicture);
+      console.log(username, id, email, birthday, userProfilePicture);
       database.query(
         "Update Users set username = ?,email=?,birthday=?,userProfilePicture = ? where userid = ?",
-        [username,  email, birthday,userProfilePicture, id],
+        [username, email, birthday, userProfilePicture, id],
         (err, result) => {
           if (err) {
             return console.error(err.message);
