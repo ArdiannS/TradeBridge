@@ -150,7 +150,7 @@ function JobSearch() {
       jobCategory = selectedJob.jobCategory;
     }
     if (jobCategory) {
-      fetch(`/jobs/${jobCategory}`)
+      fetch(`/jobs/category/${jobCategory}`)
           .then((res) => res.json())
           .then((data) => {
             setJobsByCategory(data);
@@ -276,6 +276,7 @@ function JobSearch() {
       .catch((error) => console.error(error));
   }, []);
   const handleDelete = (offerId) => {
+    console.log(offerId);
     try {
       axios
         .delete(`/jobOffer/${offerId}`)
