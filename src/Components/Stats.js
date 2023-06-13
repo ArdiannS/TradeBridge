@@ -70,11 +70,9 @@ function Stats() {
     };
   }, [totalUsers, totalJobs]);
   const [jobCategories, setJobCategories] = useState([]);
-  let jobcategory = 0;
   const fetchJobCategories = async () => {
     try {
-      // Fetch job categories from your database or API
-      const response = await fetch('/jobs'); // Replace with your actual API endpoint for fetching jobs
+      const response = await fetch('/jobs');
       if (response.ok) {
         const jobs = await response.json();
         const categories = Array.from(new Set(jobs.map((job) => job.jobCategory)));
@@ -222,7 +220,7 @@ function Stats() {
       </div>
       <div class="mt-8 flex justify-between w-full  mx-auto">
         <canvas id="chart" class="w-1/2 h-fit"></canvas>
-        <Pie data={chartData} className="w-1/2 h-1/2"/>
+        <Pie data={chartData}  className="w-1/3 h-fit"/>
       </div>
     </div>
   );

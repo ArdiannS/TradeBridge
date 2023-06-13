@@ -10,12 +10,15 @@ import { MdOutlineInfo } from "react-icons/md";
 import { BsSliders } from "react-icons/bs";
 import Footer from "../Components/Footer";
 import axios from "../api/axiosInstance";
+import { FaSadCry } from 'react-icons/fa';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
+
+
 import {data} from "autoprefixer";
 const user = JSON.parse(localStorage.getItem("user"));
 console.log("user", user);
 function JobSearch() {
   const useri = user?.username;
-  console.log(useri);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const handleSearch = async () => {
@@ -48,7 +51,6 @@ function JobSearch() {
       color: "#aaa",
     }),
   };
-  console.log("userid", user?.userid);
 
   const images = [First, Second, Third, Fourth];
 
@@ -71,8 +73,6 @@ function JobSearch() {
   function handleJobClick(job) {
     const jobId = job.jobId;
     setSelectedJob(job);
-    console.log(selectedJob);
-    console.log(jobId);
   }
   const [jobs, setJobs] = useState([]);
   useEffect(() => {
@@ -80,7 +80,6 @@ function JobSearch() {
       .then((res) => res.json())
       .then((data) => {
         setJobs(data);
-        console.log(data);
       })
       .catch((err) => console.error(err.message));
   }, []);
@@ -94,7 +93,6 @@ function JobSearch() {
     fetch("/dashboard/total-jobs")
       .then((response) => response.text())
       .then((data) => {
-        console.log(data);
         setTotalJobs(parseInt(data));
       })
       .catch((error) => console.error(error));
@@ -114,15 +112,12 @@ function JobSearch() {
   const [noJobs,setNoJobs] = useState(false);
   const filterJobsByCategory = (category) => {
     if (category === "all") {
-      console.log(jobs);
       setFilteredJobs(jobs);
     }
     else {
       const filtered = jobs.filter((job) => job.jobCategory === category);
-      console.log("filtered " , filtered);
       if(filtered.length == 0 ){
         setNoJobs(true);
-        console.log(noJobs);
       }
       setFilteredJobs(filtered);
     }
@@ -141,7 +136,6 @@ function JobSearch() {
     fetch("/comments")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setAllComments(data);
       })
       .catch((error) => console.error(error));
@@ -155,13 +149,11 @@ function JobSearch() {
     if (selectedJob) {
       jobCategory = selectedJob.jobCategory;
     }
-    console.log(jobCategory);
     if (jobCategory) {
       fetch(`/jobs/${jobCategory}`)
           .then((res) => res.json())
           .then((data) => {
             setJobsByCategory(data);
-            console.log(data);
           })
           .catch((err) => console.error(err.message));
     }
@@ -170,14 +162,11 @@ function JobSearch() {
   useEffect(() => {
     let jobid = null;
     if (jobs.length > 0) {
-      console.log("useeff3", jobs[0].jobId);
       jobid = jobs[0].jobId;
     }
     if (selectedJob && selectedJob.jobId) {
-      console.log("useeff1", selectedJob.jobId);
       jobid = selectedJob.jobId;
     } else if (filteredJobs && filteredJobs[0] && filteredJobs[0].jobId) {
-      console.log("useeff2", filteredJobs[0].jobId);
       jobid = filteredJobs[0].jobId;
     }
 
@@ -186,49 +175,40 @@ function JobSearch() {
           .then((res) => res.json())
           .then((data) => {
             setComments(data);
-            console.log("comment per ni pune ", data);
           })
           .catch((err) => console.error(err.message));
     }
   }, [selectedJob, filteredJobs, jobs]);
-
   const [jobOffers, setJobOffers] = useState([]);
 
   useEffect(() => {
     let jobid = null;
     if (jobs.length > 0) {
-      console.log("useeff3", jobs[0].jobId);
       jobid = jobs[0].jobId;
     }
     if (selectedJob && selectedJob.jobId) {
-      console.log("useeff1", selectedJob.jobId);
       jobid = selectedJob.jobId;
     } else if (filteredJobs && filteredJobs[0] && filteredJobs[0].jobId) {
-      console.log("useeff2", filteredJobs[0].jobId);
       jobid = filteredJobs[0].jobId;
     }
     fetch(`/jobOffer/${jobid}`)
       .then((res) => res.json())
       .then((data) => {
         setJobOffers(data);
-        console.log(data);
       })
       .catch((err) => console.error(err.message));
   }, [selectedJob, filteredJobs, jobs]);
   const [selectedOfferId, setSelectedOfferId] = useState(null);
   const handleEdit = (offerId) => {
-    console.log(offerId, " OFOFFOFO");
     const offer = jobOffers.find((c) => c.offerid === offerId);
     if (offer) {
       setEditedBidDescripition(offer.bidDescription);
     }
-    console.log(offerId);
     setSelectedOfferId(offerId);
   };
   const [isEditingBid, setIsEditingBid] = useState(false);
   const [editedBidAmount, setEditedBidAmount] = useState("");
   const [editedBidDescripition, setEditedBidDescripition] = useState("");
-
   const handleSaveBid = async (offerId) => {
     try {
       const response = await fetch(`/offers/${offerId}`, {
@@ -241,15 +221,21 @@ function JobSearch() {
           bidDescription: editedBidDescripition,
         }),
       });
+      window.location.reload();
+
       if (response.ok) {
-        setEditedComment("");
-        window.location.reload();
-        setIsEditing(false);
+        console.log("ok");
+        setEditedBidAmount("");
+        setEditedBidDescripition("");
+        setIsEditingBid(false);
+      } else {
+        throw new Error("Request failed with status " + response.status);
       }
     } catch (error) {
       console.error("Error:", error.message);
     }
   };
+
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState("");
   const handleEditComment = (commentId) => {
@@ -281,7 +267,6 @@ function JobSearch() {
     fetch("/jobOffers")
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setJobOffers(data);
       })
       .catch((error) => console.error(error));
@@ -318,7 +303,7 @@ function JobSearch() {
   return (
     <>
       <header>{/* <Navbar /> */}</header>
-      <div className="flex h-full">
+      <div className="flex w-auto h-full">
         <div className="h-900 w-1/5 bg-gray-200 overflow-y-scroll scrollbar-rounded" style={{ height: "900px" }}>
           <div className="flex flex-col justify-center items-center rounded-lg shadow-md w-full mx-auto">
             <h2 className="font-light text-3xl ml-2 mt-4">Jobs</h2>
@@ -490,17 +475,17 @@ function JobSearch() {
                   </div>
                   <div className="mt-3">
                     <h3 className="font-bold text-2xl">
-                      JobCategory:{selectedJob.jobCategory}
+                      Category:{selectedJob.jobCategory}
                     </h3>
                   </div>
                   <div className="mt-3">
                     <h3 className="font-bold text-4xl">
-                      JobTitle:{selectedJob.jobTitle}
+                      Title:{selectedJob.jobTitle}
                     </h3>
                   </div>
                   <div className="mt-3">
                     <p className=" text-l font-semibold">
-                      Job City:{selectedJob.jobCity}
+                      City:{selectedJob.jobCity}
                     </p>
                   </div>
                   <div className="mt-3 ml-2">
@@ -521,7 +506,7 @@ function JobSearch() {
 
                   <div className="flex mt-5">
                     {/* Nese useri osht logged in me account qe e ka postu punen ather smunet me bo bid produktit t'vet veq me fshi */}
-                    {useri === selectedJob.username ? (
+                    {useri === selectedJob.username || user.usertype === "punedhenes" ? (
                       <div className="flex mt-4 space-x-4"></div>
                     ) : (
                       <div>
@@ -596,30 +581,25 @@ function JobSearch() {
                 </div>
 
                 <div>
-                  <div className="flex  flex-col mr-10">
+                  <div className="flex border border-gray-100 shadow-2xl flex-col mr-10">
                     <img
-                        className=""     style={{ height: "850px" }}
-
+                        className=""     style={{ height: "750px" }}
                         src={`data:image/jpeg;base64,${selectedJob.jobPhoto}`}
                         alt="Job Photo"
                     />
                   </div>
-
-
                   <div class="flex justify-center mt-2">
-                    {/* <button onClick={nextImage} class="mx-2">
-                      Prev
-                    </button>
-                    <button onClick={prevImage} class="mx-2">
-                      Next
-                    </button> */}
                   </div>
                 </div>
               </div>
 
-              <h2 className="text-2xl text-center font-bold">
-                Bids for this Job:
-              </h2>
+              {jobOffers.length === 0 ? (
+                  <></>
+              ) : (
+                  <h2 className="text-2xl text-center font-bold">
+                    Bids for this Job:
+                  </h2>
+              )}
               <div className="flex justify-between">
                 {jobOffers.map((offer) => (
                   <div className="mt-8 w-1/3" key={offer.idoffer}>
@@ -643,7 +623,7 @@ function JobSearch() {
                         <p className="text-xl font-light">
                           Bid Description:
                           <br />
-                          {isEditingBid ? <></> : <>{offer.bidDescription}</>}
+                          {isEditingBid ? <>  </> : <>{offer.bidDescription}</>}
                         </p>
 
                         {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
@@ -680,7 +660,6 @@ function JobSearch() {
                                     }
                                   />
                                   <br />
-
                                   <button
                                     className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded"
                                     onClick={() => {
@@ -731,24 +710,25 @@ function JobSearch() {
                   </div>
                 ))}
               </div>
+              <div className="border">
+
+              </div>
 
               <div className=" flex justify-between">
-                <div className=" w-1/2 pr-4">
-                  <h3 className="text-center cursor-pointer">
-                    {" "}
-                    About this Job{" "}
-                  </h3>
+                <div className="w-1/2 pr-4 border-r">
+                  <h3 className="text-center cursor-pointer">About this Job</h3>
                   <div className="flex justify-center">
-                    <div className="my-4 text-center border-b-4 cursor-pointer  border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
+                    <div className="my-4 text-center border-b-4 cursor-pointer border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
                   </div>
                   <div className="">
-                    <h2 className="text-l font-light mt-3">
-                      {selectedJob.jobDescription}
-                    </h2>
+                    <h2 className="text-l font-light mt-3">{selectedJob.jobDescription}</h2>
                   </div>
                 </div>
                 <div className="w-1/2">
                   <h3 className="text-center">Comments</h3>
+                  <div className="flex justify-center">
+                    <div className="my-4 text-center border-b-4 cursor-pointer border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
+                  </div>
                   <div className="flex flex-col gap-4 p-4">
                     {comments.map((comment) => (
                       <div
@@ -765,7 +745,7 @@ function JobSearch() {
                             alt="My Image"
                           />
                         </div>
-                        <p className="text-black">{comment.commentContent}</p>
+                        {isEditing ? <>  </> :  <p className="text-black">{comment.commentContent}</p>}
                         {isEditing ? (
                           <div className="flex gap-2">
                             <input
@@ -923,17 +903,17 @@ function JobSearch() {
                       </div>
                       <div className="mt-3">
                         <h3 className="font-bold text-2xl">
-                          JobCategory:{filteredJobs[0].jobCategory}
+                          Category:{filteredJobs[0].jobCategory}
                         </h3>
                       </div>
                       <div className="mt-3">
                         <h3 className="font-bold text-4xl">
-                          JobTitle:{filteredJobs[0].jobTitle}
+                          Title:{filteredJobs[0].jobTitle}
                         </h3>
                       </div>
                       <div className="mt-3">
                         <p className=" text-l font-semibold">
-                          Job City:{filteredJobs[0].jobCity}
+                          City:{filteredJobs[0].jobCity}
                         </p>
                       </div>
                       <div className="mt-3 ml-2">
@@ -959,7 +939,7 @@ function JobSearch() {
                       </div>
                       <div className="flex mt-5">
                         {/* Nese useri osht logged in me account qe e ka postu punen ather smunet me bo bid produktit t'vet veq me fshi */}
-                        {useri === filteredJobs[0].username ? (
+                        {useri === filteredJobs[0].username || user.usertype === "punedhenes" ? (
                           <div className="flex mt-4 space-x-4"></div>
                         ) : (
                           <div>
@@ -1034,27 +1014,23 @@ function JobSearch() {
                     </div>
 
                     <div>
-                      <div className="flex  flex-col mr-10">
+                      <div className="flex shadow-2xl flex-col mr-10">
                         <img
-                            className=""     style={{ height: "850px" }}
+                            className=""     style={{ height: "750px" }}
 
                             src={`data:image/jpeg;base64,${filteredJobs[0].jobPhoto}`}
                             alt="Job Photo"
                         />
                       </div>
-                      <div class="flex justify-center mt-2">
-                        <button onClick={nextImage} class="mx-2">
-                          Prev
-                        </button>
-                        <button onClick={prevImage} class="mx-2">
-                          Next
-                        </button>
-                      </div>
                     </div>
                   </div>
-                  <h2 className="text-2xl text-center font-bold">
-                    Bids for this Job:
-                  </h2>
+                 {jobOffers.length === 0 ? (
+                     <></>
+                  ) : (
+                   <h2 className="text-2xl text-center font-bold">
+                   Bids for this Job:
+                   </h2>
+                   )}
                   <div className="flex justify-between">
                     {jobOffers.map((offer) => (
                       <div className="mt-8 w-1/3" key={offer.idoffer}>
@@ -1176,8 +1152,11 @@ function JobSearch() {
                       </div>
                     ))}
                   </div>
-                  <div className=" flex justify-between">
-                    <div className=" w-1/2 pr-4">
+                  <div className="border">
+
+                  </div>
+                  <div className="flex justify-between">
+                    <div className="w-1/2 border-r pr-4">
                       <h3 className="text-center cursor-pointer">
                         {" "}
                         About this Job{" "}
@@ -1193,6 +1172,9 @@ function JobSearch() {
                     </div>
                     <div className="w-1/2">
                       <h3 className="text-center">Comments</h3>
+                      <div className="flex justify-center">
+                        <div className="my-4 text-center border-b-4 cursor-pointer  border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
+                      </div>
                       <div className="flex flex-col gap-4 p-4">
                         {comments.map((comment) => (
                           <div
@@ -1209,9 +1191,9 @@ function JobSearch() {
                                 alt="My Image"
                               />
                             </div>
-                            <p className="text-black">
-                              {comment.commentContent}
-                            </p>
+                            {isEditing ? <>  </> :  <p className="text-black">{comment.commentContent}</p>}
+
+
                             {isEditing ? (
                               <div className="flex gap-2">
                                 <input
@@ -1235,7 +1217,6 @@ function JobSearch() {
                               <>
                                 {useri === comment.username ? (
                                   <div>
-
                                     <div className="flex mt-4 space-x-4 justify-end">
                                       <button
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
@@ -1315,9 +1296,15 @@ function JobSearch() {
 
                 <div className="rounded-lg h-full w-full">
               {noJobs ? (
-                <div>
-                <p>There is no Job with this Category</p>
+                  <div className="flex flex-col justify-center items-center h-screen">
+                    <div className="flex justify-between ">
+                    <p className="text-red-500 font-semibold ">There is no Job with this Category</p>
+                    <AiOutlineInfoCircle className="ml-2 mt-1 text-gray-500"  size={20}/>
+
+                    </div>
+                   <FaSadCry size={300} className="text-5xl text-gray-500" />
                 </div>
+
                 ) : (
                 <div className="rounded-lg h-full w-full">
                 {/* Add the rest of your code here */}
@@ -1334,23 +1321,23 @@ function JobSearch() {
                           </div>
                           <div className="mt-6">
                             <h3 className=" font-extralight text-2xl">
-                              Posted by k:
+                              Posted by:
                               {jobs[0]?.username}
                             </h3>
                           </div>
                           <div className="mt-3">
                             <h3 className="font-bold text-2xl">
-                              JobCategory:{jobs[0].jobCategory}
+                              Category:{jobs[0].jobCategory}
                             </h3>
                           </div>
                           <div className="mt-3">
                             <h3 className="font-bold text-4xl">
-                              JobTitle:{jobs[0].jobTitle}
+                              Title:{jobs[0].jobTitle}
                             </h3>
                           </div>
                           <div className="mt-3">
                             <p className=" text-l font-semibold">
-                              Job City:{jobs[0].jobCity}
+                              City:{jobs[0].jobCity}
                             </p>
                           </div>
                           <div className="mt-3 ml-2">
@@ -1372,7 +1359,7 @@ function JobSearch() {
                           </div>
                           <div className="flex mt-5">
                             {/* Nese useri osht logged in me account qe e ka postu punen ather smunet me bo bid produktit t'vet veq me fshi */}
-                            {useri === jobs[0].username ? (
+                            {useri === jobs[0].username  || user.usertype === "punedhenes" ? (
                               <div className="flex mt-4 space-x-4"></div>
                             ) : (
                               <div>
@@ -1447,32 +1434,25 @@ function JobSearch() {
                         </div>
 
                         <div>
-                          <div className="flex  flex-col mr-10">
+                          <div className="flex shadow-2xl flex-col mr-10">
                             {jobs.length > 0 && (
                                 <img
-                                    className=""     style={{ height: "850px" }}
+                                    className=""     style={{ height: "750px" }}
 
                                     src={`data:image/jpeg;base64,${jobs[0].jobPhoto}`}
                                     alt="Job Photo"
                                 />
-
                             )}
-
-                          </div>
-
-                          <div class="flex justify-center mt-2">
-                            {/* <button onClick={nextImage} class="mx-2">
-                              Prev
-                            </button>
-                            <button onClick={prevImage} class="mx-2">
-                              Next
-                            </button> */}
                           </div>
                         </div>
                       </div>
-                      <h2 className="text-2xl text-center font-bold">
-                        Bids for this Job:
-                      </h2>
+                      {jobOffers.length === 0 ? (
+                          <></>
+                      ) : (
+                          <h2 className="text-2xl text-center font-bold">
+                            Bids for this Job:
+                          </h2>
+                      )}
                       <div className="flex justify-between">
                         {jobOffers.map((offer) => (
                           <div className="mt-8 w-1/3" key={offer.idoffer}>
@@ -1598,9 +1578,13 @@ function JobSearch() {
                           </div>
                         ))}
                       </div>
+                      <div className="border">
+
+                      </div>
 
                       <div className=" flex justify-between">
-                        <div className=" w-1/2 pr-4">
+
+                        <div className=" w-1/2 border-r pr-4">
                           <h3 className="text-center cursor-pointer">
                             {" "}
                             About this Job{" "}
@@ -1616,6 +1600,9 @@ function JobSearch() {
                         </div>
                         <div className="w-1/2">
                           <h3 className="text-center">Comments</h3>
+                          <div className="flex justify-center">
+                            <div className="my-4 text-center border-b-4 cursor-pointer  border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
+                          </div>
                           <div className="flex flex-col gap-4 p-4">
                             {comments.map((comment) => (
                               <div
@@ -1632,12 +1619,12 @@ function JobSearch() {
                                     alt="My Image"
                                   />
                                 </div>
-                                <p className="text-black">
-                                  {comment.commentContent}
-                                </p>
+
+                                {isEditing ? <>  </> :  <p className="text-black">{comment.commentContent}</p>}
+
                                 {isEditing ? (
-                                  <div className="flex gap-2">
-                                    <input
+                                <div className="flex gap-2">
+                                  <input
                                       type="text"
                                       className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
                                       value={editedComment}
