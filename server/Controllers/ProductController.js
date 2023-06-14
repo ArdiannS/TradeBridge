@@ -59,7 +59,6 @@ class ProductController {
   static async getJobByCategory(req, res) {
     try {
       const jobCategory = req.params.category;
-      console.log("job category " , jobCategory);
       const jobs = await ProductModel.getJobsByCategory(jobCategory);
       res.send(jobs);
     } catch (error) {
@@ -67,6 +66,19 @@ class ProductController {
       res.status(500).send("Error retrieving jobs by category");
     }
   }
+  static async getJobById(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await ProductModel.getJobsById(id);
+      if (result) {
+        res.send(result);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving job");
+    }
+  }
+
 
   static async getSimilarJobs(req, res) {
     try {
@@ -103,7 +115,6 @@ class ProductController {
   }
   static async getJobOffers(req, res) {
     const id = req.params.id;
-    console.log("job offer", id);
     try {
       const result = await ProductModel.getJobOffersByJobId(id);
       if (result) {
@@ -114,18 +125,7 @@ class ProductController {
       res.status(500).send("Error retrieving Job Offers");
     }
   }
-  static async getJobById(req, res) {
-    const { id } = req.params;
-    try {
-      const result = await ProductModel.getJobsById(id);
-      if (result) {
-        res.send(result);
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Error retrieving job");
-    }
-  }
+
   static async getJobPhotoById(req, res) {
     const { id } = req.params;
     try {

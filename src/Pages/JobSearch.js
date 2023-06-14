@@ -5,19 +5,18 @@ import First from "../images/bgImg.jpeg";
 import Second from "../images/foto1.jpg";
 import Third from "../images/login.jpg";
 import Fourth from "../images/logoo2.png";
-import "../css/Scrollbar.css";
+import "../CSS/Scrollbar.css";
 import { MdOutlineInfo } from "react-icons/md";
 import { BsSliders } from "react-icons/bs";
 import Footer from "../Components/Footer";
 import axios from "../api/axiosInstance";
 import { FaSadCry } from 'react-icons/fa';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
-
-
-import {data} from "autoprefixer";
-const user = JSON.parse(localStorage.getItem("user"));
-console.log("user", user);
 function JobSearch() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+  const isLoggedIn = user && Object.keys(user).length > 0
+  console.log(isLoggedIn);
   const useri = user?.username;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -149,7 +148,7 @@ function JobSearch() {
       jobCategory = selectedJob.jobCategory;
     }
     if (jobCategory) {
-      fetch(`/jobs/${jobCategory}`)
+      fetch(`/jobs/category/${jobCategory}`)
           .then((res) => res.json())
           .then((data) => {
             setJobsByCategory(data);
@@ -275,6 +274,7 @@ function JobSearch() {
       .catch((error) => console.error(error));
   }, []);
   const handleDelete = (offerId) => {
+    console.log(offerId);
     try {
       axios
         .delete(`/jobOffer/${offerId}`)
@@ -865,6 +865,7 @@ function JobSearch() {
                         placeholder="Leave a comment"
                         className="p-2 rounded-lg"
                         name="commentContent"
+                        required
                       ></textarea>
                       <button
                         type="submit"
@@ -1028,6 +1029,7 @@ function JobSearch() {
                                       name="bidDescription"
                                       class="w-96 px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-24"
                                       placeholder="Enter description"
+                                      required
                                     ></textarea>
                                   </div>
                                   <input
@@ -1325,6 +1327,7 @@ function JobSearch() {
                             placeholder="Leave a comment"
                             className="p-2 rounded-lg"
                             name="commentContent"
+                            required
                           ></textarea>
                           <button
                             type="submit"
@@ -1761,6 +1764,7 @@ function JobSearch() {
                                 placeholder="Leave a comment"
                                 className="p-2 rounded-lg"
                                 name="commentContent"
+                                required
                               ></textarea>
                               <button
                                 type="submit"

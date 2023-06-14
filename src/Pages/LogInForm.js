@@ -18,6 +18,7 @@ function LogInForm() {
     e.preventDefault();
     axios.post('/signin', formData)
         .then(res => {
+          console.log(res.data);
           localStorage.setItem('user', JSON.stringify(res.data.userData?.[0]) || "");
           navigate('/dashboard');
         }).catch(({response}) => {

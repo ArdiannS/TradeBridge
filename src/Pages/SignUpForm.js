@@ -37,6 +37,8 @@ function SignUpForm() {
         console.log("ress");
         console.log(res.data);
         localStorage.setItem("user", JSON.stringify(res.data.result) || "");
+        window.location.reload();
+
         navigate("/dashboard");
       })
       .catch(({ response }) => {
