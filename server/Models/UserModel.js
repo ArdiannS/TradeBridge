@@ -51,6 +51,7 @@ class UserModel {
     });
   }
   static async addUser(
+    req,
     username,
     password,
     email,
@@ -101,6 +102,8 @@ class UserModel {
                             resolve({ status: 500, message: "error" });
                           } else {
                             let data = { ...result3[0] };
+                            req.session.userId = data.userid;
+
                             delete data.password;
                             resolve({
                               status: 200,

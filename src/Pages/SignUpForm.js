@@ -1,124 +1,253 @@
 import React, { useState } from "react";
-import loginImg from "../images/login.jpg";
+import loginImg from "../images/particle-lines-futuristic-network-background.jpg";
 import { FaFacebook, FaGoogle, FaTwitter } from "react-icons/fa";
+import { RiMailLine } from "react-icons/ri";
+
 import { Link, useNavigate } from "react-router-dom";
+import Footer from "../Components/Footer.js";
 import axios from "../api/axiosInstance";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 
 function SignUpForm() {
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+  const [errorInput, setErrorInput] = useState(false);
 
-//  const handleSignUp = (e) => {
-//     e.preventDefault();
-//     axios
-//       .post("/signup", formData)
-//       .then((res) => {
-//         localStorage.setItem(
-//           "user",
-//           JSON.stringify(res.data.userData?.[0]) || ""
-//         );
+  //  const handleSignUp = (e) => {
+  //     e.preventDefault();
+  //     axios
+  //       .post("/signup", formData)
+  //       .then((res) => {
+  //         localStorage.setItem(
+  //           "user",
+  //           JSON.stringify(res.data.userData?.[0]) || ""
+  //         );
 
-//         navigate("/dashboard");
-//       })
-//       .catch(({ response }) => {
-//         // TODO: set error
-//       });  
-//    };
+  //         navigate("/dashboard");
+  //       })
+  //       .catch(({ response }) => {
+  //         // TODO: set error
+  //       });
+  //    };
   const handleSignUp = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Move this line to the beginning of the function
+
+    const newErrors = {};
+    let hasError = false; // Use a separate flag variable to track errors
+
+    if (!formData.username) {
+      newErrors.username = "Username is required";
+      hasError = true;
+    } else if (!formData.password) {
+      newErrors.password = "Password is required";
+      hasError = true;
+    } else if (!/^.{7,}$/.test(formData.password)) {
+      newErrors.password = "Password must be at least 7 characters long";
+      hasError = true;
+    } else if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Confirm Password is required";
+      hasError = true;
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match!";
+      hasError = true;
+    } else if (!formData.email) {
+      newErrors.email = "Email is required";
+      hasError = true;
+    } else if (!isValidEmail(formData.email)) {
+      newErrors.email = "Invalid email address";
+      hasError = true;
+    } else if (!formData.date) {
+      newErrors.date = "Date of birth is required";
+      hasError = true;
+    } else if (
+      !/^(\d{2}\/\d{2}\/\d{4})|(?:\d{4}-\d{2}-\d{2})$/.test(formData.date)
+    ) {
+      newErrors.date = "Invalid date format. Use MM/DD/YYYY or YYYY-MM-DD";
+      hasError = true;
+    } else if (!formData.userType) {
+      newErrors.userType = "User type is required";
+      hasError = true;
+    }
+
+    if (hasError) {
+      // Check the flag variable instead of errorInput
+      setErrors(newErrors);
+      return;
+    }
+
     axios
       .post("/signup", formData)
       .then((res) => {
-        // console.log(res.data.result);
-        // console.log("ress");
-        // console.log(res.data);
+        console.log(" resssssss signup", res)
         localStorage.setItem("user", JSON.stringify(res.data.result) || "");
         navigate("/dashboard");
       })
       .catch(({ response }) => {
+        // Handle error
         // setError(response.data.message);
       });
+  };
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return emailRegex.test(email);
   };
 
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    confirmPassword: "",
     email: "",
     date: "",
-    userType: "", 
+    userType: "",
   });
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 h-screen w-full ">
-      <div className="hidden sm:block">
-        <img className="w-full h-full object-cover" src={loginImg} alt="" />
-      </div>
-      <div className="bg-gray-100 flex flex-col justify-center ">
-        <form className="max-w-md w-full mx-auto bg-white p-6 rounded-lg shadow-md">
+    <div className="hidden sm:block bg-gradient-to-r from-blue-600 to-blue-400">
+      <img className="w-screen h-screen object-cover" src={loginImg} alt="" />
+
+      <div className="bg-gray-100 flex flex-col justify-center items-center w-full z-50">
+        <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 w-1/3 opacity-80 border border-gray-300 p-8 rounded-lg shadow-lg">
+          <h2 className="text-3xl font-bold text-gray-800 mb-6">
+            Mirësevini në TradeBridge
+          </h2>
+          <p className="text-xl text-gray-700 mb-6">
+            Lidhuni me tregjet globale dhe kapni mundësi të reja.
+          </p>
+          <p className="text-lg text-gray-700 leading-relaxed">
+            TradeBridge është një platformë e avancuar që ju jep aftësinë të
+            zgjeroni gjirin e biznesit tuaj, të gjeni partnerë të rinj dhe të
+            shfrytëzoni potencialin e tregtisë ndërkombëtare. Me mjete dhe
+            rrjetin tonë të avancuar, ju mund të mbushni boshllëqet midis
+            tregjeve dhe të ndërtoni suksesin e biznesit tuaj.
+          </p>
+          <p className="text-lg text-gray-700 leading-relaxed mt-4">
+            Bashkohuni me TradeBridge sot dhe zbuloni një botë të mundësive.
+            Filloni eksplorimin e tregjeve të reja, lidhuni me blerës ose
+            furnizues potencialë dhe shtoni rritjen e biznesit tuaj. Menaxhoni
+            transaksionet tuaja tregtare në mënyrë të lehtë, aksesoni të dhëna
+            të vlefshme dhe qëndroni para konkurrencës.
+          </p>
+          <p className="text-lg text-gray-700 leading-relaxed mt-4">
+            Përjetoni fuqinë e TradeBridge dhe çoni biznesin tuaj në nivelin
+            tjetër. Regjistrohuni tani dhe filloni një udhëtim drejt suksesit të
+            tregtisë globale.
+          </p>
+        </div>
+
+        <form className="max-w-md w-full mx-auto bg-white opacity-80 p-6 rounded-lg shadow-lg absolute top-1/4 right-96">
           <h2 className="text-4xl font-bold text-center py-6">Sign Up</h2>
 
           <div className="flex flex-col mb-4">
             <label className="font-semibold mb-1">Username</label>
-            <input
-              type="text"
-              className="border p-2 rounded-lg"
-              placeholder="Enter your username"
-              name="username"
-              value={formData.username}
-              onInput={(e) =>
-                setFormData({ ...formData, username: e.target.value })
-              }
-            />
+            <div className="flex items-center border-b-2 border-gray-300 py-2">
+              <input
+                type="text"
+                className="flex-grow bg-transparent focus:outline-none"
+                placeholder="Enter your username"
+                name="username"
+                value={formData.username}
+                onInput={(e) =>
+                  setFormData({ ...formData, username: e.target.value })
+                }
+              />
+              <FontAwesomeIcon
+                icon={faUser}
+                size="lg"
+                className="text-gray-400 mx-2"
+              />
+            </div>
+            {errors.username && (
+              <p className="text-red-500">{errors.username}</p>
+            )}
           </div>
           <div className="flex justify-between">
             <div className="flex flex-col mb-4">
               <label className="font-semibold mb-1">Password</label>
-              <input
-                type="password"
-                className="border p-2 rounded-lg"
-                placeholder="Enter your password"
-                name="password"
-                value={formData.password}
-                onInput={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
-              />
+              <div className="flex items-center border-b-2 border-gray-300 py-2">
+                <input
+                  type="password"
+                  className="flex-grow bg-transparent focus:outline-none"
+                  placeholder="Enter your password"
+                  name="password"
+                  value={formData.password}
+                  onInput={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
+                />
+                <FontAwesomeIcon
+                  icon={faLock}
+                  size="lg"
+                  className="text-gray-400 mx-2"
+                />
+              </div>
+              {errors.password && (
+                <p className="text-red-500">{errors.password}</p>
+              )}
             </div>
             <div className="flex flex-col mb-4">
               <label className="font-semibold mb-1">
                 Confirm your Password
               </label>
-              <input
-                type="password"
-                className="border p-2 rounded-lg"
-                placeholder="Confirm your password"
-              />
+              <div className="flex items-center border-b-2 border-gray-300 py-2">
+                <input
+                  type="password"
+                  className="flex-grow bg-transparent focus:outline-none"
+                  placeholder="Enter your password"
+                  name="password"
+                  value={formData.confirmPassword}
+                  onInput={(e) =>
+                    setFormData({
+                      ...formData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
+                />
+
+                <FontAwesomeIcon
+                  icon={faLock}
+                  size="lg"
+                  className="text-gray-400 mx-"
+                />
+              </div>
             </div>
+            {errors.confirmPassword && (
+              <p className="text-red-500">{errors.confirmPassword}</p>
+            )}
           </div>
           <div className="flex flex-col mb-4">
             <label className="font-semibold mb-1">Email</label>
-            <input
-              type="email"
-              className="border p-2 rounded-lg"
-              placeholder="Enter your Email"
-              name="email"
-              value={formData.email}
-              onInput={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
-            />
+            <div className="flex items-center border-b-2 border-gray-300 py-2">
+              <input
+                type="email"
+                className="flex-grow bg-transparent focus:outline-none"
+                placeholder="Enter your Email"
+                name="email"
+                value={formData.email}
+                onInput={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
+              />
+              <RiMailLine size={25} className="" />
+            </div>
+            {errors.email && <p className="text-red-500">{errors.email}</p>}
           </div>
           <div className="flex flex-col mb-4">
             <label className="font-semibold mb-1">Date of birth</label>
-            <input
-              type="date"
-              className="border p-2 rounded-lg"
-              placeholder="Enter your password"
-              name="date"
-              value={formData.date}
-              onInput={(e) =>
-                setFormData({ ...formData, date: e.target.value })
-              }
-            />
+            <div className="flex items-center border-b-2 border-gray-300 py-2">
+              <input
+                type="date"
+                className="flex-grow bg-transparent focus:outline-none"
+                placeholder="Enter your password"
+                name="date"
+                value={formData.date}
+                onInput={(e) =>
+                  setFormData({ ...formData, date: e.target.value })
+                }
+              />
+            </div>
+            {errors.date && <p className="text-red-500">{errors.date}</p>}
           </div>
           <div className="flex flex-col mb-4">
             <div className="flex items-center justify-center mb-4">
@@ -152,6 +281,9 @@ function SignUpForm() {
                 <span className="pl-2 font-bold text-lg">Punemarres</span>
               </label>
             </div>
+            {errors.userType && (
+              <p className="text-red-500">{errors.userType}</p>
+            )}
           </div>
 
           <button

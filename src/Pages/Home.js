@@ -5,8 +5,9 @@ import Support from "../Components/Support";
 import Containers from "../Components/Containers";
 import Footer from "../Components/Footer";
 import { Link } from "react-router-dom";
-
 import { BriefcaseIcon, DocumentTextIcon } from "@heroicons/react/solid";
+const user = JSON.parse(localStorage.getItem("user"));
+
 
 const Home = () => {
   return (
@@ -46,15 +47,20 @@ const Home = () => {
                 </p>
               </Link>
             </div>
+            {user.usertype === "punemarres" ? (
+                <>
+                </>
+              ):(
+                  <div className="flex items-center mb-4 ml-4 hover:text-indigo-600">
+                    <DocumentTextIcon className="h-6 w-6  text-indigo-600 mr-2" />
+                    <Link to="/postjobs">
+                      <p className="text-slate-700 font-medium hover:text-indigo-600 cursor pointer">
+                        Post a Job
+                      </p>
+                    </Link>
+                  </div>
 
-            <div className="flex items-center mb-4 ml-4 hover:text-indigo-600">
-              <DocumentTextIcon className="h-6 w-6  text-indigo-600 mr-2" />
-              <Link to="/postjobs">
-                <p className="text-slate-700 font-medium hover:text-indigo-600 cursor pointer">
-                  Post a Job
-                </p>
-              </Link>
-            </div>
+            )}
           </div>
         </div>
       </div>

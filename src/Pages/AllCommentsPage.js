@@ -31,84 +31,70 @@ function AllCommentsPage() {
   };
 
   return (
-    <div>
-      <table class="w-3/4 divide-y divide-gray-200 mx-auto">
-        <thead className="bg-gray-50">
-          <tr>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Comment ID
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              User ID
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Job Id
-            </th>
-            <th
-              scope="col"
-              className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Comment Content
-            </th>
+      <div className="flex justify-between">
+        <div className="bg-black max-w-[330px]">
+          <Sidebar/>
+        </div>
+        <div className="flex justify-center items-center h-screen w-full bg-gray-100">
+          <div className="bg-blue-600 shadow-lg rounded-lg p-6">
+            <table className="w-full">
+              <thead className="bg-blue-700 text-white">
+              <tr>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  Comment ID
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  User ID
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  Job ID
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  Comment Content
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+              </thead>
+              <tbody className="bg-blue-600 text-white divide-y divide-blue-700">
+              {commentData.map((comment) => (
+                  <tr key={comment.commentId}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {comment.commentid}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                    {comment.userid}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      {comment.jobid}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                        {comment.commentContent}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <div className="flex justify-center">
+                        <button
+                            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
+                            onClick={() => handleDeleteComment(comment.commentid)}
+                        >
+                          Delete
+                        </button>
+                        <button className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
+                          <Link to={`/editComment/${comment.commentid}`} className="text-white">
+                            Edit
+                          </Link>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+              ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
 
-            <th
-              scope="col"
-              className=" text-xs font-medium text-gray-500 uppercase tracking-wider"
-            >
-              Actions
-            </th>
-          </tr>
-        </thead>
-        <tbody className="bg-white divide-y divide-gray-200">
-          {commentData.map((comment) => (
-            <tr>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{comment.commentId}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{comment.userid}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">{comment.jobid}</div>
-              </td>
-              <td className="px-6 py-4 whitespace-nowrap">
-                <div className="text-sm text-gray-900">
-                  {comment.commentContent}
-                </div>
-              </td>
-
-              <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                <div class="flex justify-center">
-                  <button
-                    class="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded mr-2"
-                    onClick={() => handleDeleteComment(comment.commentId)}
-                  >
-                    Delete
-                  </button>
-                  <button class="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded">
-                    <Link
-                      to={`/editComment/${comment.commentId}`}
-                      class="text-white"
-                    >
-                      Edit
-                    </Link>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
   );
 }
 

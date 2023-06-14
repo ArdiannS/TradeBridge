@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../api/axiosInstance";
+import Sidebar from "../Components/Sidebar";
 function AllUsersPage() {
   const [userData, setUserData] = useState([]);
   useEffect(() => {
@@ -28,40 +29,51 @@ function AllUsersPage() {
     }
   };
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="bg-white shadow-lg rounded-lg p-6 w-3/4">
+  <div className="flex justify-between">
+    <div className="bg-black max-w-[330px]">
+      <Sidebar/>
+    </div>
+    <div className="flex justify-center items-center h-screen w-full bg-gray-100">
+      <div className="bg-blue-600 shadow-lg rounded-lg p-6">
         <table className="w-full">
-          <thead className="bg-gray-50">
+          <thead className="bg-blue-700 text-white ">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium   uppercase tracking-wider">
                 User ID
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
+                User Profile Pic
+              </th>
+              <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
                 Username
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                Password
-              </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
                 Email
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider">
                 Birthday
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 User Type
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ">
+              <th className="px-6 py-3 text-left text-xs font-medium  uppercase tracking-wider ">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-blue-600 text-white divide-y divide-blue-700">
             {userData.map((user) => (
               <tr key={user.userid}>
                 <td className="px-6 py-4 whitespace-nowrap">{user.userid}</td>
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-900">
+                    <img
+                        src={`data:image/jpeg;base64, ${user.userProfilePicture}`}
+                        className="w-8 h-8 rounded-full"
+                    />
+                  </div>
+                </td>
                 <td className="px-6 py-4 whitespace-nowrap">{user.username}</td>
-                <td className="px-6 py-4 whitespace-nowrap">{user.password}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{user.birthday}</td>
                 <td className="px-6 py-4 whitespace-nowrap">{user.usertype}</td>
@@ -86,6 +98,8 @@ function AllUsersPage() {
           </tbody>
         </table>
       </div>
+
+    </div>
     </div>
   );
 }

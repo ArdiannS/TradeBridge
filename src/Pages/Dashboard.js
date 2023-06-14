@@ -4,6 +4,7 @@ import Sidebar from "../Components/Sidebar";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../api/axiosInstance";
+import { Pie } from "react-chartjs-2";
 
 function Dashboard() {
   const [userData, setUserData] = useState([]);
@@ -30,7 +31,6 @@ function Dashboard() {
       })
       .catch((error) => console.error(error));
   }, []);
-
   const handleDelete = async (id) => {
     try {
       axios
@@ -97,7 +97,7 @@ function Dashboard() {
 
   return (
     <div className="flex bg-gray-100">
-      <div className="w-1/4 h-screen">
+      <div className="w-1/4 h-auto">
         <Sidebar />
       </div>
       <div className="w-2/3 flex items-center justify-center">

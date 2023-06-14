@@ -2,16 +2,16 @@ const express = require("express");
 const UserController = require("../Controllers/UserController");
 const ProductController = require("../Controllers/ProductController");
 const CommentController = require("../Controllers/CommentController");
+const RequestsController = require("../Controllers/RequestsController");
 const multer = require("multer");
 const upload = multer({ storage: multer.memoryStorage() });
 const router = express.Router();
 
 const { isLoggedIn, isGuest } = require("../middelware/auth");
 const DashboardController = require("../Controllers/DashboardController");
-
-debugger;
 router.get("/jobs/:id", ProductController.getJobById);
-
+router.get("/jobs/:category", ProductController.getJobByCategory);
+router.post("/editMyJobs/:id", ProductController.updateMyJob);
 router.post(
   "/postjobs",
   upload.single("jobPhoto"),
@@ -23,7 +23,6 @@ router.post(
 //   ProductController.insertJobs
 // );
 router.post("/editjobs/:id", ProductController.updateJob);
-router.get("/jobs/:category", ProductController.getJobByCategory);
 router.put("/comments/:id", CommentController.updateComment);
 router.put("/offers/:id", ProductController.updateJobOffer);
 router.post("/jobsearch", ProductController.insertOffer);
@@ -56,8 +55,6 @@ router.get("/dashboard/total-users", DashboardController.getNumberOfAllUsers);
 router.get("/user/profile", UserController.getUserProfile);
 router.get("/myjobs/:id", ProductController.getJobsByUserId);
 router.delete("/myjobs/:id", ProductController.deleteMyJob);
-router.put("/user/profile", UserController.updateUserProfile);
-
 router.put(
   "/user/profile",
   upload.single("profilePic"),
@@ -67,5 +64,8 @@ router.get("/jobs", ProductController.searchJobs);
 router.get("/jobOffer/:id", ProductController.getJobOffers);
 router.get("/jobOffers", ProductController.getAllJobOffers);
 router.delete("/jobOffer/:id", ProductController.deleteJobOfferById);
-
+router.post("/request", RequestsController.insertRequest);
+router.get("/request/:id", RequestsController.getRequestsById);
+router.get("/request", RequestsController.getRequests);
+router.delete("/request/:id", RequestsController.deleteRequest);
 module.exports = router;
