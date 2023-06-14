@@ -11,7 +11,6 @@ class RequestsController {
       res.status(500).send("Error adding Offer");
     }
   }
-
   static async deleteRequest(req, res) {
     const { id } = req.params;
     try {

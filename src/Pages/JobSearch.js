@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { FaFacebook, FaHeart } from "react-icons/fa";
+import { FaFacebook, FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoFilterSharp } from "react-icons/io5";
 import First from "../images/bgImg.jpeg";
 import Second from "../images/foto1.jpg";
@@ -78,6 +78,12 @@ function JobSearch() {
     fetch("/jobs")
       .then((res) => res.json())
       .then((data) => {
+        const jobsWithFavorites = data.map((job) => ({
+          ...job,
+          favoriteJobs: false,
+        }));
+        console.log("this is data in jobs", data);
+        setJobs(jobsWithFavorites);
         setJobs(data);
       })
       .catch((err) => console.error(err.message));
@@ -114,7 +120,7 @@ function JobSearch() {
       setFilteredJobs(jobs);
     } else {
       const filtered = jobs.filter((job) => job.jobCategory === category);
-      if(filtered.length == 0 ){
+      if (filtered.length == 0) {
         setNoJobs(true);
       }
       setFilteredJobs(filtered);
@@ -170,11 +176,11 @@ function JobSearch() {
 
     if (jobid) {
       fetch(`/comments/${jobid}`)
-          .then((res) => res.json())
-          .then((data) => {
-            setComments(data);
-          })
-          .catch((err) => console.error(err.message));
+        .then((res) => res.json())
+        .then((data) => {
+          setComments(data);
+        })
+        .catch((err) => console.error(err.message));
     }
   }, [selectedJob, filteredJobs, jobs]);
   const [jobOffers, setJobOffers] = useState([]);
@@ -207,7 +213,7 @@ function JobSearch() {
   const [isEditingBid, setIsEditingBid] = useState(false);
   const [editedBidAmount, setEditedBidAmount] = useState("");
   const [editedBidDescripition, setEditedBidDescripition] = useState("");
-  const [editingBidId,setEditingBidId] = useState(null);
+  const [editingBidId, setEditingBidId] = useState(null);
   const handleSaveBid = async (offerId) => {
     try {
       const response = await fetch(`/offers/${offerId}`, {
@@ -258,7 +264,6 @@ function JobSearch() {
         window.location.reload();
         setIsEditing(false);
         setEditingCommentId(null);
-
       }
     } catch (error) {
       console.error("Error:", error.message);
@@ -303,11 +308,37 @@ function JobSearch() {
     }
   };
 
+  const [favoriteJobs, setFavoriteJobs] = useState([]);
+  const handleAddToFavorites = async (job) => {
+
+    let body =
+    await axios.put("/editFavoriteJob", {
+      body: {
+        jobId: job.jobId,
+        favoriteJobs: !job.favoriteJobs,
+      }
+    }).then(() => {
+      setJobs(
+          jobs.map(x=> {
+            if(x.jobId == job.jobId) {
+              x.favoriteJobs = !x.favoriteJobs;
+            }
+            return x;
+          })
+      );
+    }).catch((err) => {
+      console.log(err);
+    })
+  };
+
   return (
     <>
       <header>{/* <Navbar /> */}</header>
       <div className="flex w-auto h-full">
-        <div className="h-900 w-1/5 bg-gray-200 overflow-y-scroll scrollbar-rounded" style={{ height: "900px" }}>
+        <div
+          className="h-900 w-1/5 bg-gray-200 overflow-y-scroll scrollbar-rounded"
+          style={{ height: "900px" }}
+        >
           <div className="flex flex-col justify-center items-center rounded-lg shadow-md w-full mx-auto">
             <h2 className="font-light text-3xl ml-2 mt-4">Jobs</h2>
             <div className="mt-4 ml-2 flex justify-between gap-4">
@@ -368,6 +399,7 @@ function JobSearch() {
 
             {(isFiltering ? filteredJobs : jobs).map((job) => {
               const title = job.jobTitle || ""; // Handle undefined job.title
+              console.log(' job' , job)
               if (
                 !searchTerm ||
                 title.toLowerCase().includes(searchTerm.toLowerCase())
@@ -413,8 +445,15 @@ function JobSearch() {
                             <button className="bg-indigo-500 text-white w-56 font-bold py-3 px-8 border border-indigo-500 rounded-full hover:bg-indigo-700 hover:text-gray-200 transition duration-300 ease-in-out mr-4">
                               Jep Oferten
                             </button>
-                            <button className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
-                              <FaHeart size={26} />
+                            <button
+                              className="bg-white text-indigo-500 font-bold py-3 px-6 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out"
+                              onClick={() => handleAddToFavorites(job)}
+                            >
+                              {job.favoriteJobs ? (
+                                <FaHeart size={26} />
+                              ) : (
+                                <FaRegHeart size={26} />
+                              )}
                             </button>
                           </div>
                         </div>
@@ -540,7 +579,8 @@ function JobSearch() {
 
                   <div className="flex mt-5">
                     {/* Nese useri osht logged in me account qe e ka postu punen ather smunet me bo bid produktit t'vet veq me fshi */}
-                    {useri === selectedJob.username || user.usertype === "punedhenes" ? (
+                    {useri === selectedJob.username ||
+                    user.usertype === "punedhenes" ? (
                       <div className="flex mt-4 space-x-4"></div>
                     ) : (
                       <div>
@@ -617,22 +657,22 @@ function JobSearch() {
                 <div>
                   <div className="flex border border-gray-100 shadow-2xl flex-col mr-10">
                     <img
-                        className=""     style={{ height: "750px" }}
-                        src={`data:image/jpeg;base64,${selectedJob.jobPhoto}`}
-                        alt="Job Photo"
+                      className=""
+                      style={{ height: "750px" }}
+                      src={`data:image/jpeg;base64,${selectedJob.jobPhoto}`}
+                      alt="Job Photo"
                     />
                   </div>
-                  <div class="flex justify-center mt-2">
-                  </div>
+                  <div class="flex justify-center mt-2"></div>
                 </div>
               </div>
 
               {jobOffers.length === 0 ? (
-                  <></>
+                <></>
               ) : (
-                  <h2 className="text-2xl text-center font-bold">
-                    Bids for this Job:
-                  </h2>
+                <h2 className="text-2xl text-center font-bold">
+                  Bids for this Job:
+                </h2>
               )}
               <div className="flex justify-between">
                 {jobOffers.map((offer) => (
@@ -657,13 +697,17 @@ function JobSearch() {
                         <p className="text-xl font-light">
                           Bid Description:
                           <br />
-                          {isEditingBid && offer.idoffer === editingBidId ? ( <>  </>) : (<>{offer.bidDescription}</>)}
+                          {isEditingBid && offer.idoffer === editingBidId ? (
+                            <> </>
+                          ) : (
+                            <>{offer.bidDescription}</>
+                          )}
                         </p>
 
                         {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
                         {useri === offer.username ? (
                           <div className="flex mt-4 space-x-4">
-                            {isEditingBid && offer.idoffer === editingBidId ?  (
+                            {isEditingBid && offer.idoffer === editingBidId ? (
                               <>
                                 <div>
                                   <label htmlFor="editedBidDescription">
@@ -745,9 +789,7 @@ function JobSearch() {
                   </div>
                 ))}
               </div>
-              <div className="border">
-
-              </div>
+              <div className="border"></div>
 
               <div className=" flex justify-between">
                 <div className="w-1/2 pr-4 border-r">
@@ -756,7 +798,9 @@ function JobSearch() {
                     <div className="my-4 text-center border-b-4 cursor-pointer border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
                   </div>
                   <div className="">
-                    <h2 className="text-l font-light mt-3">{selectedJob.jobDescription}</h2>
+                    <h2 className="text-l font-light mt-3">
+                      {selectedJob.jobDescription}
+                    </h2>
                   </div>
                 </div>
                 <div className="w-1/2">
@@ -780,9 +824,15 @@ function JobSearch() {
                             alt="My Image"
                           />
                         </div>
-                        {isEditing && editingCommentId === comment.commentid ?
-                            (<></>): (<><p className="text-black">{comment.commentContent}</p></>)
-                        }
+                        {isEditing && editingCommentId === comment.commentid ? (
+                          <></>
+                        ) : (
+                          <>
+                            <p className="text-black">
+                              {comment.commentContent}
+                            </p>
+                          </>
+                        )}
                         {isEditing && comment.commentid === editingCommentId ? (
                           <div className="flex gap-2">
                             <input
@@ -790,14 +840,12 @@ function JobSearch() {
                               className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
                               value={editedComment}
                               onChange={(e) => setEditedComment(e.target.value)}
-
                             />
                             <button
                               className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                              onClick={() =>{
-                                handleSaveComment(comment.commentid)
-                                }
-                              }
+                              onClick={() => {
+                                handleSaveComment(comment.commentid);
+                              }}
                             >
                               Save
                             </button>
@@ -811,7 +859,7 @@ function JobSearch() {
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                     onClick={() => {
                                       handleEditComment(comment.commentid);
-                                      setEditingCommentId(comment.commentid)
+                                      setEditingCommentId(comment.commentid);
                                       setIsEditing(true);
                                     }}
                                   >
@@ -983,7 +1031,8 @@ function JobSearch() {
                       </div>
                       <div className="flex mt-5">
                         {/* Nese useri osht logged in me account qe e ka postu punen ather smunet me bo bid produktit t'vet veq me fshi */}
-                        {useri === filteredJobs[0].username || user.usertype === "punedhenes" ? (
+                        {useri === filteredJobs[0].username ||
+                        user.usertype === "punedhenes" ? (
                           <div className="flex mt-4 space-x-4"></div>
                         ) : (
                           <div>
@@ -1061,21 +1110,21 @@ function JobSearch() {
                     <div>
                       <div className="flex shadow-2xl flex-col mr-10">
                         <img
-                            className=""     style={{ height: "750px" }}
-
-                            src={`data:image/jpeg;base64,${filteredJobs[0].jobPhoto}`}
-                            alt="Job Photo"
+                          className=""
+                          style={{ height: "750px" }}
+                          src={`data:image/jpeg;base64,${filteredJobs[0].jobPhoto}`}
+                          alt="Job Photo"
                         />
                       </div>
                     </div>
                   </div>
-                 {jobOffers.length === 0 ? (
-                     <></>
+                  {jobOffers.length === 0 ? (
+                    <></>
                   ) : (
-                   <h2 className="text-2xl text-center font-bold">
-                   Bids for this Job:
-                   </h2>
-                   )}
+                    <h2 className="text-2xl text-center font-bold">
+                      Bids for this Job:
+                    </h2>
+                  )}
                   <div className="flex justify-between">
                     {jobOffers.map((offer) => (
                       <div className="mt-8 w-1/3" key={offer.idoffer}>
@@ -1099,7 +1148,8 @@ function JobSearch() {
                             <p className="text-xl font-light">
                               Bid Description:
                               <br />
-                              {isEditingBid && editingBidId === offer.offerid ? (
+                              {isEditingBid &&
+                              editingBidId === offer.offerid ? (
                                 <></>
                               ) : (
                                 <>{offer.bidDescription}</>
@@ -1109,7 +1159,8 @@ function JobSearch() {
                             {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
                             {useri === offer.username ? (
                               <div className="flex mt-4 space-x-4">
-                                {isEditingBid  && editingBidId === offer.offerid ? (
+                                {isEditingBid &&
+                                editingBidId === offer.offerid ? (
                                   <>
                                     <div>
                                       <label htmlFor="editedBidDescription">
@@ -1198,9 +1249,7 @@ function JobSearch() {
                       </div>
                     ))}
                   </div>
-                  <div className="border">
-
-                  </div>
+                  <div className="border"></div>
                   <div className="flex justify-between">
                     <div className="w-1/2 border-r pr-4">
                       <h3 className="text-center cursor-pointer">
@@ -1237,10 +1286,17 @@ function JobSearch() {
                                 alt="My Image"
                               />
                             </div>
-                            {isEditing && editingCommentId === comment.commentid ? ( <>  </>) :  (<p className="text-black">{comment.commentContent}</p>)}
+                            {isEditing &&
+                            editingCommentId === comment.commentid ? (
+                              <> </>
+                            ) : (
+                              <p className="text-black">
+                                {comment.commentContent}
+                              </p>
+                            )}
 
-
-                            {isEditing&& editingCommentId === comment.commentid ? (
+                            {isEditing &&
+                            editingCommentId === comment.commentid ? (
                               <div className="flex gap-2">
                                 <input
                                   type="text"
@@ -1268,7 +1324,9 @@ function JobSearch() {
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                                         onClick={() => {
                                           handleEditComment(comment.commentid);
-                                          setEditingCommentId(comment.commentid);
+                                          setEditingCommentId(
+                                            comment.commentid
+                                          );
                                           setIsEditing(true);
                                         }}
                                       >
@@ -1341,95 +1399,98 @@ function JobSearch() {
                   </div>
                 </div>
               ) : (
-
                 <div className="rounded-lg h-full w-full">
-              {noJobs ? (
-                  <div className="flex flex-col justify-center items-center h-screen">
-                    <div className="flex justify-between ">
-                    <p className="text-red-500 font-semibold ">There is no Job with this Category</p>
-                    <AiOutlineInfoCircle className="ml-2 mt-1 text-gray-500"  size={20}/>
-
+                  {noJobs ? (
+                    <div className="flex flex-col justify-center items-center h-screen">
+                      <div className="flex justify-between ">
+                        <p className="text-red-500 font-semibold ">
+                          There is no Job with this Category
+                        </p>
+                        <AiOutlineInfoCircle
+                          className="ml-2 mt-1 text-gray-500"
+                          size={20}
+                        />
+                      </div>
+                      <FaSadCry size={300} className="text-5xl text-gray-500" />
                     </div>
-                   <FaSadCry size={300} className="text-5xl text-gray-500" />
-                </div>
+                  ) : (
+                    <div className="rounded-lg h-full w-full">
+                      {/* Add the rest of your code here */}
 
-                ) : (
-                <div className="rounded-lg h-full w-full">
-                {/* Add the rest of your code here */}
-
-                  {jobs.length > 0 && (
-                    <>
-                      <div className="flex justify-between my-7 mx-6">
-                        <div className=" h-1/4 w-1/2 mx-9">
-                          <div className="mt-10  h-20 flex items-center">
-                            <img
-                              src={`data:image/jpeg;base64, ${jobs[0].userProfilePicture}`}
-                              className="w-44 h-44 rounded-full mb-8"
-                            />
-                          </div>
-                          <div className="mt-6">
-                            <h3 className=" font-extralight text-2xl">
-                              Posted by:
-                              {jobs[0]?.username}
-                            </h3>
-                          </div>
-                          <div className="mt-3">
-                            <h3 className="font-bold text-2xl">
-                              Category:{jobs[0].jobCategory}
-                            </h3>
-                          </div>
-                          <div className="mt-3">
-                            <h3 className="font-bold text-4xl">
-                              Title:{jobs[0].jobTitle}
-                            </h3>
-                          </div>
-                          <div className="mt-3">
-                            <p className=" text-l font-semibold">
-                              City:{jobs[0].jobCity}
-                            </p>
-                          </div>
-                          <div className="mt-3 ml-2">
-                            <button className=" bg-white text-sm border border-black font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out">
-                              Start Today
-                            </button>
-                          </div>
-                          <div class="my-4 border-b border-gray-500 w-1/2"></div>
-                          <div className="mt-3 flex justify-between w-1/2 text-2xl">
-                            <p className="text-2xl font-bold">Job Type </p>
-                            <p className=" text-lg font-light">
-                              {jobs[0].jobType}
-                            </p>
-                          </div>
-                          <div class="my-4 border-b border-gray-500 w-1/2"></div>
-                          <div className="mt-3 flex justify-between w-1/2 text-2xl">
-                            <p className=" text-2xl font-bold">Hours </p>
-                            <p className=" text-lg font-light">Set own</p>
-                          </div>
-                          <div className="flex mt-5">
-                            {/* Nese useri osht logged in me account qe e ka postu punen ather smunet me bo bid produktit t'vet veq me fshi */}
-                            {useri === jobs[0].username  || user.usertype === "punedhenes" ? (
-                              <div className="flex mt-4 space-x-4"></div>
-                            ) : (
-                              <div>
-                                <form action="/jobsearch" method="POST">
-                                  <div class="my-5">
-                                    <div class="mt-2 flex flex-col ">
-                                      <div className="flex justify-between">
-                                        <label
-                                          htmlFor="bidAmount"
-                                          className="block text-xl font-semibold"
-                                        >
-                                          Place Your Bid:
-                                          <br />
-                                        </label>
-                                        <input
-                                          type="number"
-                                          id="jobPrice"
-                                          name="jobPrice"
-                                          className="w-40 items-center px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-10"
-                                          placeholder="Enter amount"
-                                          required
-                                        />
+                      {jobs.length > 0 && (
+                        <>
+                          <div className="flex justify-between my-7 mx-6">
+                            <div className=" h-1/4 w-1/2 mx-9">
+                              <div className="mt-10  h-20 flex items-center">
+                                <img
+                                  src={`data:image/jpeg;base64, ${jobs[0].userProfilePicture}`}
+                                  className="w-44 h-44 rounded-full mb-8"
+                                />
+                              </div>
+                              <div className="mt-6">
+                                <h3 className=" font-extralight text-2xl">
+                                  Posted by:
+                                  {jobs[0]?.username}
+                                </h3>
+                              </div>
+                              <div className="mt-3">
+                                <h3 className="font-bold text-2xl">
+                                  Category:{jobs[0].jobCategory}
+                                </h3>
+                              </div>
+                              <div className="mt-3">
+                                <h3 className="font-bold text-4xl">
+                                  Title:{jobs[0].jobTitle}
+                                </h3>
+                              </div>
+                              <div className="mt-3">
+                                <p className=" text-l font-semibold">
+                                  City:{jobs[0].jobCity}
+                                </p>
+                              </div>
+                              <div className="mt-3 ml-2">
+                                <button className=" bg-white text-sm border border-black font-bold py-3 px-8 rounded-lg transition duration-300 ease-in-out">
+                                  Start Today
+                                </button>
+                              </div>
+                              <div class="my-4 border-b border-gray-500 w-1/2"></div>
+                              <div className="mt-3 flex justify-between w-1/2 text-2xl">
+                                <p className="text-2xl font-bold">Job Type </p>
+                                <p className=" text-lg font-light">
+                                  {jobs[0].jobType}
+                                </p>
+                              </div>
+                              <div class="my-4 border-b border-gray-500 w-1/2"></div>
+                              <div className="mt-3 flex justify-between w-1/2 text-2xl">
+                                <p className=" text-2xl font-bold">Hours </p>
+                                <p className=" text-lg font-light">Set own</p>
+                              </div>
+                              <div className="flex mt-5">
+                                {/* Nese useri osht logged in me account qe e ka postu punen ather smunet me bo bid produktit t'vet veq me fshi */}
+                                {useri === jobs[0].username ||
+                                user.usertype === "punedhenes" ? (
+                                  <div className="flex mt-4 space-x-4"></div>
+                                ) : (
+                                  <div>
+                                    <form action="/jobsearch" method="POST">
+                                      <div class="my-5">
+                                        <div class="mt-2 flex flex-col ">
+                                          <div className="flex justify-between">
+                                            <label
+                                              htmlFor="bidAmount"
+                                              className="block text-xl font-semibold"
+                                            >
+                                              Place Your Bid:
+                                              <br />
+                                            </label>
+                                            <input
+                                              type="number"
+                                              id="jobPrice"
+                                              name="jobPrice"
+                                              className="w-40 items-center px-4 py-2 text-lg border border-gray-300 rounded-l-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-10"
+                                              placeholder="Enter amount"
+                                              required
+                                            />
 
                                             <div className="ml-2 flex">
                                               <button className="bg-white items-center h-11 text-indigo-500 flex justify-center font-bold mb-2 py-3 w-40 px-8 border border-indigo-500 rounded-full hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out">
@@ -1481,59 +1542,59 @@ function JobSearch() {
                               </div>
                             </div>
 
-                        <div>
-                          <div className="flex shadow-2xl flex-col mr-10">
-                            {jobs.length > 0 && (
-                                <img
-                                    className=""     style={{ height: "750px" }}
-
+                            <div>
+                              <div className="flex shadow-2xl flex-col mr-10">
+                                {jobs.length > 0 && (
+                                  <img
+                                    className=""
+                                    style={{ height: "750px" }}
                                     src={`data:image/jpeg;base64,${jobs[0].jobPhoto}`}
                                     alt="Job Photo"
-                                />
-                            )}
+                                  />
+                                )}
+                              </div>
+                            </div>
                           </div>
-                        </div>
-                      </div>
-                      {jobOffers.length === 0 ? (
-                          <></>
-                      ) : (
-                          <h2 className="text-2xl text-center font-bold">
-                            Bids for this Job:
-                          </h2>
-                      )}
-                      <div className="flex justify-between">
-                        {jobOffers.map((offer) => (
-                          <div className="mt-8 w-1/3" key={offer.idoffer}>
-                            <ul className="mt-4 space-y-4">
-                              <li className="border border-gray-300 rounded-lg p-4">
-                                <div className="flex items-start justify-between">
-                                  <div className="flex flex-col">
-                                    <p className="text-lg font-bold">
-                                      Bid From: {offer.username}
+                          {jobOffers.length === 0 ? (
+                            <></>
+                          ) : (
+                            <h2 className="text-2xl text-center font-bold">
+                              Bids for this Job:
+                            </h2>
+                          )}
+                          <div className="flex justify-between">
+                            {jobOffers.map((offer) => (
+                              <div className="mt-8 w-1/3" key={offer.idoffer}>
+                                <ul className="mt-4 space-y-4">
+                                  <li className="border border-gray-300 rounded-lg p-4">
+                                    <div className="flex items-start justify-between">
+                                      <div className="flex flex-col">
+                                        <p className="text-lg font-bold">
+                                          Bid From: {offer.username}
+                                        </p>
+                                        <p className="text-sm text-gray-500">
+                                          Bid Date: {offer.bidTime}
+                                        </p>
+                                      </div>
+                                      <p className="text-xl font-bold">
+                                        Bid Amount:
+                                        <br />
+                                        {isEditingBid ? (
+                                          <></>
+                                        ) : (
+                                          <>${offer.jobOffer}</>
+                                        )}
+                                      </p>
+                                    </div>
+                                    <p className="text-xl font-light">
+                                      Bid Description:
+                                      <br />
+                                      {isEditingBid ? (
+                                        <></>
+                                      ) : (
+                                        <>{offer.bidDescription}</>
+                                      )}
                                     </p>
-                                    <p className="text-sm text-gray-500">
-                                      Bid Date: {offer.bidTime}
-                                    </p>
-                                  </div>
-                                  <p className="text-xl font-bold">
-                                    Bid Amount:
-                                    <br />
-                                    {isEditingBid ? (
-                                      <></>
-                                    ) : (
-                                      <>${offer.jobOffer}</>
-                                    )}
-                                  </p>
-                                </div>
-                                <p className="text-xl font-light">
-                                  Bid Description:
-                                  <br />
-                                  {isEditingBid ? (
-                                    <></>
-                                  ) : (
-                                    <>{offer.bidDescription}</>
-                                  )}
-                                </p>
 
                                     {/* Nese useri qe osht logged in e ka bo oferten munet me bo delete ose edit oferten e vet */}
                                     {useri === offer.username ? (
@@ -1574,103 +1635,107 @@ function JobSearch() {
                                               />
                                               <br />
 
-                                          <button
-                                            className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded"
-                                            onClick={() => {
-                                              handleSaveBid(offer.idoffer);
-                                              setIsEditingBid(false);
-                                            }}
-                                          >
-                                            Save
-                                          </button>
-                                        </div>
-                                      </>
+                                              <button
+                                                className="bg-blue-500 hover:bg-blue-700  text-white font-bold py-2 px-4 rounded"
+                                                onClick={() => {
+                                                  handleSaveBid(offer.idoffer);
+                                                  setIsEditingBid(false);
+                                                }}
+                                              >
+                                                Save
+                                              </button>
+                                            </div>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <button
+                                              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                              onClick={() => {
+                                                handleEdit(offer.idoffer);
+                                                setIsEditingBid(true);
+                                              }}
+                                            >
+                                              Edit
+                                            </button>
+                                            <button
+                                              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                              onClick={() =>
+                                                handleDelete(offer.idoffer)
+                                              }
+                                            >
+                                              Delete
+                                            </button>
+                                          </>
+                                        )}
+                                      </div>
                                     ) : (
-                                      <>
-                                        <button
-                                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                          onClick={() => {
-                                            handleEdit(offer.idoffer);
-                                            setIsEditingBid(true);
-                                          }}
-                                        >
-                                          Edit
-                                        </button>
-                                        <button
-                                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                          onClick={() =>
-                                            handleDelete(offer.idoffer)
-                                          }
-                                        >
-                                          Delete
-                                        </button>
-                                      </>
-                                    )}
-                                  </div>
-                                ) : (
-                                  <div>
-                                    {useri === jobs[0].username && (
-                                      <div className="flex mt-4 space-x-4">
-                                        <button
-                                          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                          onClick={() =>
-                                            handleDelete(offer.idoffer)
-                                          }
-                                        >
-                                          Delete
-                                        </button>
+                                      <div>
+                                        {useri === jobs[0].username && (
+                                          <div className="flex mt-4 space-x-4">
+                                            <button
+                                              className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                              onClick={() =>
+                                                handleDelete(offer.idoffer)
+                                              }
+                                            >
+                                              Delete
+                                            </button>
+                                          </div>
+                                        )}
                                       </div>
                                     )}
-                                  </div>
-                                )}
-                              </li>
-                            </ul>
+                                  </li>
+                                </ul>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
-                      <div className="border">
+                          <div className="border"></div>
 
-                      </div>
+                          <div className=" flex justify-between">
+                            <div className=" w-1/2 border-r pr-4">
+                              <h3 className="text-center cursor-pointer">
+                                {" "}
+                                About this Job{" "}
+                              </h3>
+                              <div className="flex justify-center">
+                                <div className="my-4 text-center border-b-4 cursor-pointer  border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
+                              </div>
+                              <div className="">
+                                <h2 className="text-l font-light mt-3">
+                                  {jobs[0].jobDescription}
+                                </h2>
+                              </div>
+                            </div>
+                            <div className="w-1/2">
+                              <h3 className="text-center">Comments</h3>
+                              <div className="flex justify-center">
+                                <div className="my-4 text-center border-b-4 cursor-pointer  border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
+                              </div>
+                              <div className="flex flex-col gap-4 p-4">
+                                {comments.map((comment) => (
+                                  <div
+                                    className="flex flex-col gap-2"
+                                    key={comment.commentid}
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <div>
+                                        <h4>{comment.username}</h4>
+                                      </div>
+                                      <img
+                                        src={`data:image/jpeg;base64,${comment.userProfilePicture}`}
+                                        className="w-8 h-8 rounded-full"
+                                        alt="My Image"
+                                      />
+                                    </div>
 
-                      <div className=" flex justify-between">
-
-                        <div className=" w-1/2 border-r pr-4">
-                          <h3 className="text-center cursor-pointer">
-                            {" "}
-                            About this Job{" "}
-                          </h3>
-                          <div className="flex justify-center">
-                            <div className="my-4 text-center border-b-4 cursor-pointer  border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
-                          </div>
-                          <div className="">
-                            <h2 className="text-l font-light mt-3">
-                              {jobs[0].jobDescription}
-                            </h2>
-                          </div>
-                        </div>
-                        <div className="w-1/2">
-                          <h3 className="text-center">Comments</h3>
-                          <div className="flex justify-center">
-                            <div className="my-4 text-center border-b-4 cursor-pointer  border-gray-500 hover:border-2 hover:border-indigo-500 w-1/2"></div>
-                          </div>
-                          <div className="flex flex-col gap-4 p-4">
-                            {comments.map((comment) => (
-                              <div
-                                className="flex flex-col gap-2"
-                                key={comment.commentid}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <div>
-                                    <h4>{comment.username}</h4>
-                                  </div>
-                                  <img
-                                    src={`data:image/jpeg;base64,${comment.userProfilePicture}`}
-                                    className="w-8 h-8 rounded-full"
-                                    alt="My Image"
-                                  />
-                                </div>
-
-                                {isEditing && editingCommentId === comment.commentid ? <>  </> :  <p className="text-black">{comment.commentContent}</p>}
+                                    {isEditing &&
+                                    editingCommentId === comment.commentid ? (
+                                      <> </>
+                                    ) : (
+                                      <p className="text-black">
+                                        {comment.commentContent}
+                                      </p>
+                                    )}
 
                                 {isEditing && editingCommentId === comment.commentid ? (
                                 <div className="flex gap-2">

@@ -2,7 +2,7 @@ const CommentModel = require("../Models/CommentModel");
 
 class CommentController {
   static async insertComment(req, res) {
-    const { commentContent, jobId,userId  } = req.body;
+    const { commentContent, jobId, userId } = req.body;
 
     const result = await CommentModel.addComent(commentContent, jobId, userId);
     if (result) {
@@ -26,25 +26,25 @@ class CommentController {
 
   static async getCommentsByJobId(req, res) {
     const jobId = req.params.id;
-    console.log(jobId);
+    //console.log(jobId);
     var result = await CommentModel.getCommentsByJobId(jobId);
     if (result) {
       res.send(result);
     }
   }
   static async updateComment(req, res) {
-    const {commentContent} = req.body;
-    console.log(commentContent);
-    const {id} = req.params;
-    console.log(id);
-    var result = await CommentModel.updateComment(commentContent,id);
+    const { commentContent } = req.body;
+    //console.log(commentContent);
+    const { id } = req.params;
+    //console.log(id);
+    var result = await CommentModel.updateComment(commentContent, id);
     if (result) {
-      res.send(result);
+      res.redirect("/allcomments");
     }
   }
   static async deleteComment(req, res) {
     const { id } = req.params;
-    console.log("this " , id);
+    //console.log("this " , id);
     try {
       const result = await CommentModel.deleteComment(id);
       res.status(200).json({ message: "Comment deleted successfully" });

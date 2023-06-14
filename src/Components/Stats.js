@@ -13,7 +13,7 @@ function Stats() {
     fetch("/dashboard/total-jobs")
       .then((response) => response.text())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setTotalJobs(parseInt(data));
       })
       .catch((error) => console.error(error));
@@ -23,7 +23,7 @@ function Stats() {
     fetch("/dashboard/total-users")
       .then((response) => response.text())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setTotalUsers(parseInt(data));
       })
       .catch((error) => console.error(error));

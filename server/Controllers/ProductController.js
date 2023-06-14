@@ -4,12 +4,10 @@ class ProductController {
   static async insertJobs(req, res) {
     const { jobTitle, jobDescription, jobType, jobCategory, jobCity } =
       req.body;
-    console.log(req.file);
     const buffer = req.file.buffer;
     const jobPhoto = buffer.toString("base64");
-    console.log("ididid");
+    console.log('-------------------- ', req.session)
     const userid = req.session.userId;
-    console.log(userid);
 
     try {
       const result = await ProductModel.insertJobs(
@@ -30,8 +28,7 @@ class ProductController {
   }
   static async insertOffer(req, res) {
     const { jobPrice, userId, jobId, bidDescription } = req.body;
-    console.log(jobId);
-    console.log("userid", userId);
+
     try {
       const result = await ProductModel.insertJobOffer(
         userId,
@@ -83,7 +80,6 @@ class ProductController {
   static async getSimilarJobs(req, res) {
     try {
       const jobCategory = req.body.jobCategory;
-      console.log(jobCategory);
       const jobs = await ProductModel.getSimilarJobs(jobCategory);
       res.send(jobs);
     } catch (error) {
@@ -102,6 +98,19 @@ class ProductController {
       res.status(500).send("Error retrieving products");
     }
   }
+
+  static async getFavoriteJobs(req, res) {
+    try {
+      const favoriteJobs = await ProductModel.getFavoriteJobs();
+      if (favoriteJobs) {
+        res.send(favoriteJobs);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving favorite jobs");
+    }
+  }
+
   static async getAllJobOffers(req, res) {
     try {
       const result = await ProductModel.getAllJobOffers();
@@ -151,7 +160,6 @@ class ProductController {
   }
   static async deleteJobOfferById(req, res) {
     const { id } = req.params;
-    console.log("id e ofertes", id);
     try {
       const result = await ProductModel.deleteJobOffer(id);
       res.status(200).json({ message: "Job Offer deleted successfully" });
@@ -184,8 +192,7 @@ class ProductController {
     const { id } = req.params;
     const { bidAmount, bidDescription } = req.body;
 
-    console.log(bidAmount);
-    console.log(bidDescription);
+
     try {
       const result = await ProductModel.updateJobOffers(
         bidAmount,
@@ -202,14 +209,12 @@ class ProductController {
   }
   static async getJobsByUserId(req, res) {
     const userId = req.session.userId;
-    console.log(userId);
     if (!userId) {
       return res.status(401).json({ error: "Unauthorized" });
     }
     try {
       const jobs = await ProductModel.getJobsByUserId(userId);
       res.json({ jobs });
-      console.log(jobs);
     } catch (error) {
       console.error(error);
       res.status(500).json({ error: "Server error" });
@@ -218,7 +223,6 @@ class ProductController {
 
   static async deleteMyJob(req, res) {
     const { id } = req.params;
-    console.log("id e userit", id);
     try {
       const result = await ProductModel.deleteMyJob(id);
       res.status(200).json({ message: "My Job deleted successfully" });
@@ -228,11 +232,23 @@ class ProductController {
     }
   }
 
+  static async updateFavoriteJobs(req, res) {
+    const { jobId, favoriteJobs } = req.body.body;
+    console.log(' body' ,req.body.body)
+    try {
+      const result = await ProductModel.updateFavoriteJobs(jobId, favoriteJobs);
+      res.status(200).json({ message: "My Job deleted successfully" });
+    } catch (error) {
+      console.error(error);
+      res.status(500).send("Error updating job");
+    }
+  }
+
   static async updateMyJob(req, res) {
     const jobId = req.params.id;
-    const { jobTitle, jobType, jobCategory, jobDescription } =
-      req.body;
-      console.log(jobTitle,jobType,jobId);
+    const { jobTitle, jobType, jobCategory, jobDescription, favoriteJobs } = req.body;
+    console.log('this is edi tjob', jobTitle, jobType, jobId, favoriteJobs);
+    console.log('this req.body', req.body);
 
     try {
       const result = await ProductModel.updateMyJob(
@@ -242,7 +258,7 @@ class ProductController {
         jobDescription,
         jobId
       );
-        res.redirect("/myjobs/:id");
+      res.redirect("/myjobs/:id");
     } catch (error) {
       console.error(error);
       res.status(500).send("Error updating job");

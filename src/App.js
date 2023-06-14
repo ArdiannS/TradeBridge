@@ -22,6 +22,7 @@ import AllCommentsPage from "./Pages/AllCommentsPage";
 import EditMyJobs from "./Pages/EditMyJobs";
 import MakeRequest from "./Pages/MakeRequest";
 import AllRequests from "./Pages/AllRequests";
+import FavoriteJobs from "./Pages/FavoriteJobs";
 function App() {
   const [isLoading, setIsLoading] = useState(true);
 
@@ -90,6 +91,7 @@ function App() {
             <Route path="/editMyJobs/:id" exact element={<EditMyJobs />} />
             <Route path="/request" exact element={<MakeRequest />} />
             <Route path="/allrequests" exact element={<AllRequests />} />
+            <Route path="/favoriteJobs" exact element={<FavoriteJobs />} />
           </Routes>
         </Router>
       )}

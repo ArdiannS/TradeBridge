@@ -18,6 +18,7 @@ class UserController {
 
     try {
       const result = await UserModel.addUser(
+        req,
         username,
         password,
         email,
@@ -27,19 +28,14 @@ class UserController {
         req,
         res
       );
-      console.log("++++++++++++++++++++");
-      if (result) {
-        console.log(result);
 
-        console.log("+++++++++++++++++result+++");
-      }
-      console.log(result.result);
-      req.session.userid = result.result.userid || 30;
+      console.log( 'signup session thingy ', req.session)
+
+
       res
         .status(result.status)
         .json({ result: result.result, message: result.message });
 
-      console.log(req.session);
       // console.log(req.session)
     } catch (error) {
       console.error(error.message);
@@ -49,7 +45,10 @@ class UserController {
   static async login(req, res) {
     const { username, password } = req.body;
     try {
-      await UserModel.UserLogIn(username, password, res, req);
+      await UserModel.UserLogIn(username, password, res, req)
+
+      console.log( 'ktu login bAb', req.session)
+
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: "Something went wrong." });
@@ -62,7 +61,7 @@ class UserController {
         res.sendStatus(200);
       });
     } catch (exception) {
-      console.log("An error happened!" + exception);
+      // console.log("An error happened!" + exception);
     }
   }
   static async getUsersById(req, res) {

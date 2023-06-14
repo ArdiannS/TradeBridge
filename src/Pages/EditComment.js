@@ -7,10 +7,10 @@ function EditComment(){
         setMessage(event.target.value);
 
     
-        console.log(event.target);
+        // console.log(event.target);
 
      
-        console.log(event.target.value);
+        // console.log(event.target.value);
     };
 
     const [commentData , setCommentData] = useState(null);
@@ -19,7 +19,7 @@ function EditComment(){
         fetch(`/comment/${id}`)
             .then((response) => response.json())
             .then((data) => {
-                console.log(data);
+                // console.log(data);
                 setCommentData(data[0]);
             })
             .catch((error) => console.error(error));

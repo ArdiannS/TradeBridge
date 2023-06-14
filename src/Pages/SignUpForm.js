@@ -11,6 +11,8 @@ import { faLock, faUser } from "@fortawesome/free-solid-svg-icons";
 
 function SignUpForm() {
   const navigate = useNavigate();
+  const [errors, setErrors] = useState({});
+  const [errorInput, setErrorInput] = useState(false);
 
   //  const handleSignUp = (e) => {
   //     e.preventDefault();
@@ -29,26 +31,73 @@ function SignUpForm() {
   //       });
   //    };
   const handleSignUp = (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Move this line to the beginning of the function
+
+    const newErrors = {};
+    let hasError = false; // Use a separate flag variable to track errors
+
+    if (!formData.username) {
+      newErrors.username = "Username is required";
+      hasError = true;
+    } else if (!formData.password) {
+      newErrors.password = "Password is required";
+      hasError = true;
+    } else if (!/^.{7,}$/.test(formData.password)) {
+      newErrors.password = "Password must be at least 7 characters long";
+      hasError = true;
+    } else if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Confirm Password is required";
+      hasError = true;
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match!";
+      hasError = true;
+    } else if (!formData.email) {
+      newErrors.email = "Email is required";
+      hasError = true;
+    } else if (!isValidEmail(formData.email)) {
+      newErrors.email = "Invalid email address";
+      hasError = true;
+    } else if (!formData.date) {
+      newErrors.date = "Date of birth is required";
+      hasError = true;
+    } else if (
+      !/^(\d{2}\/\d{2}\/\d{4})|(?:\d{4}-\d{2}-\d{2})$/.test(formData.date)
+    ) {
+      newErrors.date = "Invalid date format. Use MM/DD/YYYY or YYYY-MM-DD";
+      hasError = true;
+    } else if (!formData.userType) {
+      newErrors.userType = "User type is required";
+      hasError = true;
+    }
+
+    if (hasError) {
+      // Check the flag variable instead of errorInput
+      setErrors(newErrors);
+      return;
+    }
+
     axios
       .post("/signup", formData)
       .then((res) => {
-        // console.log(res.data.result);
-        console.log("ress");
-        console.log(res.data);
+        console.log(" resssssss signup", res)
         localStorage.setItem("user", JSON.stringify(res.data.result) || "");
-        window.location.reload();
-
         navigate("/dashboard");
       })
       .catch(({ response }) => {
+        // Handle error
         // setError(response.data.message);
       });
+  };
+
+  const isValidEmail = (email) => {
+    const emailRegex = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+    return emailRegex.test(email);
   };
 
   const [formData, setFormData] = useState({
     username: "",
     password: "",
+    confirmPassword: "",
     email: "",
     date: "",
     userType: "",
@@ -57,6 +106,7 @@ function SignUpForm() {
   return (
     <div className="hidden sm:block bg-gradient-to-r from-blue-600 to-blue-400">
       <img className="w-screen h-screen object-cover" src={loginImg} alt="" />
+
       <div className="bg-gray-100 flex flex-col justify-center items-center w-full z-50">
         <div className="absolute top-1/3 left-1/3 transform -translate-x-1/2 w-1/3 opacity-80 border border-gray-300 p-8 rounded-lg shadow-lg">
           <h2 className="text-3xl font-bold text-gray-800 mb-6">
@@ -108,6 +158,9 @@ function SignUpForm() {
                 className="text-gray-400 mx-2"
               />
             </div>
+            {errors.username && (
+              <p className="text-red-500">{errors.username}</p>
+            )}
           </div>
           <div className="flex justify-between">
             <div className="flex flex-col mb-4">
@@ -129,6 +182,9 @@ function SignUpForm() {
                   className="text-gray-400 mx-2"
                 />
               </div>
+              {errors.password && (
+                <p className="text-red-500">{errors.password}</p>
+              )}
             </div>
             <div className="flex flex-col mb-4">
               <label className="font-semibold mb-1">
@@ -138,8 +194,17 @@ function SignUpForm() {
                 <input
                   type="password"
                   className="flex-grow bg-transparent focus:outline-none"
-                  placeholder="Confirm your password"
+                  placeholder="Enter your password"
+                  name="password"
+                  value={formData.confirmPassword}
+                  onInput={(e) =>
+                    setFormData({
+                      ...formData,
+                      confirmPassword: e.target.value,
+                    })
+                  }
                 />
+
                 <FontAwesomeIcon
                   icon={faLock}
                   size="lg"
@@ -147,6 +212,9 @@ function SignUpForm() {
                 />
               </div>
             </div>
+            {errors.confirmPassword && (
+              <p className="text-red-500">{errors.confirmPassword}</p>
+            )}
           </div>
           <div className="flex flex-col mb-4">
             <label className="font-semibold mb-1">Email</label>
@@ -163,6 +231,7 @@ function SignUpForm() {
               />
               <RiMailLine size={25} className="" />
             </div>
+            {errors.email && <p className="text-red-500">{errors.email}</p>}
           </div>
           <div className="flex flex-col mb-4">
             <label className="font-semibold mb-1">Date of birth</label>
@@ -178,6 +247,7 @@ function SignUpForm() {
                 }
               />
             </div>
+            {errors.date && <p className="text-red-500">{errors.date}</p>}
           </div>
           <div className="flex flex-col mb-4">
             <div className="flex items-center justify-center mb-4">
@@ -211,6 +281,9 @@ function SignUpForm() {
                 <span className="pl-2 font-bold text-lg">Punemarres</span>
               </label>
             </div>
+            {errors.userType && (
+              <p className="text-red-500">{errors.userType}</p>
+            )}
           </div>
 
           <button

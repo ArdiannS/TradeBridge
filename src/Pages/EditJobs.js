@@ -16,10 +16,10 @@ function EditJobs() {
     setMessage(event.target.value);
 
     // 👇️ this is the input field itself
-    console.log(event.target);
+    // console.log(event.target);
 
     // 👇️ this is the new value of the input
-    console.log(event.target.value);
+    // console.log(event.target.value);
   };
   const [jobData, setJobData] = useState(null);
 
@@ -29,7 +29,7 @@ function EditJobs() {
     fetch(`/jobs/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        // console.log(data);
         setJobData(data[0]);
       })
       .catch((error) => console.error(error));
