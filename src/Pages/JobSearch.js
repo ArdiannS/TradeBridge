@@ -12,9 +12,11 @@ import Footer from "../Components/Footer";
 import axios from "../api/axiosInstance";
 import { FaSadCry } from 'react-icons/fa';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
-const user = JSON.parse(localStorage.getItem("user"));
-console.log("user", user);
 function JobSearch() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+  const isLoggedIn = user && Object.keys(user).length > 0
+  console.log(isLoggedIn);
   const useri = user?.username;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
