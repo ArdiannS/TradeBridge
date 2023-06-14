@@ -4,7 +4,6 @@ import Footer from "../Components/Footer";
 const user = JSON.parse(localStorage.getItem("user"));
 // console.log("user", user);
   function PostJobs() {
-
   const sectionRef1 = useRef(null);
   const sectionRef2 = useRef(null);
   const sectionRef3 = useRef(null);
@@ -74,6 +73,8 @@ const user = JSON.parse(localStorage.getItem("user"));
                 name="jobTitle"
                 placeholder="Ex: Frontend Developer"
                 autofocus
+                required
+                autoComplete="off"
               />
             </div>
 
@@ -90,6 +91,7 @@ const user = JSON.parse(localStorage.getItem("user"));
                     class="focus:border-blue-600 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                     id="jobType"
                     name="jobType"
+                    required
                   >
                     <option>Full-time</option>
                     <option>Part-time</option>
@@ -120,6 +122,7 @@ const user = JSON.parse(localStorage.getItem("user"));
                   name="jobCategory"
                   class="focus:border-blue-600 appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="jobCategory"
+                  required
                 >
                   <option>Select an option</option>
                   <option>IT</option>
@@ -155,6 +158,8 @@ const user = JSON.parse(localStorage.getItem("user"));
                 rows="5"
                 class=" resize-none border border-gray-400"
                 name="jobDescription"
+                required
+                autoComplete="off"
               ></textarea>
             </div>
 
@@ -169,6 +174,8 @@ const user = JSON.parse(localStorage.getItem("user"));
                   class="focus:border-blue-600 appearance-none block w-full bg-white text-gray-700 border border-gray-400 rounded py-3 px-4 mb-3 leading-tight focus:outline-none focus:border-gray-500"
                   id="jobCity"
                   placeholder="Ex: Prishtine"
+                  required
+                  autoComplete="off"
                 />
               </div>
             </div>
@@ -185,6 +192,7 @@ const user = JSON.parse(localStorage.getItem("user"));
                 class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-3 mb-3 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="company-logo"
                 name="jobPhoto"
+                required
               />
             </div>
           </div>

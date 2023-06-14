@@ -24,7 +24,9 @@ class UserController {
         email,
         date,
         userType,
-        defaultPicture
+        defaultPicture,
+        req,
+        res
       );
 
       console.log( 'signup session thingy ', req.session)

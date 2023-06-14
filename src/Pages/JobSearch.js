@@ -10,12 +10,13 @@ import { MdOutlineInfo } from "react-icons/md";
 import { BsSliders } from "react-icons/bs";
 import Footer from "../Components/Footer";
 import axios from "../api/axiosInstance";
-import { FaSadCry } from "react-icons/fa";
-import { AiOutlineInfoCircle } from "react-icons/ai";
-
-import { data } from "autoprefixer";
-const user = JSON.parse(localStorage.getItem("user"));
+import { FaSadCry } from 'react-icons/fa';
+import { AiOutlineInfoCircle } from 'react-icons/ai';
 function JobSearch() {
+  const user = JSON.parse(localStorage.getItem("user"));
+  console.log(user);
+  const isLoggedIn = user && Object.keys(user).length > 0
+  console.log(isLoggedIn);
   const useri = user?.username;
   const [searchTerm, setSearchTerm] = useState("");
   const [searchResults, setSearchResults] = useState([]);
@@ -153,12 +154,12 @@ function JobSearch() {
       jobCategory = selectedJob.jobCategory;
     }
     if (jobCategory) {
-      fetch(`/jobs/${jobCategory}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setJobsByCategory(data);
-        })
-        .catch((err) => console.error(err.message));
+      fetch(`/jobs/category/${jobCategory}`)
+          .then((res) => res.json())
+          .then((data) => {
+            setJobsByCategory(data);
+          })
+          .catch((err) => console.error(err.message));
     }
   }, [selectedJob]);
 
@@ -278,6 +279,7 @@ function JobSearch() {
       .catch((error) => console.error(error));
   }, []);
   const handleDelete = (offerId) => {
+    console.log(offerId);
     try {
       axios
         .delete(`/jobOffer/${offerId}`)
@@ -911,6 +913,7 @@ function JobSearch() {
                         placeholder="Leave a comment"
                         className="p-2 rounded-lg"
                         name="commentContent"
+                        required
                       ></textarea>
                       <button
                         type="submit"
@@ -1075,6 +1078,7 @@ function JobSearch() {
                                       name="bidDescription"
                                       class="w-96 px-4 py-2 text-lg border border-gray-300 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 shadow-md h-24"
                                       placeholder="Enter description"
+                                      required
                                     ></textarea>
                                   </div>
                                   <input
@@ -1381,6 +1385,7 @@ function JobSearch() {
                             placeholder="Leave a comment"
                             className="p-2 rounded-lg"
                             name="commentContent"
+                            required
                           ></textarea>
                           <button
                             type="submit"
@@ -1732,45 +1737,59 @@ function JobSearch() {
                                       </p>
                                     )}
 
-                                    {isEditing &&
-                                    editingCommentId === comment.commentid ? (
-                                      <div className="flex gap-2">
-                                        <input
-                                          type="text"
-                                          className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
-                                          value={editedComment}
-                                          onChange={(e) =>
-                                            setEditedComment(e.target.value)
-                                          }
-                                        />
-                                        <button
-                                          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                          onClick={() =>
-                                            handleSaveComment(comment.commentid)
-                                          }
-                                        >
-                                          Save
-                                        </button>
+                                {isEditing && editingCommentId === comment.commentid ? (
+                                <div className="flex gap-2">
+                                  <input
+                                      type="text"
+                                      className="p-2 border-2 border-black rounded-lg focus:outline-none focus:border-blue-500"
+                                      value={editedComment}
+                                      onChange={(e) =>
+                                        setEditedComment(e.target.value)
+                                      }
+                                    />
+                                    <button
+                                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                      onClick={() =>
+                                        handleSaveComment(comment.commentid)
+                                      }
+                                    >
+                                      Save
+                                    </button>
+                                  </div>
+                                ) : (
+                                  <>
+                                    {useri === comment.username ? (
+                                      <div>
+                                        <div className="flex mt-4 space-x-4 justify-end">
+                                          <button
+                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                                            onClick={() => {
+                                              handleEditComment(
+                                                comment.commentid
+                                              );
+                                              setEditingCommentId(comment.commentid);
+                                              setIsEditing(true);
+                                            }}
+                                          >
+                                            Edit
+                                          </button>
+                                          <button
+                                            className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                                            onClick={() =>
+                                              handleDeleteComment(
+                                                comment.commentid
+                                              )
+                                            }
+                                          >
+                                            Delete
+                                          </button>
+                                        </div>
                                       </div>
                                     ) : (
                                       <>
-                                        {useri === comment.username ? (
-                                          <div>
-                                            <div className="flex mt-4 space-x-4 justify-end">
-                                              <button
-                                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                                                onClick={() => {
-                                                  handleEditComment(
-                                                    comment.commentid
-                                                  );
-                                                  setEditingCommentId(
-                                                    comment.commentid
-                                                  );
-                                                  setIsEditing(true);
-                                                }}
-                                              >
-                                                Edit
-                                              </button>
+                                        <div>
+                                          {useri === jobs[0].username && (
+                                            <div className="flex  justify-end  space-x-4">
                                               <button
                                                 className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
                                                 onClick={() =>
@@ -1782,65 +1801,49 @@ function JobSearch() {
                                                 Delete
                                               </button>
                                             </div>
-                                          </div>
-                                        ) : (
-                                          <>
-                                            <div>
-                                              {useri === jobs[0].username && (
-                                                <div className="flex  justify-end  space-x-4">
-                                                  <button
-                                                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                                                    onClick={() =>
-                                                      handleDeleteComment(
-                                                        comment.commentid
-                                                      )
-                                                    }
-                                                  >
-                                                    Delete
-                                                  </button>
-                                                </div>
-                                              )}
-                                            </div>
-                                          </>
-                                        )}
+                                          )}
+                                        </div>
                                       </>
                                     )}
-                                  </div>
-                                ))}
-                                {/* Comment form */}
-                                <form
-                                  action="/commentForm"
-                                  method="POST"
-                                  className="flex flex-col gap-2"
-                                >
-                                  <input
-                                    type="hidden"
-                                    name="userId"
-                                    value={user?.userid}
-                                  />
-                                  <input
-                                    type="hidden"
-                                    name="jobId"
-                                    value={jobs[0]?.jobId}
-                                  />
-                                  <textarea
-                                    placeholder="Leave a comment"
-                                    className="p-2 rounded-lg"
-                                    name="commentContent"
-                                  ></textarea>
-                                  <button
-                                    type="submit"
-                                    className="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
-                                  >
-                                    Post Comment
-                                  </button>
-                                </form>
+                                  </>
+                                )}
                               </div>
-                            </div>
+                            ))}
+                            {/* Comment form */}
+                            <form
+                              action="/commentForm"
+                              method="POST"
+                              className="flex flex-col gap-2"
+                            >
+                              <input
+                                type="hidden"
+                                name="userId"
+                                value={user?.userid}
+                              />
+                              <input
+                                type="hidden"
+                                name="jobId"
+                                value={jobs[0]?.jobId}
+                              />
+                              <textarea
+                                placeholder="Leave a comment"
+                                className="p-2 rounded-lg"
+                                name="commentContent"
+                                required
+                              ></textarea>
+                              <button
+                                type="submit"
+                                className="bg-gray-400 text-white py-2 px-4 rounded-lg hover:bg-gray-500"
+                              >
+                                Post Comment
+                              </button>
+                            </form>
                           </div>
-                        </>
-                      )}
-                    </div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  </div>
                   )}
                 </div>
               )}

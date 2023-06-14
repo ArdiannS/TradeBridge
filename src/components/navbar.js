@@ -6,12 +6,23 @@ function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [user, setUser] = useState({});
   const [isProfileUpdated, setIsProfileUpdated] = useState(false);
+  const useri = JSON.parse(localStorage.getItem("user"));
+  const userIsLogged = Object.keys(useri).length > 0;
+  const userIsLoggedAsAdmin =
+    Object.keys(user).length > 0 && user.usertype === "admin";
   const navigate = useNavigate();
+  useEffect(() => {
+    const useri = JSON.parse(localStorage.getItem("user"));
+    console.log(useri);
+    if (useri) {
+      setUser(useri);
+    }
+  }, []);
 
   const handleLogout = async () => {
     try {
       await axios.post("/logout", {});
-      // console.log("Logged out successfully");
+      console.log("Logged out successfully");
       localStorage.setItem("user", "{}");
       setUser({}); // Clear the user data
       navigate("/signin");
@@ -19,29 +30,6 @@ function Navbar() {
       console.error("Logout failed", error);
     }
   };
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-  }, []);
-  const fetchUserProfile = async () => {
-    try {
-      const userResponse = await axios.get("/user/profile");
-      const userData = userResponse.data.user[0];
-      setUser(userData);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  useEffect(() => {
-    fetchUserProfile();
-  }, [isProfileUpdated]); // Listen for changes in isProfileUpdated only
-
-  const userIsLogged = Object.keys(user).length > 0;
-  const userIsLoggedAsAdmin =
-    Object.keys(user).length > 0 && user.usertype === "admin";
 
   return (
     <div>
@@ -56,23 +44,6 @@ function Navbar() {
               ></img>
             </Link>
           </h1>
-        </div>
-        <div className="hidden md:flex md:items-center md:ml-auto md:space-x-6">
-          <Link to="/">
-            <a className="text-white hover:text-blue-600 font-bold text-lg">
-              Home
-            </a>
-          </Link>
-          <Link to="/jobsearch">
-            <a className="text-white hover:text-blue-600 font-bold text-lg">
-              Search Job
-            </a>
-          </Link>
-          <Link to="/postjobs">
-            <a className="text-white hover:text-blue-600 font-bold text-lg px-3.5">
-              Post a Job
-            </a>
-          </Link>
         </div>
 
         <div className="flex items-center space-x-6 md:hidden">
@@ -102,7 +73,24 @@ function Navbar() {
           )}
         </div>
         {userIsLogged && (
-          <div className="relative z-50">
+          <div className="relative z-50 flex items-center">
+            <div className="hidden md:flex md:items-center md:ml-auto md:space-x-6">
+              <Link to="/">
+                <a className="text-white hover:text-blue-600 font-bold text-lg">
+                  Home
+                </a>
+              </Link>
+              <Link to="/jobsearch">
+                <a className="text-white hover:text-blue-600 font-bold text-lg">
+                  Search Job
+                </a>
+              </Link>
+              <Link to="/postjobs">
+                <a className="text-white hover:text-blue-600 font-bold text-lg px-3.5">
+                  Post a Job
+                </a>
+              </Link>
+            </div>
             <button
               id="dropdownAvatarNameButton"
               className="flex items-center text-sm font-medium text-gray-900 rounded-full hover:text-blue-600 dark:hover:text-blue-500 md:mr-0 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-white overflow-visible"
@@ -111,11 +99,11 @@ function Navbar() {
             >
               <span className="sr-only">Open user menu</span>
               <img
-                src={`data:image/jpeg;base64,${user.userProfilePicture}`}
+                src={`data:image/jpeg;base64,${useri.userProfilePicture}`}
                 className="w-10 h-10 rounded-full"
                 alt="My Image"
               />
-              {user.username}
+              {useri.username}
               <svg
                 className="w-4 h-4 mx-1.5"
                 aria-hidden="true"
@@ -138,8 +126,8 @@ function Navbar() {
                 className="overflow-hidden absolute top-10 right-0 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 z-50"
               >
                 <div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-                  <div className="font-medium capitalize">{user.usertype}</div>
-                  <div className="truncate">{user.email}</div>
+                  <div className="font-medium capitalize">{useri.usertype}</div>
+                  <div className="truncate">{useri.email}</div>
                 </div>
 
                 <ul
@@ -172,7 +160,6 @@ function Navbar() {
                       </a>
                     </li>
                   </Link>
-                  <Link to={`/favoriteJobs`}>
                   <li>
                     <a
                       href="#"
@@ -181,7 +168,6 @@ function Navbar() {
                       Favorite Jobs
                     </a>
                   </li>
-                  </Link>
                 </ul>
                 <div className="py-2">
                   <p

@@ -63,6 +63,19 @@ class ProductController {
       res.status(500).send("Error retrieving jobs by category");
     }
   }
+  static async getJobById(req, res) {
+    const { id } = req.params;
+    try {
+      const result = await ProductModel.getJobsById(id);
+      if (result) {
+        res.send(result);
+      }
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving job");
+    }
+  }
+
 
   static async getSimilarJobs(req, res) {
     try {
@@ -121,18 +134,7 @@ class ProductController {
       res.status(500).send("Error retrieving Job Offers");
     }
   }
-  static async getJobById(req, res) {
-    const { id } = req.params;
-    try {
-      const result = await ProductModel.getJobsById(id);
-      if (result) {
-        res.send(result);
-      }
-    } catch (err) {
-      console.error(err);
-      res.status(500).send("Error retrieving job");
-    }
-  }
+
   static async getJobPhotoById(req, res) {
     const { id } = req.params;
     try {
